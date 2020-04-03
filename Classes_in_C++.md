@@ -1,4 +1,4 @@
-#Classes in C++#
+# Classes in C++ #
 C++ and Java overlap a fair bit. Private and public instance variables and methods are bunched together in C++.
 
     class Rectangle{
@@ -20,7 +20,7 @@ C++ and Java overlap a fair bit. Private and public instance variables and metho
 
 Note that garbage collection of the stack is automated in C++. To avoid memory leaks pertaining to the heap, one must call a destruictor. Default constructors, through overloading, are available.
 
-##Scope resolution##
+## Scope resolution ##
 Methods of a `class` body can be declared and defined outside the class body if they are qualified using `::`. In Java, the resolution operator `::` is used to call (reference) methods on an object which is not an instance of the class.
 
     Rectangle::Rectangle(int a, int b){
@@ -40,7 +40,7 @@ Methods of a `class` body can be declared and defined outside the class body if 
 
 The method `Init()` in C++ is equivalent to the `static{}` block in Java, allowing one to hide initialisation details from an external class or external method.
 
-##Templates in C++##
+## Templates in C++ ##
 Templates in C++ are equivalent to generic classes in Java. The instantiation of a template with chosen types through the constructor causes other methods to follow the same type used.
 
     template<class T>	//this token is similar in function to @someProperty in Java

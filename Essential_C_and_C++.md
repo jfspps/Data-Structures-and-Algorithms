@@ -69,10 +69,10 @@ Alternatively, one can use the indirect member operator, instead of (*p).
 
 Tokens `&r` to the right of the assignment operator return the address the reference points to. All references MUST be initialised.
 
-##Functions and parameter passing##
+## Functions and parameter passing ##
 Passing by value assigns a variable, local to the function,  with the parameter. The actual-parameter cannot be changed. To change a parameter variable, pass by reference or by pointer.
 
-###Passing and calling by addresses###
+### Passing and calling by addresses ###
 From the given block (quite often `main()`), the address of parameter(s) can be sent to a function so as to allow the parameter values to change. The following function call passes the address of the variables `a` and `b`.
 
     swap(&a, &b);
@@ -83,14 +83,14 @@ Then, by the following function signature, one then needs to have formal paramet
 
 The above definition expects references, which are then referred to as `x` and `y` in the `swap()`. The function body would then need to dereference `x` and `y` (using `*x` and `*y`) in order to access the values of `a` and `b`.
 
-###Passing and calling by reference (C++ only)###
+### Passing and calling by reference (C++ only) ###
 Instead of passing by value, one can use references to the values and pass references.
 
     swap(int &x, int &y);
 
 The above call assigns x and y as references to the actual-parameters `a` and `b`. Thus, the function call `swap(a, b)` can change the values of the actual-parameters. This provides an alternative to the pointer approach above.
 
-###Passing arrays###
+### Passing arrays ###
 Arrays can be thought of as pointers to the first element of an array. The type of the array and number of elements present indicates how much storage space is required.
 
 Passing arrays is equivalent to passing pointers.
@@ -101,7 +101,7 @@ The above call is equivalent to the following but not specific for arrays:
 
     fun(int *A, int n);
 
-###Passing structures###
+### Passing structures ###
 One can pass structures as values, references and pointers. Here is an example of a function definition involving references and pointers to structures. Both approaches allow one to change the actual-parameter passed.
 
     int area(struct Rectangle &z){

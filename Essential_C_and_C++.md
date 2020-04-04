@@ -113,3 +113,7 @@ One can pass structures as values, references and pointers. Here is an example o
 		(p*).length++;
 		return p->length * p->breadth;
 	}
+
+## Static variables ##
+
+The keyword `static` declares variables (as well as objects and functions) which are initialised once (all subsequent initialisations are ignored) and retain their value for the duration of the function call, including `main()`.

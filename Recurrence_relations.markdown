@@ -19,7 +19,7 @@ One `if` statement and one `printf()` call, when `n >0`. In addition there are `
 One can express a recurrence relation (an equation which relates consecutive terms, in this case, of a recursive function calls) to deduce the number of calls (time complexity `T(n)` for `int n`) expected. 
 
 ```math
-T(n) = 	1				n = 0
+T(n) = 		1		n = 0
 		T(n - 1) + 2	n > 0
 ```
 

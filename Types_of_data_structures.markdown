@@ -1,7 +1,9 @@
+
 # Types of data structures #
 
-a. Physical _e.g._ arrays and linked lists, which define how memory is allocated.
-b. Logical _e.g._ stack (LIFO based), queues (FIFO based), trees, graphs and hash tables. These data types describe ow operations on the data are performed but are implemented by arrays or linked lists, or some combination.
+a. __Physical__ _e.g._ arrays and linked lists, which define how memory is allocated.
+
+b. __Logical__ _e.g._ stack (LIFO based), queues (FIFO based), trees, graphs and hash tables. These data types describe how operations on the data are performed but are implemented by arrays or linked lists, or some combination.
 
 **Arrays** in C++ are fixed in size (static) and can reside on the stack or heap. They are generally more efficient than linked lists, particularly if the max. size of the array is known.
 

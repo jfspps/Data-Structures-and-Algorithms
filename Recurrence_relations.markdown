@@ -14,7 +14,7 @@ void fun1(int n)
 }
 ```
 
-One `if` statement and one `printf()` call, when `n >0`. In addition there are `T(n - 1)` multiple calls of `fun1()` made when `n > 0`. When `n = 0`, only one run of the `if` statement is needed.
+One `if` statement and one `printf()` call, when `n > 0`. In addition there are `T(n - 1)` multiple calls of `fun1()` made when `n > 0`. When `n = 0`, only one run of the `if` statement is needed.
 
 One can express a recurrence relation (an equation which relates consecutive terms, in this case, of a recursive function calls) to deduce the number of calls (time complexity `T(n)` for `int n`) expected. 
 

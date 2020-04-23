@@ -9,3 +9,5 @@ My notes from an online C++ course
 6. [Recurrence relations and recursion](Recurrence_relations.markdown)
 7. [Static and global variables](Static_and_global_variables.markdown)
 8. [Types of recursion](Types_of_recursion.markdown)
+9. [Applications of recursion](Recursive_function_applications.md)
+10. [Arrays](Arrays.md)

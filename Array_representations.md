@@ -43,7 +43,7 @@ p = q;
 q = NULL;
 ```
 
-Arrays are contiguous structures and therefore the last element will likely neighbour some other unrelated variable in the heap.
+Arrays are contiguous structures and therefore the last element will likely neighbour some other unrelated variable in the heap, temporarily limiting the present array length.
 
 ## Multi-dimensional arrays ##
 
@@ -66,7 +66,7 @@ A[2] = new int[4];
 
 A[1][2] = 5; //etc...
 ```
-One can also set a pointer to a +pointer to an +array, where + inside in the heap.
+One can also set a pointer to a +pointer to an +array, where +pointer resides in the heap.
 
 ```cpp
 int **A;            //in the stack
@@ -78,7 +78,7 @@ A[1] = new int[4];
 A[2] = new int[4];
 ```
 
-One accesses each element in the array of arrays using nested for loops.
+One accesses each element in the array of arrays using nested for loops by accessing the +pointer first and then processing each element in the pointed array.
 
 In C, the above pointer to a pointer of arrays is achieved using:
 
@@ -101,9 +101,9 @@ free C;
 
 ## Array representation in memory ##
 
-The memory address of an array is only known at run-time. The compiler obtains the address of each array by starting from the first element: `location A[0] + i*sizeof(element)`, where i is the index.
+The memory address of an array is only known at run-time. The compiler obtains the address of an element by starting from the first element: `location A[0] + i*sizeof(element)`, where i is the index. That is, the first element has an index i = 0, which is simply given by the address `location A[0]`.
 
-The location of A[0] is updated at run-time. Arrays are zero-based because the allocation of address requires minimal operations. Compare the above convention to arrays which are one-based: `location B[i] + (i-1)sizeof(element)`. The operation `i-1` must be carried out for all arrays in the program.
+The location of A[0] is updated at run-time. Arrays are zero-based because the allocation of address involves minimal operations. Compare the above convention to arrays which are one-based: `location B[i] + (i-1)sizeof(element)`. The operation `i-1` must be carried out for all arrays in the program.
 
 The address of elements of multidimensional arrays is deduced by using either:
 
@@ -112,7 +112,7 @@ The address of elements of multidimensional arrays is deduced by using either:
 
 ### Row-major mapping ###
 
-Rows, denoted by the first index m of `A[m][n]` are traversed left-to-right, i.e. row index first, then column index. Here is the sequential represesentation of a 2D array:
+Rows, denoted by the first token `[m]` of `A[m][n]` are traversed left-to-right, i.e. row index `[m]` first, then column index `[n]`. Here is the sequential represesentation of a 2D array:
 
 ![](rowmajor.svg)
 
@@ -121,7 +121,7 @@ int A[3][4];
 //initialise as needed
 ```
 
-The last element of rows 0 and 1 precede the first elements of rows 1 and 2, respectively. There are three rows (m = 3) and four elements (n = 4) per row. How does one deduce the address of `A[1][2]`? We use the variables `i` and `j` to denote a specific position in the zero-based matrix (`m` and `n` are used to denote the dimensions of the matrix; both are non-zero).
+We use the variables `i` and `j` to denote a specific position in the zero-based matrix. The tokens `m` and `n` are used to denote the dimensions (number of elements) of the matrix; both are non-zero. The last element of rows 0 and 1 precede the first elements of rows 1 and 2, respectively. There are three rows (m = 3) and four elements (n = 4) per row. How does one deduce the address of `A[1][2]`?
 
 + Take the row index (i.e. i = 1) and skip ahead to the second row (row i = 1) i.e. `location(A[0][0] + 1*n*sizeof(element))`. In this case, n = 4 but writing it as such then presents a general expression for any dimension `n`.
 + Then we home in on the third element of row 1: `location(A[0][0] + 1*n*sizeof(element) + 3*sizeof(element))`. We do not need `m` here since we known exactly how many elements to traverse. This simplifies to `location(A[0][0] + (1*n + 3)*sizeof(element))`.

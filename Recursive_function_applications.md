@@ -58,7 +58,7 @@ The time complexity so far is O(n^2) when one considers the number of multiplica
 The complexity can be reduced significantly by taking out common factors:
 
 ```
-exp(4) = 1 + x/1(1 + x/2(1 + x/3(1 + x/4)))
+exp(x,4) = 1 + x/1(1 + x/2(1 + x/3(1 + x/4)))
 ```
 
 The factorisation employs *Horner's rule*. The time complexity is now O(n).

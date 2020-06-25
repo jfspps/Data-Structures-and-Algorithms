@@ -1,6 +1,6 @@
 # Static and global variables #
 
-Static variables are stored in the code section of memory. They are initialised once and once only. All subsequent initialisation which can be foundin recursive calls, are ignored. The static variable retains its value since the first initialisation or last expression.
+Static variables are stored in the code section of memory. They are initialised once and once only. All subsequent initialisation which can be found in recursive calls, are ignored. The static variable retains its value since the first initialisation or last expression.
 
 ```cpp
 int fun(int n)

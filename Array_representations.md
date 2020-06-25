@@ -112,7 +112,7 @@ The address of elements of multidimensional arrays is deduced by using either:
 
 ### Row-major mapping ###
 
-Rows, denoted by the first token `[m]` of `A[m][n]` are traversed left-to-right, i.e. row index `[m]` first, then column index `[n]`. Here is the sequential represesentation of a 2D array:
+Rows, denoted by the first token `[m]` of `A[m][n]` are traversed left-to-right, i.e. row index `[m]` first, then column index `[n]`. Here is the sequential representation of a 2D array:
 
 ![](rowmajor.svg)
 

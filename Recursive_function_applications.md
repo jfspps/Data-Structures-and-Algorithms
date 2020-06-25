@@ -53,7 +53,7 @@ Thus `e(x,y) = e(x,0) + ... + p*x^y/f*y`, where the highest order term is return
 
 Note that p = 1 and f = 1 are static variables are never re-initialised.
 
-The time complexity so far is O(n^2) when one considers the number of multiplications for each term. The first two involve no mulitplications, the next is 2, the fourth is 4, then 6 so 2[1 + 2 + ... + n] which is 2[n(n+1)/2]. 
+The time complexity so far is O(n^2) when one considers the number of multiplications for each term. The first two involve no multiplications, the next is 2, the fourth is 4, then 6 so 2[1 + 2 + ... + n] which is 2[n(n+1)/2]. 
 
 The complexity can be reduced significantly by taking out common factors:
 

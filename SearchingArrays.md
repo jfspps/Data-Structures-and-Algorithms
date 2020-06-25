@@ -4,7 +4,7 @@ There are two primary algorithms which enable a user to search for an element in
 
 ## Linear search
 
-This involves processing, at worst, all elements of an array to find a required element. Linear searching does not account for repeated occurances of an element. 
+This involves processing, at worst, all elements of an array to find a required element. Linear searching does not account for repeated occurrences of an element. 
 
 For a given array `A` of length `length`, a linear search algorithm for an element `key` of type `int` is:
 
@@ -41,7 +41,7 @@ One deduces the new midpoint as the floor value of `(low + high)/2`.
 
 Note that binary search computes at most `log2 n` cycles, where n is the array length. This can be roughly shown by taking the maximum number of search attempts equal to the number of times the array is halved `m`: `length/2^m`. The binary search method continues up until there is only one element targeted. This means that `length/2^m` is greater than or equal to 1. Hence, `2^m` less than or equal to `length`, which after taking log (base 2) yields `m = log2 length`. The worst case time complexity is therefore `O(log2 n)`.
 
-A binary search tree shows that the tree height is measured in mutiples of `log2 n`:
+A binary search tree shows that the tree height is measured in multiples of `log2 n`:
 
 ![](binarySearchTree.svg)
 

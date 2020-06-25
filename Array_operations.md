@@ -54,7 +54,7 @@ void Append(struct Array *arr, int x)
 struct Array arr1 = {5, {2,3,4,5,6},10};
 Display(arr1);
 Append(&arr1, 10);
-Displat(arr1);  //this would print 2,3,4,5,6,10
+Display(arr1);  //this would print 2,3,4,5,6,10
 ```
 
 We pass the address of `arr` to Append() and all other non-display functions.

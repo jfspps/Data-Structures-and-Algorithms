@@ -18,7 +18,7 @@ C++ and Java overlap a fair bit. Private and public instance variables and metho
 			~Rectangle();	
 	}
 
-Note that garbage collection of the stack is automated in C++. To avoid memory leaks pertaining to the heap, one must call a destruictor. Default constructors, through overloading, are available.
+Note that garbage collection of the stack is automated in C++. To avoid memory leaks pertaining to the heap, one must call a destructor. Default constructors, through overloading, are available.
 
 ## Scope resolution ##
 Methods of a `class` body can be declared and defined outside the class body if they are qualified using `::`. In Java, the resolution operator `::` is used to call (reference) methods on an object which is not an instance of the class.

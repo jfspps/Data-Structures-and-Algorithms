@@ -1,5 +1,5 @@
 # Types of recursive functions #
-+ Tail recursion: when the recursive function is the last callof a a block, for example
++ Tail recursion: when the recursive function is the last call of a a block, for example
 
 ```C++
 void fun(int n)

@@ -12,3 +12,4 @@ My notes from an online C++ course
 9. [Applications of recursion](Recursive_function_applications.md)
 10. [Array representations](Array_representations.md)
 11. [Array operations](Array_operations.md)
+12. [Array searching](SearchingArrays.md)

@@ -1,6 +1,11 @@
 # Array operations in C++
 
-### Array as a structure
+### The dot (.) and arrow (->) operators ###
+The dot operator is used to call a given method or member (of a structure) on an object which was passed by reference. See Display(), below, for an example.
+
+The arrow operator is used when the object was passed as a pointer. See Append() for an example.
+
+### The array structure ###
 
 The following examples are based on an array structure, with three variables.
 
@@ -12,6 +17,8 @@ struct Array
     int length; //represents the number of elements which are not padded with zeros
 }
 ```
+
+### Operations on the array structure ###
 
 We store the structure in the heap. For display functions we simply pass by value (a copy is temporarily stored in the stack) but for other operations which can edit elements, we pass by pointer.
 

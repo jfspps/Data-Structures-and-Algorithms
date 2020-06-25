@@ -1,5 +1,7 @@
 # Array operations in C++
 
+### Array as a structure
+
 The following examples are based on an array structure, with three variables.
 
 ```cpp
@@ -12,6 +14,12 @@ struct Array
 ```
 
 We store the structure in the heap. For display functions we simply pass by value (a copy is temporarily stored in the stack) but for other operations which can edit elements, we pass by pointer.
+
+### Dot and arrow operators
+
+The dot `(.)` operator calls a method on the given object when the object was passed by value. See `Display()` below for an example. If the object was passed by pointer then the arrow operator `(->)` is used instead. See `Append()` for an example.
+
+## Displaying and appending to an array
 
 ```cpp
 void Display(struct Array arr)
@@ -43,6 +51,8 @@ Displat(arr1);  //this would print 2,3,4,5,6,10
 ```
 
 We pass the address of `arr` to Append() and all other non-display functions.
+
+## Inserting to and deleting from an array
 
 The insertion function insert() starts the last element and copies all preceding elements until the point of insertion `index` is reached.
 

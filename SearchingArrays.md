@@ -16,7 +16,7 @@ for (int i = 0; i < length; i++)
         return i;
     }
 }
-return -1;  //flags a true negative
+return -1;
 } 
 ```
 
@@ -39,7 +39,11 @@ One deduces the new midpoint as the floor value of `(low + high)/2`.
 
 ![](binarySearch.svg)
 
-Note that binary search computes at most `log2 n` cycles, where n is the array length. This can be roughly shown by taking the maximum number of search attempts equal to the number of times the array is halved `m`: `length/2^m`. The binary search method continues up until there is only one element targeted. This means that `length/2^m` is greater than or equal to 1. Hence, `2^m` less than or equal to `length`, which after taking log (base 2) yields `m = log2 length`. The worst case time complexity is therefore `O(log2 n)`.
+Note that binary search computes at most `log2 n` cycles, where n is the array length. This can be roughly shown by taking the maximum number of search attempts equal to the number of times the array is halved `m`: `length/2^m`. 
+
+The binary search method continues up until there is only one element targeted. This means that `length/2^m` is greater than or equal to 1. 
+
+Hence, `2^m` less than or equal to `length`, which after taking log (base 2) yields `m = log2 length`. The worst case time complexity is therefore `O(log2 n)`.
 
 A binary search tree shows that the tree height is measured in multiples of `log2 n`:
 
@@ -47,7 +51,13 @@ A binary search tree shows that the tree height is measured in multiples of `log
 
 The left-hand branch is followed if the key is less than the middle element. The right-hand branch is followed if the key is greater than the middle element.
 
-The average time complexity is also `O(log2 n)`. The sum of all possible searches is a finite series: `1 + 1*2 + 2*4 + 3*8 + ...` which simplifies to `1 + 1*2^1 + 2*2^2 + 3*2^3 + ...`, reducing to the sum of `i + 2^i`, where `i = log2 n`. Following this, the average time complexity `[log2 n + 2^(log2 n)]/n` then becomes `[log2 n + n^(log2 2)]/n`, and finally approximates to `O((log2 n)/n + 1)`.
+The average time complexity is also `O(log2 n)`. 
+
+The sum of all possible searches is a finite series: `1 + 1*2 + 2*4 + 3*8 + ...` which simplifies to `1 + 1*2^1 + 2*2^2 + 3*2^3 + ...`, reducing to the sum of `i + 2^i`, where `i = log2 n`. 
+
+Following this, the average time complexity `[log2 n + 2^(log2 n)]/n` then becomes `[log2 n + n^(log2 2)]/n`.
+
+Finally, this approximates to `O((log2 n)/n + 1)`.
 
 The algorithm loops through if-statements, ensuring that low <= high.
 
@@ -58,12 +68,33 @@ while(low <= high){
     if (key == A[mid]){
         return mid;
     } else if (key < A[mid]){
-        high = mid -1;  //equivalently call the function binarySearch(floor((low + (mid -1))/2) again
+        high = mid -1;  //*
     } else {
-        low = mid + 1;  //recursively call goes here
+        low = mid + 1;  //*
     }
 }
 return -1;
 ```
 
-A recursive form without a while loop can be implemented by calling a suitably written function at the above indicated points.
+A recursive form _without_ a while loop can be implemented by calling a suitably written function at the above indicated points*.
+
+```cpp
+int binarySearch(int arr[], int low, int high){
+
+    if (low < high){
+        mid = floor((low + high)/2);
+
+        if (key == arr[mid]){
+            return mid;
+        } else if (key < arr[mid]){
+            high = mid - 1;
+            binarySearch(arr, low, high);
+        } else {
+            low = mid + 1;
+            binarySearch(arr, low, high);
+        }
+    }
+    return -1;
+}
+
+```

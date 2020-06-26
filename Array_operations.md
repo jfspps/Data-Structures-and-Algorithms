@@ -13,7 +13,7 @@ The following examples are based on an array structure, with three variables.
 struct Array
 {
     int size;
-    int A[size];
+    int A[size];    //represents the number of elements with user-defined values
     int length; //represents the number of elements which are not padded with zeros
 }
 ```
@@ -103,3 +103,49 @@ struct Array arr1 = {{2,3,4,5,6}, 10, 5};
 printf("%d", Delete(&arr1, 0));     //prints 2
 Display(arr1);      //prints 3,4,5,6
 ```
+
+## Reversing an array
+
+Apart from creating an array in which the elements are copied back to front, a more efficient algorithm is the immediate swapping of elements in the given array when the initial counter `i` is less than the second counter `j`. We pass by pointer this time since we want to change the elements' values.
+
+```cpp
+void Reverse2(struct Array *arr)
+{
+    int i, j;
+    for(i = 0, j = arr->length-1; i < j; i++, j--)
+    {
+        swap(&arr->A[i], &arr->A[j]);
+    }
+}
+
+void swap(int *x, int *y)
+{
+    int temp = *x;
+    *x = *y;
+    *y = temp;
+}
+```
+
+## Inserting an element in a sorted array
+
+The approach here is to check the value that is to be inserted and the element (for example) at the end of the array. If a condition is met then shift the last element down the array. Continue with this until the element in the array is less than the value to be inserted. No need to check all other preceding elements.
+
+```cpp
+void insertIntoSorted(struct Array *arr, int newElement){
+    int i = arr->length - 1;
+
+    //check that there is space to insert the element
+    if (arr->length == arr->size){
+        return;
+    }
+
+    //shift the values
+    while (i >= 0 && arr->A[i] > x){
+        arr->A[i+1] == arr->A[i];
+        i--;
+    }
+
+    arr->A[i] = x;
+    arr->length++;
+}
+

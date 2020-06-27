@@ -148,4 +148,276 @@ void insertIntoSorted(struct Array *arr, int newElement){
     arr->A[i] = x;
     arr->length++;
 }
+```
 
+## Merging sorted arrays
+
+Two sorted arrays can be merged such that the resultant array is also sorted. This is achieved by comparing sequential elements from both arrays and then deciding about which element to copy across to the new, larger array.
+
+```cpp
+//assume Merge is a method of a class Array (Array() is then the constructor); array A is a instance variable of the object on which Merge operates on (full code for the class is below)
+    Array Merge(Array& B){
+        Array C(length + B.length, length + B.length);
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        while (i < length && j < B.length){
+            if (A[i] < B.Get(j)){
+                C.Set(k++, A[i++]);
+            } else {
+                C.Set(k++, B.Get(j++));
+            }
+        }
+
+        //check for and the add trailing elements from either array (the object array or B)
+        for (; i < length; i++){
+            C.Set(k++, A[i]);
+        }
+        for (; j < B.length; j++){
+            C.Set(k++, B.Get(j));
+        }
+        return C;
+    }
+
+    //somewhere in main(){}
+        struct Array array1 = {{2,6,10,15,25}, 10, 5};
+        struct Array array2 = {{3,4,7,18,20}, 10, 5};
+
+        struct Array array3 = array1.Merge(array2)
+
+```
+
+Below is the class Array taken from the course:
+
+```cpp
+#include <iostream>
+#include <cstdlib>
+ 
+using namespace std;
+ 
+class Array{
+ 
+private:
+    int* A;
+    int size;
+    int length;
+ 
+public:
+    Array(int size, int length, bool sorted=false){
+ 
+        this->size = size;
+        this->length = length;
+ 
+        A = new int [size];
+ 
+        if (sorted){
+            cout << "Enter ints in sorted manner" << endl;
+            for (int i = 0; i < length; i++){
+                cout << "Enter element " << i << " : " << flush;
+                cin >> A[i];
+            }
+        } else {
+            for (int i = 0; i < length; i++){
+ 
+                int val;
+                val = rand() % 100;  // Random int in range 0 to 100
+ 
+                // Generate random binary int and make value negative
+                if (rand() % 2){
+                    A[i] = -1 * val;
+                } else {
+                    A[i] = val;
+                }
+ 
+            }
+        }
+    }
+ 
+    int Get(int index){
+        if (index >= 0 && index < length){
+            return A[index];
+        }
+    }
+ 
+    void Set(int index, int x){
+        if (index >= 0 && index < length){
+            A[index] = x;
+        }
+    }
+ 
+    void display(){
+        for (int i = 0; i < length; i++){
+            cout << A[i] << " ";
+        }
+        cout << endl;
+    }
+ 
+    Array Merge(Array& B){
+        Array C(length + B.length, length + B.length);
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        while (i < length && j < B.length){
+            if (A[i] < B.Get(j)){
+                C.Set(k++, A[i++]);
+            } else {
+                C.Set(k++, B.Get(j++));
+            }
+        }
+        for (; i < length; i++){
+            C.Set(k++, A[i]);
+        }
+        for (; j < B.length; j++){
+            C.Set(k++, B.Get(j));
+        }
+        return C;
+    }
+ 
+    ~Array(){
+        delete[] A;
+    }
+ 
+ 
+};
+ 
+int main() {
+ 
+    Array X(10, 5, true);
+    Array Y(10, 4, true);
+ 
+    Array Z = X.Merge(Y);
+    Z.display();
+ 
+    return 0;
+}
+```
+
+## Set operations
+
+Sets contain collections of unique values and in these examples stored as arrays. The set operations covered produce new sets, as new arrays.
+
+### Union
+
+This takes the elements from both sets and be copied to a new set. There are no duplicates.
+
+### Intersection
+
+This takes elements which are common to both sets and copies the elements to a new set.
+
+### Difference
+
+The result depends on the order of the operands. The difference A - B indicates the elements only found in A are copied to the new set (array). The difference B - A indicates the elements only found in B are copied across.
+
+### The code for set operations
+
+In general, set operations on ordered arrays are more efficient, at degree O(n + m) or just O(2n) as O(n). Set operation time complexities on unordered arrays are quadratic, O(nm) or just O(n^2). The code below is presented in C
+
+```cpp
+Set Operations on Arrays
+struct Array
+{
+    int A[10];
+    int size;
+    int length;
+};
+
+void Display(struct Array arr)
+{
+    int i;
+    printf("\nElements are\n");
+    for(i=0; i < arr.length; i++)
+    printf("%d ", arr.A[i]);
+}
+
+struct Array* Union(struct Array *arr1, struct Array *arr2)
+{
+    int i, j, k;
+    i = j = k = 0;
+    struct Array *arr3 = (struct Array *)malloc(sizeof(struct Array));
+
+    while(i < arr1->length && j < arr2->length)
+    {
+    if(arr1->A[i] < arr2->A[j])
+        arr3->A[k++] = arr1->A[i++];
+    else if(arr2->A[j] < arr1->A[i])
+        arr3->A[k++] = arr2->A[j++];
+    else
+        {
+            arr3->A[k++] = arr1->A[i++];
+            j++;
+        }
+    }
+
+    for( ; i < arr1->length; i++)
+        arr3->A[k++] = arr1->A[i];
+
+    for( ; j < arr2->length; j++)
+        arr3->A[k++] = arr2->A[j];
+
+    arr3->length = k;
+    arr3->size = 10;
+    return arr3;
+}
+
+struct Array* Intersection(struct Array *arr1, struct Array *arr2)
+{
+    int i, j, k;
+    i = j = k = 0;
+    struct Array *arr3 = (struct Array *)malloc(sizeof(struct Array));
+
+    while(i < arr1->length && j < arr2->length)
+    {
+    if(arr1->A[i] < arr2->A[j])
+        i++;
+    else if(arr2->A[j] < arr1->A[i])
+        j++;
+    else if(arr1->A[i] == arr2->A[j])
+        {
+            arr3->A[k++] = arr1->A[i++];
+            j++;
+        }
+    }
+
+    arr3->length = k;
+    arr3->size = 10;
+    return arr3;
+}
+
+struct Array* Difference(struct Array *arr1, struct Array *arr2)
+{
+    int i, j, k;
+    i = j = k = 0;
+    struct Array *arr3 = (struct Array *)malloc(sizeof(struct Array));
+
+    while(i < arr1->length && j < arr2->length)
+    {
+    if(arr1->A[i] < arr2->A[j])
+        arr3->A[k++] = arr1->A[i++];
+    else if(arr2->A[j] < arr1->A[i])
+        j++;
+    else
+        {
+            i++; 
+            j++;
+        }
+    }
+
+    for( ; i < arr1->length; i++)
+        arr3->A[k++] = arr1->A[i];
+
+    arr3->length = k;
+    arr3->size = 10;
+    return arr3;
+}
+
+int main()
+{
+    struct Array arr1 = {{2,9,21,28,35}, 10, 5};
+    struct Array arr1 = {{2,3,9,18,28}, 10, 5};
+    struct Array *arr3;
+
+    arr3 = Union(&arr1, &arr2);
+    Display(*arr3);
+    return 0;
+}
+```

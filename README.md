@@ -13,3 +13,4 @@ My notes from an online C++ course
 10. [Array representations](10_Array_representations.md)
 11. [Array operations](11_Array_operations.md)
 12. [Array searching](12_SearchingArrays.md)
+13. [Algorithm exercises on arrays](13_ArraysExamples)

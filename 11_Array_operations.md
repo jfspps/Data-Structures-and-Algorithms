@@ -12,9 +12,9 @@ The following examples are based on an array structure, with three variables.
 ```cpp
 struct Array
 {
-    int size;
-    int A[size];    //represents the number of elements with user-defined values
-    int length; //represents the number of elements which are not padded with zeros
+    int size;       //represents the number of elements with user-defined values
+    int A[10];    
+    int length;     //represents the total number of elements currently available
 }
 ```
 
@@ -313,7 +313,6 @@ The result depends on the order of the operands. The difference A - B indicates 
 In general, set operations on ordered arrays are more efficient, at degree O(n + m) or just O(2n) as O(n). Set operation time complexities on unordered arrays are quadratic, O(nm) or just O(n^2). The code below is presented in C
 
 ```cpp
-Set Operations on Arrays
 struct Array
 {
     int A[10];

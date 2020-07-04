@@ -24,7 +24,7 @@ void fun(int n)
 
 The first call is written at the top and all subsequent calls branch from the top.
 
-![](recursiveTracing.svg)
+![](/images/recursiveTracing.svg)
 
 This recursive function `fun()` has a _calling phase_ (also referred to as an _ascending phase_), the section of the block which precedes recursion. The sequence printed is 3, 2, 1.
 
@@ -41,7 +41,7 @@ void fun(int n)
 }
 ```
 
-![](recursiveTracing2.svg)
+![](/images/recursiveTracing2.svg)
 
 Both recursive exmaples shown are of the order `O(n)`.
 

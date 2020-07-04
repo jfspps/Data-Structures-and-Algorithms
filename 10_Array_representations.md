@@ -114,7 +114,7 @@ The address of elements of multidimensional arrays is deduced by using either:
 
 Rows, denoted by the first token `[m]` of `A[m][n]` are traversed left-to-right, i.e. row index `[m]` first, then column index `[n]`. Here is the sequential representation of a 2D array:
 
-![](rowmajor.svg)
+![](/images/rowmajor.svg)
 
 ```cpp
 int A[3][4];
@@ -133,7 +133,7 @@ The zero-based nature of arrays minimised the number of operations for all multi
 
 In row-major mapping, row indices are traversed before column indices. For column-major mapping, column indices are traversed first. In the notation `A[m][n]`, this is right-to-left.
 
-![](columnmajor.svg)
+![](/images/columnmajor.svg)
 
 There are three rows (m = 3) and three elements (n = 3) per row. How does one deduce the address of `A[1][2]` or element a(12) above? In memory, a(20) resides immediately before a(01) etc.
 

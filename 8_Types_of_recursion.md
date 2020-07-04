@@ -43,7 +43,7 @@ void fun(int n)
 }
 ```
 
-![](recursiveTracing3.svg)
+![](/images/recursiveTracing3.svg)
 
 Above, the output is "3, 2, 1, 1, 2, 1, 1". The space complexity is `(n + 1)` which is `O(n)`. A total of 15 calls were made for an element size of 3. It can be shown that the order follows a geometric progression, with worst-case degree of 2^(n+1) - 1, which is effectively O(2^n).
 

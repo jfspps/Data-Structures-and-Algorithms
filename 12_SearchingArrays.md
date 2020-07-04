@@ -37,7 +37,7 @@ In the case of an array of increasing integers, the key element is compared to t
 
 One deduces the new midpoint as the floor value of `(low + high)/2`.
 
-![](binarySearch.svg)
+![](/images/binarySearch.svg)
 
 Note that binary search computes at most `log2 n` cycles, where n is the array length. This can be roughly shown by taking the maximum number of search attempts equal to the number of times the array is halved `m`: `length/2^m`. 
 
@@ -47,7 +47,7 @@ Hence, `2^m` less than or equal to `length`, which after taking log (base 2) yie
 
 A binary search tree shows that the tree height is measured in multiples of `log2 n`:
 
-![](binarySearchTree.svg)
+![](/images/binarySearchTree.svg)
 
 The left-hand branch is followed if the key is less than the middle element. The right-hand branch is followed if the key is greater than the middle element.
 

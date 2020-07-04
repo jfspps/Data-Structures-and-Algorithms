@@ -121,7 +121,7 @@ int fib(int n){
     return fib(n-2) + fib(n-1)
 }
 ```
-![](Fibonacci.svg)
+![](/images/Fibonacci.svg)
 
 Since some of the fib() calls are staggered (as given by the `fib(n-2) + fib(n-1)`), one finds that the call is repeated in places. In other words, the recursive function fib(5) calls fib(1) five times. The recursive approach is said to be 'excessive'. The time complexity of the above functions are, at worst, O(2^n).
 
@@ -147,13 +147,13 @@ if (n == r || r == 0)
 return nCr(n-1, r-1) + nCr(n-1,r);
 ```
 
-![](Pascalstriangle.svg)
+![](/images/Pascalstriangle.svg)
 
 ##  Tower of Hanoi ##
 
 This originates from the fundamental problem of moving a tower in pieces from A to C, via B.
 
-![](Hanoi.svg)
+![](/images/Hanoi.svg)
 
 The function takes the form `hanoi(n, start, via, end)`, where n = disc number, and the positions are denoted by start, via and end.
 

@@ -1,6 +1,6 @@
 # Examples of algorithms on arrays #
 
-The links below go straight to the code examples. They all use the following structure:
+The code below comes straight from the [code example](/code/ArrayExamples). They all use the following structure:
 
 ```cpp
 struct Array
@@ -11,8 +11,7 @@ struct Array
 };
 ```
 
-1. Finding the missing element in a sorted array
-
+1. Finding out if there is a missing element in an array, O(n)
 ```cpp
 void findMissingSorted(struct Array arr)
 {
@@ -29,8 +28,7 @@ void findMissingSorted(struct Array arr)
 }
 ```
 
-2. Finding multiple missing elements in a sorted array (with external array, tally, to store the starting points of missing elements)
-
+2. Finding out if there are multiple missing elements in an array, O(n)
 ```cpp
 void findMultipleMissingSorted(struct Array arr, struct Array* tally)
 {
@@ -51,8 +49,7 @@ void findMultipleMissingSorted(struct Array arr, struct Array* tally)
 }
 ```
 
-3. Finding duplicated elements in a sorted array
-
+3. Finding duplicates in an array, O(n)
 ```cpp
 void findDuplicates(struct Array arr)
 {
@@ -69,8 +66,8 @@ void findDuplicates(struct Array arr)
         cout << "Nothing missing here";
 }
 ```
-4. Finding duplicated elements in a unsorted array
 
+4. Finding duplicates in an unsorted array, O(n^2)
 ```cpp
 void findDuplicatesUnsorted(struct Array arr)
 {
@@ -86,32 +83,51 @@ void findDuplicatesUnsorted(struct Array arr)
             {
                 temp.A[i] = j;
                 found = true;
+                cout << "Found duplicate values at elements " << i << " and " << temp.A[i] << " with a value of " << arr.A[i] << "\n";
                 break;
             }
         }
     }
 
-    if (found)
-    {
-        for (int i = 0; i < temp.length; i++)
-        {
-            if (temp.A[i] > 0)
-            {
-                cout << "Found duplicate values at elements " << i << " and " << temp.A[i] << " with a value of " << arr.A[i] << "\n";
-            }
-        }
-    }
-    else
+    if (!found)
     {
         cout << "No duplicates found";
     }
 }
 ```
 
-5. Finding a pair of elements with sum 'sum'
-
+5. Finding a pair of elements with the sum 'sum' over a sorted array (increasing, non-repeating only), O(n)
 ```cpp
-void findPairWithSum(struct Array arr, int sum)
+void findPairWithSumSortedInc(struct Array arr, int sum)
+{
+    bool found = false;
+    int i = 0, j = arr.length;
+
+    while (i < j)
+    {
+        if (arr.A[i] + arr.A[j] == sum)
+        {
+            found = true;
+            cout << "Found two values at elements " << i << " and " << j << " with a sum of " << sum << "\n";
+            i++;
+            j--;
+        }
+        else if (arr.A[i] + arr.A[j] > sum)
+            j--;
+        else
+            i++;
+    }
+
+    if (!found)
+    {
+        cout << "No operands found";
+    }
+}
+```
+
+6. Finding a pair of elements with the sum 'sum' in a sorted/unsorted array (O(n^2))
+```cpp
+void findPairWithSumGeneral(struct Array arr, int sum)
 {
     //temp records the index where the other operand is found
     struct Array temp = {arr.size, arr.length, {0}};
@@ -125,69 +141,19 @@ void findPairWithSum(struct Array arr, int sum)
             {
                 temp.A[i] = j;
                 found = true;
-                break;
-            }
-        }
-    }
-
-    if (found)
-    {
-        for (int i = 0; i < temp.length; i++)
-        {
-            if (temp.A[i] > 0)
-            {
                 cout << "Found two values at elements " << i << " and " << temp.A[i] << " with a sum of " << sum << "\n";
             }
         }
     }
-    else
+
+    if (!found)
     {
         cout << "No operands found";
     }
 }
 ```
 
-6. Finding a pair of elements with sum K in a sorted array
-
-```cpp
-void findPairWithSumSorted(struct Array arr, int sum)
-{
-    //temp records the index where the other operand is found
-    struct Array temp = {arr.size, arr.length, {0}};
-    bool found = false;
-
-    for (int i = 0; i < arr.length ; i++)
-    {
-        for (int j = i+1; (arr.A[i] + arr.A[j]) < sum, j < arr.length; j++)
-        {
-            if (arr.A[i] + arr.A[j] == sum)
-            {
-                temp.A[i] = j;
-                found = true;
-                break;
-            }
-        }
-    }
-
-    if (found)
-    {
-        for (int i = 0; i < temp.length; i++)
-        {
-            if (temp.A[i] > 0)
-            {
-                cout << "Found two values at elements " << i << " and " << temp.A[i] << " with a sum of " << sum << "\n";
-            }
-        }
-    }
-    else
-    {
-        cout << "No operands found";
-    }
-}
-```
-
-7. Finding max and min in one scan of an array
-
+7. Finding the max and min of an array in one scan (O(n))
 ```cpp
 void findMaxAndMin(struct Array arr)
 {

@@ -13,63 +13,79 @@ void findMissingSorted(struct Array);
 void findMultipleMissingSorted(struct Array, struct Array*);
 void findDuplicates(struct Array);
 void findDuplicatesUnsorted(struct Array);
-void findPairWithSum(struct Array, int);
-void findPairWithSumSorted(struct Array, int);
+void findPairWithSumSortedInc(struct Array, int);
+void findPairWithSumGeneral(struct Array, int);
 void findMaxAndMin(struct Array);
+void printArray(struct Array);
 
 int main()
 {
+    //1. Finding out if there is a missing element in an array (should be between element indices 5 and 6)
     struct Array array1 = {11, 11, {1,2,3,4,5,6,8,9,10,11,12}};
-    int reply;
-
-    //1. Finding a missing element in a sorted array (should be between element indices 5 and 6)
-    cout << "Example 1, finding a missing element in a sorted array.\n";
+    cout << "Example 1, finding out if there is a missing element in an array.\n";
+    printArray(array1);
     findMissingSorted(array1);
     cout << "\n";
 
     //2. Finding multiple missing elements in a sorted array (should be 5, 8 and 9); store a persistent array of results as an added feature
-    cout << "Example 2, finding missing elements in a sorted array.\n";
+    cout << "Example 2, finding multiple missing elements in a sorted array.\n";
     struct Array array2 = {11, 11, {1,2,3,4,5,6,8,9,10,12,15}};
     struct Array tally2 = {array1.size, array2.length, {0}};
+    printArray(array2);
     findMultipleMissingSorted(array2, &tally2);
     cout << "\n";
 
     //3. Finding duplicates in an array
     cout << "Example 3, finding duplicates in an array.\n";
     struct Array array3 = {11, 11, {1,2,2,4,5,6,6,9,10,12,15}};
+    printArray(array3);
     findDuplicates(array3);
     cout << "\n";
 
     //4. Finding duplicates in an unsorted array
     cout << "Example 4, finding duplicates in an unsorted array.\n";
     struct Array array4 = {11, 11, {15,2,2,4,25,6,6,10,10,10,15}};
+    printArray(array4);
     findDuplicatesUnsorted(array4);
     cout << "\n";
 
-    //5. Finding a pair of elements with the sum K
-    int sum = 10;
-    cout << "Example 5, finding a pair of elements with the sum of " << sum << "\n";
-    struct Array array5 = {11, 11, {15,2,2,6,25,6,6,10,0,10,12}};
-    findPairWithSum(array5, sum);
+    //5. Finding a pair of elements with the sum 'sum' over a sorted array (increasing, non-repeating only)
+    int sum = 14;
+    cout << "Example 5, finding a pair of elements with the sum of " << sum << " over a sorted (increasing, non-repeating) array.\n";
+    struct Array array5 = {11, 11, {0,1,3,6,7,8,9,11,12,14,15}};
+    printArray(array5);
+    findPairWithSumSortedInc(array5, sum);
     cout << "\n";
 
-    //6. Finding a pair of elements with the sum K in a sorted array
+    //6. Finding a pair of elements with the sum (comparisons)
     int sum2 = 6;
-    cout << "Example 6, finding a pair of elements with the sum of " << sum2 << " in a sorted array.\n";
+    cout << "Example 6, same algorithm, finding a pair of elements with the sum of " << sum2 << " in a sorted array.\n";
     struct Array array6 = {11, 11, {1,2,2,4,5,6,6,9,10,12,15}};
-    findPairWithSumSorted(array6, sum2);
+    printArray(array6);
+    findPairWithSumSortedInc(array6, sum2);
+    cout << "\n";
+
+    cout << "Again, with a more general algorithm (sorted or unsorted).\n";
+    findPairWithSumGeneral(array6, sum2);
+    cout << "\n";
+
+    cout << "As above but over a different unsorted array.\n";
+    struct Array array6b = {11, 11, {1,2,22,4,5,6,6,9,1,12,1}};
+    printArray(array6b);
+    findPairWithSumGeneral(array6b, sum2);
     cout << "\n";
 
     //7. Finding max and min in a single scan
-    cout << "Example 7, finding the max and min in one scan of an array\n";
+    cout << "Example 7, finding the max and min in one scan of an array.\n";
     struct Array array7 = {11, 11, {15,2,2,66,25,0,6,140,10,0,15}};
+    printArray(array7);
     findMaxAndMin(array7);
     cout << "\n";
 
     return 0;
 }
 
-//1. Finding a missing element in a sorted array
+//1. Finding out if there is a missing element in an array
 void findMissingSorted(struct Array arr)
 {
     int current;
@@ -84,7 +100,7 @@ void findMissingSorted(struct Array arr)
     cout << "Nothing missing here";
 }
 
-//2. Finding multiple missing elements in a sorted array
+//2. Finding out if there are multiple missing elements in an array
 void findMultipleMissingSorted(struct Array arr, struct Array* tally)
 {
     bool found = false;
@@ -134,29 +150,47 @@ void findDuplicatesUnsorted(struct Array arr)
             {
                 temp.A[i] = j;
                 found = true;
+                cout << "Found duplicate values at elements " << i << " and " << temp.A[i] << " with a value of " << arr.A[i] << "\n";
                 break;
             }
         }
     }
 
-    if (found)
-    {
-        for (int i = 0; i < temp.length; i++)
-        {
-            if (temp.A[i] > 0)
-            {
-                cout << "Found duplicate values at elements " << i << " and " << temp.A[i] << " with a value of " << arr.A[i] << "\n";
-            }
-        }
-    }
-    else
+    if (!found)
     {
         cout << "No duplicates found";
     }
 }
 
-//5. Finding a pair of elements with the sum 'sum'
-void findPairWithSum(struct Array arr, int sum)
+//5. Finding a pair of elements with the sum 'sum' over a sorted array (increasing, non-repeating only)
+void findPairWithSumSortedInc(struct Array arr, int sum)
+{
+    bool found = false;
+    int i = 0, j = arr.length;
+
+    while (i < j)
+    {
+        if (arr.A[i] + arr.A[j] == sum)
+        {
+            found = true;
+            cout << "Found two values at elements " << i << " and " << j << " with a sum of " << sum << "\n";
+            i++;
+            j--;
+        }
+        else if (arr.A[i] + arr.A[j] > sum)
+            j--;
+        else
+            i++;
+    }
+
+    if (!found)
+    {
+        cout << "No operands found";
+    }
+}
+
+//6. Finding a pair of elements with the sum K in a sorted/unsorted array (O(n^2))
+void findPairWithSumGeneral(struct Array arr, int sum)
 {
     //temp records the index where the other operand is found
     struct Array temp = {arr.size, arr.length, {0}};
@@ -170,64 +204,18 @@ void findPairWithSum(struct Array arr, int sum)
             {
                 temp.A[i] = j;
                 found = true;
-                break;
-            }
-        }
-    }
-
-    if (found)
-    {
-        for (int i = 0; i < temp.length; i++)
-        {
-            if (temp.A[i] > 0)
-            {
                 cout << "Found two values at elements " << i << " and " << temp.A[i] << " with a sum of " << sum << "\n";
             }
         }
     }
-    else
+
+    if (!found)
     {
         cout << "No operands found";
     }
 }
 
-//6. Finding a pair of elements with the sum K in a sorted array
-void findPairWithSumSorted(struct Array arr, int sum)
-{
-    //temp records the index where the other operand is found
-    struct Array temp = {arr.size, arr.length, {0}};
-    bool found = false;
-
-    for (int i = 0; i < arr.length ; i++)
-    {
-        for (int j = i+1; (arr.A[i] + arr.A[j]) < sum, j < arr.length; j++)
-        {
-            if (arr.A[i] + arr.A[j] == sum)
-            {
-                temp.A[i] = j;
-                found = true;
-                break;
-            }
-        }
-    }
-
-    if (found)
-    {
-        for (int i = 0; i < temp.length; i++)
-        {
-            if (temp.A[i] > 0)
-            {
-                cout << "Found two values at elements " << i << " and " << temp.A[i] << " with a sum of " << sum << "\n";
-            }
-        }
-    }
-    else
-    {
-        cout << "No operands found";
-    }
-}
-
-//7. Finding the max and min of an array in one scan
+//7. Finding the max and min of an array in one scan (O(n))
 void findMaxAndMin(struct Array arr)
 {
     if (arr.length < 2)
@@ -262,3 +250,12 @@ void findMaxAndMin(struct Array arr)
     cout << "The maximum value is " << maximum << " and the minimum value is " << minimum << "\n";
 }
 
+void printArray(struct Array arr)
+{
+    cout << "[ ";
+    for (int i = 0; i < arr.length; i++)
+    {
+        cout << arr.A[i] << " ";
+    }
+    cout << "]\n";
+}

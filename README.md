@@ -14,3 +14,4 @@ My notes from an online C++ course
 11. [Array operations](11_Array_operations.md)
 12. [Array searching](12_SearchingArrays.md)
 13. [Algorithm exercises on arrays](13_ArraysExamples.md)
+14. [Strings in C and C++](14_Strings.md)

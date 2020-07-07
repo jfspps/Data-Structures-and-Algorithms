@@ -113,9 +113,9 @@ int main()
 }
 ```
 
-## Finding duplicated characters in a string using hashtables ##
+## Finding duplicated characters in a string using hash tables ##
 
-Hashtables are data structures which implement the storage of data largely based on the value itself. While offering fast search  operations (compared to other search methods such as linear search and binary search) hashing does occcupy more memory since the data structure is scattered over a wider area. The element location of the hashtable is related to the value to which it locates. This is demonstrated with the next example.
+Hash tables are data structures which implement the storage of data, the address of which is largely based on the value itself. While offering fast search operations (compared to other search methods such as linear search and binary search) hashing does occcupy more memory since the data structure is scattered over a wider area. Hash tables are demonstrated in the next example.
 
 The goal is to initialise an array which records a tally showing how often each character appears in the string. In this example, each element in the array corresponds to a lowercase letter. Take the string, "finding". By using the ASCII codes, the memory locations minimally range from 100 (for 'd') to 110 (for 'n'). Even for five different characters, the array (a continous data structure) needs to reserve space for all lower case characters, that is, 97 - 122 (corresponding to 'a' - 'z'). (A linked list would be smaller.) The array of length 26 which stores the tally is referred to as a __hash table__.
 

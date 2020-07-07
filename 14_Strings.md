@@ -112,3 +112,234 @@ int main()
     }
 }
 ```
+
+## Finding duplicated characters in a string using hashtables ##
+
+Hashtables are data structures which implement the storage of data largely based on the value itself. While offering fast search  operations (compared to other search methods such as linear search and binary search) hashing does occcupy more memory since the data structure is scattered over a wider area. The element location of the hashtable is related to the value to which it locates. This is demonstrated with the next example.
+
+The goal is to initialise an array which records a tally showing how often each character appears in the string. In this example, each element in the array corresponds to a lowercase letter. Take the string, "finding". By using the ASCII codes, the memory locations minimally range from 100 (for 'd') to 110 (for 'n'). Even for five different characters, the array (a continous data structure) needs to reserve space for all lower case characters, that is, 97 - 122 (corresponding to 'a' - 'z'). (A linked list would be smaller.) The array of length 26 which stores the tally is referred to as a __hash table__.
+
+```cpp
+int main()
+{
+    char A[] = "finding";
+    int hashTable[26] = {0};
+    int i;
+
+    for (i = 0; A[i] != '\0'; i++)
+    {
+        //increment the value at the hashtable
+        hashTable[A[i] - 97]++;
+    }
+
+    //now look throught the hashTable to find duplicated characters
+    for (i = 0; i < 26; i++)
+    {
+        if (hashTable[i] > 1)
+        {
+            //the hashTable element position relates to the character
+            printf("The character %c ", i+97);
+            //print the frequency
+            printf("appeared %d times\n", hashTable[i]);
+        }
+    }
+}
+```
+
+The complete search for duplicates is O(n+n) or just O(n). A similar approach for uppercase letters can be implemented.
+
+## Finding duplicated characters in a string using Bitwise operations ##
+
+To review the necessary bitwise operations:
+
+#### Left-shift with `<<`
+
+Recall that a byte is represented by eight bits, from left to right, `int 1` is 00000001, `int 8` is 00001000 and so on. The smallest int is 0 and the largest is 255. Bits in a byte are identified by zero-based indices so bit 0 is the right-most, and bit 7 is the left-most in a 8-bit byte.
+
+![](/images/oneByte.svg)
+
+The statement `H = H<<1` shifts all ones _and_ zeros to the left by one place in the byte `H`. Each shift to the left doubles (2^1) the present value. Two shifts `H<<2` increases the value by 2^2, four shifts `H<<4` increases the value by 2^4 and so on.
+
+#### Bits ORing (merging) and ANDIing (masking)
+
+These operations are related to boolean logic `||` and `&&` expect that they are now bitwise, `|` and `&`.
+
+|    a      |     b         |  Bitwise AND       |  Result |
+|-----------|:-------------:|:------------------:|:-------:|
+|    1      |     1         |     &              |    1    |
+|    1      |     0         |     &              |    0    |
+|    0      |     1         |     &              |    0    |
+|    0      |     0         |     &              |    0    |
+
+The decimals 10 & 6 = 2. The term masking derives from the left-shift operations on a byte with decimal value 1 and binary value 00000001, and then performing the bitwise &. The effect is to determine if a bit in a given byte is 1.
+
+For example, the decimal 8 is in binary as 00001000. We take a separate byte `a` with value 00000001 and then perform `a<<0; eight&a`. This would give a 0 at the least significant (right-most, zeroth) bit. The operations `a<<1; eight&a` and `a<<2; eight&a` would also result in zeros. Finally, `a<<3; eight&a` gives binary 1, signalling that bit three in byte `eight` is a one.
+
+![](/images/eightInBinary.svg)
+
+|    a      |     b         |  Bitwise OR        |  Result |
+|-----------|:-------------:|:------------------:|:-------:|
+|    1      |     1         |     \|             |    1    |
+|    1      |     0         |     \|             |    1    |
+|    0      |     1         |     \|             |    1    |
+|    0      |     0         |     \|             |    0    |
+
+The decimals 10 | 6 = 14. Using the same examples from ANDing (masking), merging is about turning any zero bit in `eight` to a 1. So to switch bit 6 in `eight` on, we perform five left-shifts and then perform a bitwise | operation. Overall, this is `a<<5; eight|a`.
+
+#### Using bitwise operations to find duplicated characters
+
+The array hash table `H` needed must store states for all 26 characters, as a bit. Conveniently, we then use a 32-bit structure to store this representation, which in C or C++ is an `int` or `long int`. This example would use the first 26 bits of the int but pad all bits with zeros, 'off'.
+
+The code below is explained as follows. Check if the corresponding switch, the bit, is 'on' by performing masking. For instance, 'f' would need to be placed in bit 102 - 97 = 5 of `H` (actually the sixth bit since the structure is zero-based). We check if bit 5 is on by running `x<<5; x & H` (the compiler uses the binary forms of `int`'s `x` and `H`). If the result is 1 then 'f' was already located somewhere in the string. If the bit is marked 0 then this is the first instance of 'f', and we set the sixth bit in `H` as 1, by performing merging. Subsequent detection of 'f' would then signify a duplicated character.
+
+Note that `H` is not a hash table or array, so position zero is on the right.
+
+![](/images/findingAnF.svg)
+
+The time complexity is linear, O(n).
+
+```cpp
+int main()
+{
+    char A[] = "finding";
+    long int H = 0, x;
+    int i;
+
+    for (i = 0; A[i] != '\0'; i++)
+    {
+        x = 1;  //reset
+        //left-shift right-most 1 by A[i]-97 places; A[i] is the ASCII code at i
+        x = x<<A[i]-97;
+
+        //perform masking+ check if the bit in H is also a 1
+        if (x & H > 0)
+        {
+            printf("%c is duplicated", A[i]);
+        } 
+        else
+        {
+            //if it is not 1, then perform merging to switch the bit at i 'on'
+            H = x | H;
+        }
+    }
+}
+```
+
+One can determine if two string are anagrams by building one hash table and checking for negative values.
+
+```cpp
+int main()
+{
+    //assume that both strings are in lowercase
+    char A[] = "medical";
+    char B[] = "decimal";
+    char hashTable[26];
+    int i;
+
+    for (i = 0; A[i] != '\0'; i++)
+    {
+        hashTable[A[i]-97]++;
+    }
+
+    for (i = 0; B[i] != '\0'; i++)
+    {
+        hashTable[B[i]-97]--;
+        if (hashTable[B[i]-97] < 0)
+        {
+            printf("The strings are not anagrams of each other");
+            break;
+        }
+    }
+
+    if (B[i] == '\0')
+        printf("The strings are anagrams of each other");
+
+    return 0;
+}
+```
+
+## String permutations
+
+Recall that a permutation is a set of possible configurations of a items, where the order of each item is important. A string "ABC" can be written in 3! permutations (for n items, then n!), some of which are "ACB", "BAC", "CAB" and so on. One can use a _state space tree_ to deduce all possible permutations.
+
+![](/images/stateSpaceTree.svg)
+
+We start with ABC and then _back-track_ to deduce all other permutations, by swapping items in the sequence. Instead of ABC, how about ACB. Then start with a different first letter, B. And so on. The act of deducing all possible outcomes is termed a _brute-force_method.
+
+The generation of the permutations can be achieved by running recursive functions.
+
+```cpp
+void permutation(char S[], int k)
+{
+    // array A[] records whether a item is available or not, and is indexed by i
+    static int A[10] = {0};
+
+    // array Res[] is a temporary array which is built up according to the items available 
+    static char Res[10];
+    int i;
+
+    // k indicates the position in S[] where we should begin scanning (initially, this should be set to 0)
+    // check if we're at the end of the string
+    if (S[k] == '\0')
+    {
+        Res[k] = '\0';
+        printf("Res");
+        // at this point, permutation() returns
+    }
+    else
+    {
+        for (i = 0; S[i] != '\0'; i++)
+        {
+            // check if the item is 0, meaning it is not selected yet
+            if (A[i] == 0)
+            {
+                // copy the element from S to the temporary array S[] and flag it as unavailable (1) in A[]
+                Res[k] = S[i];
+                A[i] = 1;
+                // increment k and re-scan from there
+                permutation(S, k+1);
+
+                //by now, we've printed a permutation, so reset the availability and move along user string S[]
+                A[i] = 0;
+            }
+        }
+    }
+}
+
+int main()
+{
+    char myString[] = "ABC";
+    permutation(myString, 0);
+    return 0;
+}
+```
+
+An alternative which swaps the low `l` (usually 0) and high `h` (usually array length - 1) elements, until `l == h`.
+
+```cpp
+void permutation2(char S[], int l, int h)
+{
+    int i;
+
+    if (l == h)
+    {
+        printf(S);
+    }
+    else 
+    {
+        for (i = l; i <= h; i++)
+        {
+            swap(S[l], S[i]);
+            permutation2(S, l+1, h);
+            swap(S[l], S[i]);
+        }
+    }
+}
+
+void swap(char &x, char &y)
+{
+    char temp = x;
+    x = y;
+    y = temp;
+}
+```

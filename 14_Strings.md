@@ -264,7 +264,7 @@ Recall that a permutation is a set of possible configurations of a items, where 
 
 ![](/images/stateSpaceTree.svg)
 
-We start with ABC and then _back-track_ to deduce all other permutations, by swapping items in the sequence. Instead of ABC, how about ACB. Then start with a different first letter, B. And so on. The act of deducing all possible outcomes is termed a _brute-force_method.
+We start with ABC and then _back-track_ (along the dashed line) to deduce all other permutations, by swapping items in the sequence. Instead of ABC, how about ACB. Then start with a different first letter, B. And so on. The act of deducing all possible outcomes is termed a _brute-force_ method.
 
 The generation of the permutations can be achieved by running recursive functions.
 
@@ -272,6 +272,7 @@ The generation of the permutations can be achieved by running recursive function
 void permutation(char S[], int k)
 {
     // array A[] records whether a item is available or not, and is indexed by i
+    // A[i] corresponds to S[i]. If A[i] == 0 then S[i] is copied across to Res[i]
     static int A[10] = {0};
 
     // array Res[] is a temporary array which is built up according to the items available 
@@ -290,16 +291,16 @@ void permutation(char S[], int k)
     {
         for (i = 0; S[i] != '\0'; i++)
         {
-            // check if the item is 0, meaning it is not selected yet
+            // If A[i] == 0 then S[i] is copied across to Res[i]
             if (A[i] == 0)
             {
-                // copy the element from S to the temporary array S[] and flag it as unavailable (1) in A[]
+                // copy the element from S to the temporary array Res[] and flag it as unavailable (1) in A[]
                 Res[k] = S[i];
                 A[i] = 1;
-                // increment k and re-scan from there
+                // increment k and re-scan from the next position in S
                 permutation(S, k+1);
 
-                //by now, we've printed a permutation, so reset the availability and move along user string S[]
+                //by now, we've printed a permutation (that is S[k] is '\0'), so reset the availability and move along user string S[]
                 A[i] = 0;
             }
         }
@@ -313,6 +314,10 @@ int main()
     return 0;
 }
 ```
+
+The tree diagram of the above is given here:
+
+![](/images/stateSpaceTreePerm.svg)
 
 An alternative which swaps the low `l` (usually 0) and high `h` (usually array length - 1) elements, until `l == h`.
 

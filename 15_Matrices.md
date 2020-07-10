@@ -298,3 +298,39 @@ int main()
 ```
 
 The program is located in [/code/SymmetricMatrices/](/code/SymmetricMatrices/).
+
+## Tridiagonal matrices ##
+
+Defined such that all elements off the diagonal (i-j = 0), the upper (i-j = -1) and lower (i-j = 1) diagonals are zero. Overall, all values of the matrix `M[i][j] = 0 for ||i-j|| > 1`. 
+
+There will be `3n - 2` elements on the diagonals, for any nxn square matrix. We store them in a single-dimensioned array diagonal by diagonal.
+
+![](/images/tridiagonalMatrix.svg)
+
+Once the requirements in terms of i and j are met, one can access the elements in array A[] from their matrix M indices using:
+
++ lower diagonal (i-j = 1): `index(A[i][j]) = i - 1`
+
++ diagonal (i-j = 0): `index(A[i][j]) = n - 1 + (i-1)`
+
++ upper diagonal (i-j = -1): `index(A[i][j]) = 2n - 1 + (i-1)`
+
+Approach the method by first asking for the indices of the element in matrix M required. Decide which diagonal the user has asked for using `if (i-j == -1){...} else `. Then apply the above expression to retrieve the index of the element in array A[]. Then display or update the value. 
+
+A tridiagonal matrix is one type of _square-band matrix_ where the number of diagonals on either side of the diagonal is equal but can be greater than one. All elements off the diagonals are zero.
+
+## Topelitz matrices ##
+
+This is matrix in which all elements in the same diagonal are equal. That is, `M[i][j] = M[i-1][j-1]`.
+
+There is not requirement for the values between each diagonal to equal or not. The storage of such a matrix can be achieved by again using a single-dimensioned array and recording the values of the first row and the first column. This would require `n + (n-1)` elements.
+
+![](/images/ToeplitzMatrix.svg)
+
+The user can could input the first row and column values. The display of the Toeplitz matrix can be achieved with the following:
+
++ upper triangle (i <= j): `index(A[i][j]) = j - i`
+
++ lower triangle (i > j): `index(A[i][j]) = n + i - j - 1`
+
+The approach is similar. Ask for the indices of the element in matrix M required. Decide which diagonal the user has asked for using `if (i <= j){...} else `. Then apply the above expression to retrieve the index of the element in array A[]. Then display or update the value.

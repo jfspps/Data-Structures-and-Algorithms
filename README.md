@@ -16,3 +16,4 @@ My notes from an online C++ course
 13. [Algorithm exercises on arrays](13_ArraysExamples.md)
 14. [Strings in C and C++](14_Strings.md)
 15. [Matrices](15_Matrices.md)
+16. [Sparse matrices and polynomials](16_Sparse_matrices_and_Polynomials.md)

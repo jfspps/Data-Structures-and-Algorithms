@@ -75,7 +75,7 @@ struct Element{
 }
 ```
 
-The sparse matrix tabular representation is defined by another structure:
+The sparse matrix tabular representation is defined by another structure. The first column summarising the sparse matrix is stored in variables n, m, and num. The remaining elements are stored in another structure e.
 
 ```cpp
 struct Sparse{
@@ -109,7 +109,7 @@ void create(struct Sparse *s)
         scanf("%d%d%d", &s->e[i].i, &s->e[i].j, &s->e[i].x);
 }
 ```
-One can display the sparse matrix as a sparse matrix (so including the zero elements):
+One can display the sparse matrix as a sparse matrix (so including the zero elements) using:
 
 ```cpp
 void display(struct Sparse s)
@@ -131,31 +131,31 @@ void display(struct Sparse s)
 }
 ```
 
-The sum of two sparse matrices is given below. The same example shown above is presented here again with coords i, j and k.
+The sum of two sparse matrices is given below. The same example shown above (without the first column summarising the sparse matrix) is presented here again with coords i, j and k.
 
-Matrix s1.e
+`struct s1.e`
 
-| index| i     |    |      |     |     |
-|------|-------|----|------|-----|-----|
-| Row  | _3_   |1   | 2    | 3   | 3   |
-|Column| _2_   |4   | 2    | 2   | 4   |
-|Value | _4_   |6   | 7    | 2   | 5   |
+| index | i  |      |     |     |
+|-------|----|------|-----|-----|
+| Row i |1   | 2    | 3   | 3   |
+| Col j |4   | 2    | 2   | 4   |
+| x     |6   | 7    | 2   | 5   |
 
-Matrix s2.e
+`struct s2.e`
 
-| Index| j     |    |      |     |
-|------|-------|----|------|-----|
-| Row  | _2_   |2   | 2    | 3   |
-|Column| _3_   |2   | 5    | 3   |
-|Value | _3_   |3   | 5    | 2   |
+| Index | j  |      |     |
+|-------|----|------|-----|
+| Row i |2   | 2    | 3   |
+| Col j |2   | 5    | 3   |
+| x     |3   | 5    | 2   |
 
-Matrix sum.e
+`struct sum.e`
 
-|Index |k      |    |      |     |     |    |    |
-|------|-------|----|------|-----|-----|----|----|
-| Row  | _3_   |1   | 2    | 2   | 3   | 3  | 3  |
-|Column| _5_   |4   | 2    | 5   | 2   | 3  | 4  |
-|Value | _4_   |6   | 10   | 5   | 2   | 2  | 5  |
+| Index |k   |      |     |     |    |    |
+|-------|----|------|-----|-----|----|----|
+| Row i |1   | 2    | 2   | 3   | 3  | 3  |
+| Col j |4   | 2    | 5   | 2   | 3  | 4  |
+| x     |6   | 10   | 5   | 2   | 2  | 5  |
 
 ```cpp
 struct Sparse* add(struct Sparse *s1, struct Sparse *s2)

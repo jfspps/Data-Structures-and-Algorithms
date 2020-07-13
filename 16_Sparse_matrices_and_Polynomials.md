@@ -214,3 +214,103 @@ struct Sparse* add(struct Sparse *s1, struct Sparse *s2)
     return sum;
 }
 ```
+
+## Polynomial representations ##
+
+We consider the example below:
+
+```math
+p(x) = 3x^5 + 2x^4 + 5x^2 + 2x + 7
+```
+
+The polynomial is stored in a list, with the coefficient and the exponent of the variable `x`.
+
+We define two structures and proceed as shown below:
+
+```cpp
+struct Term
+{
+    int coeff;
+    int exp;
+};
+
+struct Poly
+{
+    int n;  //no. of non-zero terms
+    struct Term* terms; 
+};
+
+int main()
+{
+    struct Poly p;
+    printf("Enter the number of non-zero terms:");
+    scanf("%d", &p.n);
+
+    p.t = new Term[p.n];
+
+    printf("Enter all of the terms of the polynomial:");
+    for (int i = 0; i < p.n; i++)
+    {
+        printf("Term no. %d", i+1);
+        scanf("%d%d", &p.terms[i].coeff, &p.terms[i].exp);
+    }
+
+    //display and manipulate as required
+
+    return 0;
+}
+```
+
+### Evaluating the polynomial ###
+
+The iteration is finding x to the given power, multiplying by the coefficient and then adding to the cumulative sum.
+
+```cpp
+int x = 5;
+int sum = 0;
+for (int i = 0; i < p.n; i++)
+    sum += p.terms[i].coeff * pow(x, p.terms[i].exp);
+ // do something with sum...
+```
+
+### Adding two polynomials ###
+
+Essentially, we add to terms' coefficients if there exponents are equal. Otherwise, the term with the larger exponent is copied across to the new polynomial (follow the convention that the larger exponents are written on the left hand-side).
+
+```cpp
+struct Poly* add(struct Poly *p1, struct Poly *p2)
+{
+    int i, j, k;
+    struct Poly *sum;
+    sum = (struct Poly*) malloc(sizeof(struct Poly));
+    sum->terms = (struct Term *) malloc((p1->n + p2->n) * sizeof(struct Term));
+
+    i = j = k = 0;
+    while(i < p1->n && j < p2->n)
+    {
+        //p1 has the larger exponent; advance p1 index i, leave p2 index j
+        if(p1->terms[i].exp > p2->terms[j].exp)
+            sum->terms[k++] = p1->terms[i++];
+            //p2 has the larger exponent; advance p2 index j, leave p1 index i
+        else if(p1->terms[i].exp < p2->terms[j].exp)
+            sum->terms[k++] = p2->terms[j++];
+        else
+        {
+            //both exponents are equal, so copy either of the exponents and add the coefficients; advance all indices
+            sum->terms[k].exp = p1->terms[i].exp;
+            sum->terms[k++].coeff = p1->terms[i++].coeff + p2->terms[j++].coeff;
+        }
+    }
+
+    //copy across remaining terms from polynomial incompletely processed
+    for( ; i < p1->n; i++)
+        sum->terms[k++] = p1->terms[i];
+    for( ; j < p2->n; j++)
+        sum->terms[k++] = p2->terms[j];
+
+    sum->n = k;
+    return sum;
+}
+```
+
+The above approach can be applied to the subtraction of polynomials, and with more work, the multiplication of polynomials.

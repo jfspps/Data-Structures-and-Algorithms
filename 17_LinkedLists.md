@@ -1,6 +1,6 @@
 # Linked lists #
 
- A linked list a collection of __nodes__ which contain a value (data) known as the __key__ and an address to the next node. Unlike arrays, these have potentially unlimited memory capacity (hardware memory dependent) and are distributed over the heap. Linked lists are not stored in the stack.
+ A linked list a collection of __nodes__ which contain a value (data) sometimes referred to as the _key_ and an address to the next node. Unlike arrays, these have potentially unlimited memory capacity (hardware memory dependent) and are distributed over the heap. Linked lists are not stored in the stack.
 
  The first node or _head node_ (pointer) points to the second node, which contains the first value. The head node does not possess a data value but is merely a pointer which resides in the stack. Subsequent nodes reside in the heap.
 
@@ -108,11 +108,17 @@ public:
 
 Both recursive and iterative forms of Display() are time complexity of O(n). The space complexity for recursive form is also O(n+1) or just O(n), compared to iterative which is a constant O(1). 
 
-## Populating a linked list ##
+## Creating a linked list ##
 
-A linked list can be initialised from an array `A`, of length `n`.
+A linked list can be initialised from an array `A`, of length `n`. __This pattern is applied for many of the examples outlined below.__
 
 ```cpp
+struct Node
+{
+    int data;
+    struct Node *next;
+}*first = NULL, *second = NULL, *third = NULL;
+
 void newLinkedList(int A[], int n)
 {
     int i;
@@ -203,7 +209,7 @@ For linked lists, we move nodes as opposed to swapping the key between nodes. In
 ```cpp
 struct Node * LinearSearch(struct Node *lead, int key)
 {
-    struct Node *tail;
+    struct Node *tail = 0;
     while(lead != NULL)
     {
         if(key == lead->data)
@@ -221,11 +227,210 @@ struct Node * LinearSearch(struct Node *lead, int key)
 }
 ```
 
-### Inserting nodes into a linked list ###
+### Inserting nodes into a linked list and creating linked lists ###
 
-### Removing nodes ###
+First create a new node anywhere in the heap. Then decide where in the linked list the new node will be inserted.
 
-### Removing nodes with duplicated data ###
++ Inserting at the beginning is O(1) time complexity. After declaring the new node, assign the data value and set the new node's `next` pointer to point to the first data node in the linked list. Change the first pointer (in the stack) address so that it points to the new data of the new node.
+
++ Inserting a new node at a given node `N` anywhere after the first node is more involved. Build a new node somewhere in the heap. Traverse the linked list `N-1` times with a pointer `p` which was initially set to the first node (use a `for` loop). Set the new node's `next` pointer to match `p->next`, then change `p->next` to point to `N`. The time complexity here is worst-case, O(N). Compare this inserting into an array which is similarly expensive.
+
+The code (with the structure repeated for reference) is given below for both cases:
+
+```cpp
+struct Node
+{
+    int data;
+    struct Node *next;
+}*first=NULL, *second=NULL, *third=NULL;
+
+void Insert(struct Node *p, int index, int x)
+{
+    struct Node *newNode;
+    int i;
+    if(index < 0 || index > count(p))
+        return;
+    newNode = (struct Node *) malloc(sizeof(struct Node));
+    newNode->data = x;
+    if(index == 0)
+    {
+        newNode->next = first;
+        first = newNode;
+    }
+    else
+    {
+        for(i = 0; i < index-1; i++)
+            p=p->next;
+
+        newNode->next = p->next;
+        p->next = newNode;
+    }
+}
+
+int count(struct Node *p)
+{
+    int l = 0;
+    while(p)
+    {
+        l++;
+        p = p->next;
+    }
+    return l;
+}
+```
+Incidentally, the `insert()` method can be looped to create a new linked list, extending from the beginning or end, or inserting somewhere in between nodes.
+
+To insert a new node after the last node only, the time complexity is constant O(1), as long as you know the address of the first and last nodes.
+
+```cpp
+struct Node
+{
+    int data;
+    struct Node *next;
+}*first=NULL, *second=NULL, *third=NULL;
+
+insertLast(int x)
+{
+    Node * t = new Node;
+    t->data = x;
+    t->next = NULL;
+    if (!first)
+    {
+        //if the linked list is empty
+        first = t;
+        last = t;
+    }
+    else 
+    {
+        last->next = t;
+        last = t;
+    }
+}
+```
+
+### Sorted linked lists ###
+
+One can check if a linked list is sorted by calling the function `isSorted()`:
+
+```cpp
+int isSorted(struct Node *p)
+{
+    int min = -65536;
+    while(p != NULL)
+    {
+        if(p->data < x)
+            return 0;
+
+        min = p->data;
+        p = p->next;
+    }
+    return 1;
+}
+```
+
+This achieved by traversing along the linked list, comparing the data value and incrementing the pointer value at the same time.
+
+```cpp
+struct Node
+{
+    int data;
+    struct Node *next;
+}*first=NULL, *second=NULL, *third=NULL;
+
+void insertInSorted(struct Node *p, int x)
+{
+    struct Node *newNode, *trailing = NULL;
+    newNode = (struct Node*) malloc(sizeof(struct Node));
+    newNode->data = x;
+    newNode->next = NULL;
+
+    if(first == NULL)
+        //if the linked list is empty
+        first = newNode;
+    else
+    {
+        //traverse along the linked list, while reassigning the trailing pointer
+        while(p && p->data<x)
+        {
+            trailing = p;
+            p = p->next;
+        }
+
+        if(p == first)
+        {
+            newNode->next = first;
+            first = newNode;
+        }
+        else
+        {
+            newNode->next = trailing->next;
+            trailing->next = newNode;
+        }
+    }
+}
+```
+
+### Deleting nodes ###
+
+The most important step to remember here is to free the memory that the deleted node occupies. Use `free`.
+
+```cpp
+//assume here that the linked list holds integers, the type returned
+int Delete(struct Node *p, int index)
+{
+    struct Node *trailing = NULL;
+    int x = -1, i;
+    if(index < 1 || index > count(p))
+        return -1;
+    
+    if(index == 1)
+    {
+        trailing = first;
+        x = first->data;
+        first = first->next;
+        free(trailing);     //use free() if malloc was used; use delete, an operator, if new was used
+        return x;
+    }
+    else
+    {
+        for(i = 0; i < index-1; i++)
+        {
+            trailing = p;
+            p = p->next;
+        }
+        trailing->next = p->next;
+        x = p->data;
+        free(p);        //use free() if malloc was used; use delete, an operator, if new was used
+        return x;
+    }
+}
+```
+
+### Deleting nodes with duplicated data in a sorted linked list ###
+
+The essential approach here is the compare adjacent node data values and free the node if the values are equal.
+
+```cpp
+void removeDuplicate(struct Node *p)
+{
+    struct Node *trailing = p->next;
+    while(trailing != NULL)
+    {
+        if(p->data != trailing->data)
+        {
+            //move along the list
+            p = trailing;
+            trailing = trailing->next;
+        }
+        else
+        {
+            p->next = trailing->next;
+            free(trailing);
+            trailing = p->next;
+        }
+    }
+}
+```
 
 ### Reversing a linked list ###
 

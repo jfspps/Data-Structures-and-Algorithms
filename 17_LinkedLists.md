@@ -21,7 +21,7 @@ struct Node * p;
 p = (struct Node *) malloc(sizeof(struct Node));
 ```
 
-In C++, the Node can defined by a class or a structure. As a structure, the first node is declared with C++ using:
+In C++, the node can defined by a class or a structure. As a structure, the first node is declared with C++ using:
 
 ```cpp
 struct Node * p;
@@ -233,7 +233,7 @@ First create a new node anywhere in the heap. Then decide where in the linked li
 
 + Inserting at the beginning is O(1) time complexity. After declaring the new node, assign the data value and set the new node's `next` pointer to point to the first data node in the linked list. Change the first pointer (in the stack) address so that it points to the new data of the new node.
 
-+ Inserting a new node at a given node `N` anywhere after the first node is more involved. Build a new node somewhere in the heap. Traverse the linked list `N-1` times with a pointer `p` which was initially set to the first node (use a `for` loop). Set the new node's `next` pointer to match `p->next`, then change `p->next` to point to `N`. The time complexity here is worst-case, O(N). Compare this inserting into an array which is similarly expensive.
++ Inserting a new node at a given node `N` anywhere after the first node is more involved. Build a new node somewhere in the heap. Traverse the linked list `N-1` times with a pointer `p` which was initially set to the first node (use a `for` loop). Set the new node's `next` pointer to match `p->next`, then change `p->next` to point to `N`. The time complexity here is worst-case, O(N). Compare this to an insertion into an array which is similarly expensive.
 
 The code (with the structure repeated for reference) is given below for both cases:
 
@@ -434,9 +434,341 @@ void removeDuplicate(struct Node *p)
 
 ### Reversing a linked list ###
 
+Two methods can reverse the nodes of a linked list.
+
++ Interchanging the elements (the values)
++ Interchanging the links (the pointers)
+
+The latter method is generally preferred. Linked list nodes reside at seemingly random positions in the heap and so it would be largely meaningless to interchange data values when the resultant list is also randomly distributed. Instead, one should change the direction of the link, given be Node's `next` pointer.
+
+#### Interchanging the elements ####
+
+Initialise an (auxiliary) array of the same length as the linked list. Copy across all the elements to the array. Then re-assign all elements of the linked list in the reverse order.
+
+```cpp
+void changeElements(struct Node *p)
+{
+    int *A, i = 0;
+    struct Node *q = p;
+    A = (int *) malloc(sizeof(int)* count(p));
+
+    //fill the auxiliary array and move the pointer q along the linked list
+    while(q != NULL)
+    {
+        A[i] = q->data;
+        q = q->next;
+        i++;
+    }
+    q = p;
+    i--;
+
+    //re-assign the linked list in the reverse order
+    while(q != NULL)
+    {
+        q->data = A[i];
+        q = q->next;
+        i--;    //we're going backwards...
+    }
+}
+```
+
+The time complexity is O(2n) or just O(n). The method requires the movement of data (with a type which must be known) between linked lists and arrays.
+
+#### Interchanging the links: sliding (tailing) pointers
+
+This starts with three pointers. The three pointers `p`, `q` and `r` occupy three consecutive nodes. The central node is the node which is modified at the time. The first and third pointer are needed to recall the previous pointer values. 
+
+The method effectively reverses the 'direction' of the link to the next node. Instead of pointing the next node, the pointer is changed so that it points to the previous node.
+
+```cpp
+void changeLinks(struct Node *p)
+{
+    struct Node *q=NULL, *r=NULL;
+
+    while(p!=NULL)
+    {
+        // first three statements slide the pointers r, p and q
+        r = q;
+        q = p;
+        p = p->next;
+
+        //reverse the direction of the link
+        q->next = r;
+    }
+    first=q;
+}
+```
+
+This approach is much simpler. Data need not be exchanged.
+
+The recursive version of changeLinks(), in outline, slides to the end of the linked list from the beginning. The function terminates and the previous call re-assigns the link. In the method below, pointer `tail = NULL` and pointer `p` should point to the second node.
+
+```cpp
+void changeLinksRecursive(struct Node *tail, struct Node *p)
+{
+    //keep calling itself until p reaches the last node, where 
+    if(p)
+    {
+        changeLinksRecursive(p, p->next);
+        //initially, q now points to the first node and tails pointer p
+        //when p == null, the direction of the last link is reversed
+        p->next = tail;
+    }
+    else
+        //Node's first
+        first = tail;
+}
+```
+
 ### Concatenating and merging linked lists ###
 
+Two linked lists can be joined be setting the `last` property of the last node (in one list) to the address of the second node of another linked list.
+
+```cpp
+//two nodes A and B
+p = A;
+while (p->next != NULL)
+{
+    p = p->next;
+}
+p->next = B;
+B = NULL;   //previously pointed to the second node of Node B
+```
+The time complexity depends on the number nodes in Node A, so O(n).
+
+One can also combine two sorted linked lists into a single linked list (specifically, _merging_) is somewhat analogous to the code needed to merge two sorted arrays, with the exception of data transfer. Briefly, one checks the value at both linked lists and re-assigns the link.
+
+```cpp
+struct Node
+{
+    int data;
+    struct Node *next;
+}*first = NULL, *second = NULL, *third = NULL;
+
+//merge two Node, p and q
+void Merge(struct Node *p, struct Node *q)
+{
+    struct Node *last;
+    if(p->data < q->data)
+    {
+        third = last = p;
+        p = p->next;
+        third->next = NULL;
+    }
+    else
+    {
+        third = last = q;
+        q = q->next;
+        third->next = NULL;
+    }
+
+    while(p && q)
+    {
+        if(p->data < q->data)
+        {
+            last->next = p;
+            last = p;
+            p = p->next;
+            last->next = NULL;
+        }
+        else
+        {
+            last->next = q;
+            last = q;
+            q = q->next;
+            last->next = NULL;
+        }
+    }
+
+    if(p)
+        last->next = p;
+    if(q)
+        last->next = q;
+}
+```
+
+Follow the above code with the schematic below for the first few iterations:
+
+![](/images/mergingLinkedLists.svg)
+
+The pointer last trails pointers `p` and `q`. The last assignments link pointer 'last' to remaining nodes of one linked list. Note that pointers `p` or `q` can be more than one node ahead of the other.
+
 ## Looped/circular linked lists ##
+
+A _looped linked list_ does not have any node with a `NULL` pointer at the last node. The looped linked list possesses a last node which points to any other node in the _same_ linked list. Linked lists described thus far do have a last node with a `NULL` pointer, and are known as _linear linked lists_.
+
+One can check for looped linked lists by
+
++ comparing the address of all nodes and finding a repeated address
++ comparing the value of all nodes which are unique, and looking for repeated values
++ using two pointers, and racing them around the loop until they meet
+
+We describe the last option here.
+
+One pointer will migrate forward by two nodes (faster) and the other pointer will migrate by one node. At some point in a looped linked list (although not necessarily during the first lap) both pointers will be assigned to the same node. If one of the pointers ends up being `NULL` then the linked list is not looped. 
+
+The length of the loop section is always less than `n` and determines how long it takes for the two pointers to 'coincide'. The time complexity is O(n).
+
+```cpp
+int isLoop(struct Node *f)
+{
+    struct Node *p, *q;
+    // start at the beginning of Node f
+    p = q = f;
+
+    //start the race and continue until a NULL pointer is found or p == q
+    do
+    {
+        p = p->next;
+        q = q->next;
+        // q is advanced an extra node ahead during each iteration
+        q = q ? q->next : q;
+    }
+    while((p && q) && (p != q));
+
+    if(p == q)
+        return 1;
+    else
+        return 0;
+}
+```
+
+## Linked Lists in C++ ##
+
+The following implementation in C++ will be used in the later part of this article.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Node
+{
+public:
+    int data;
+    Node *next;
+};
+
+class LinkedList
+{
+private:
+    Node *first;
+public:
+    LinkedList(){first = NULL;}
+    LinkedList(int A[], int n);
+    ~LinkedList();
+    void Display();
+    void Insert(int index, int x);
+    int Delete(int index);
+    int Length();
+};
+
+LinkedList::LinkedList(int A[], int n)
+{
+    Node *last, *t;
+    int i = 0;
+    first = new Node;
+    first->data = A[0];
+    first->next = NULL;
+    last = first;
+
+    for(i = 1; i < n; i++)
+    {
+        t = new Node;
+        t->data = A[i];
+        t->next = NULL;
+        last->next = t;
+        last = t;
+    }
+}
+
+LinkedList::~LinkedList()
+{
+    Node *p = first;
+    while(first)
+    {
+        first = first->next;
+        delete p;
+        p = first;
+    }
+}
+
+void LinkedList::Display()
+{
+    Node *p = first;
+    while(p)
+    {
+        cout << p->data << " ";
+        p = p->next;
+    }
+    cout << endl;
+}
+
+int LinkedList::Length()
+{
+    Node *p = first;
+    int len = 0;
+    while(p)
+    {
+        len++;
+        p = p->next;
+    }
+    return len;
+}
+
+void LinkedList::Insert(int index, int x)
+{
+    Node *t, *p = first;
+    if(index <0 || index > Length())
+        return;
+
+    t = new Node;
+    t->data = x;
+    t->next = NULL;
+    if(index == 0)
+    {
+        t->next = first;
+        first = t;
+    }
+    else
+    {
+        for(int i = 0; i < index-1; i++)
+            p = p->next;
+
+        t->next = p->next;
+        p->next = t;
+    }
+}
+
+int LinkedList::Delete(int index)
+{
+    Node *p, *q = NULL;
+    int x = -1;
+    if(index < 1 || index > Length())
+        return -1;
+    
+    if(index == 1)
+    {
+        p = first;
+        first = first->next;
+        x = p->data;
+        delete p;
+    }
+    else
+    {
+        p = first;
+        for(int i = 0; i < index-1; i++)
+        {
+            q = p;
+            p = p->next;
+        }
+        q->next = p->next;
+        x = p->data;
+        delete p;
+    }
+    
+    return x;
+}
+```
 
 ## Doubly linked lists ##
 

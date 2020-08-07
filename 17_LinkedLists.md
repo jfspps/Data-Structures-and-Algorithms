@@ -2,7 +2,7 @@
 
  A linked list a collection of __nodes__ which contain a value (data) sometimes referred to as the _key_ and an address to the next node. Unlike arrays, these have potentially unlimited memory capacity (hardware memory dependent) and are distributed over the heap. Linked lists are not stored in the stack.
 
- The first node or _head node_ (pointer) points to the second node, which contains the first value. The head node does not possess a data value but is merely a pointer which resides in the stack. Subsequent nodes reside in the heap.
+ The first node or _head node_ (pointer) points to the second node, which contains the first value. The head node does not possess a data value but is merely a pointer which resides in the stack. Subsequent nodes reside in the heap. For circular linked lists, described below, the head node can have a data value.
 
 Linked lists can be implemented by structures:
 
@@ -593,6 +593,10 @@ Follow the above code with the schematic below for the first few iterations:
 
 The pointer last trails pointers `p` and `q`. The last assignments link pointer 'last' to remaining nodes of one linked list. Note that pointers `p` or `q` can be more than one node ahead of the other.
 
+## Linked Lists in C++ ##
+
+The [attached](/code/linkedListCPP.cpp) unit in C++ will be used the to demonstrate some of the examples presented in the remainder of this article.
+
 ## Looped/circular linked lists ##
 
 A _looped linked list_ does not have any node with a `NULL` pointer at the last node. The looped linked list possesses a last node which points to any other node in the _same_ linked list. Linked lists described thus far do have a last node with a `NULL` pointer, and are known as _linear linked lists_.
@@ -632,140 +636,147 @@ int isLoop(struct Node *f)
         return 0;
 }
 ```
+A node with a head node only, and one which points to itself, is also a circular linked list.
 
-## Linked Lists in C++ ##
+## Displaying a circular linked list ##
 
-The following implementation in C++ will be used in the later part of this article.
+Previously, we displayed linear linked lists by processing each node until we reached the end node with NULL pointer. For circular linked lists, we process each node until we return to the head node. One stores the address of the head node and uses a `do...while` loops to force at least one iteration:
 
 ```cpp
-#include <iostream>
-using namespace std;
-
-class Node
+void Display(Node *p)
 {
-public:
+    do
+    {
+        printf("%d ", p->data);
+        p = p->next;
+    }
+    while (p != head);
+}
+```
+
+Recursively, the circular list is navigated with a flag value that marks the number of iterations carried out.
+
+```cpp
+void Display(Node *p)
+{
+    static int flag = 0;
+    if (p != head || flag == 0)
+    {
+        flag = 1;
+        printf("%d ", p->data);
+        Display(p->next);
+    }
+    flag = 0;
+}
+```
+Once the second call to Display() is performed, `flag = 1`. When the last node is printed, `p = head`. Hence, the tail recursion ends and the circular list is not traversed a second time. The second assignment of `flag = 0` is needed if Display() is called again. Recall, static variables are initialised on program start-up and persist until shutdown. The static variable is only accessible in the block it is declared in.
+
+## Inserting into a circular linked list ##
+
+For any circular list of length `n`, there are `n+1` points of insertion (the point between the head and tail node is the same; in linear lists, the node before the head is not the same as the node after the last). In the case of insertion before the head node, a pointer must first traverse the entire list and reach the last (tail) node. This is thus O(n) in time complexity. In the case of insertion after the head node, the insertion follows the same procedure as the insertion of a linear linked list.
+
+The snippet below was taken from the C++ [unit](/code/linkedListCPP.cpp) referenced earlier. The Length() method is also provided in the unit.
+
+```cpp
+struct Node
+{
     int data;
-    Node *next;
-};
+    struct Node *next;
+} * Head;
 
-class LinkedList
+void Insert(struct Node *p, int index, int x)
 {
-private:
-    Node *first;
-public:
-    LinkedList(){first = NULL;}
-    LinkedList(int A[], int n);
-    ~LinkedList();
-    void Display();
-    void Insert(int index, int x);
-    int Delete(int index);
-    int Length();
-};
-
-LinkedList::LinkedList(int A[], int n)
-{
-    Node *last, *t;
-    int i = 0;
-    first = new Node;
-    first->data = A[0];
-    first->next = NULL;
-    last = first;
-
-    for(i = 1; i < n; i++)
-    {
-        t = new Node;
-        t->data = A[i];
-        t->next = NULL;
-        last->next = t;
-        last = t;
-    }
-}
-
-LinkedList::~LinkedList()
-{
-    Node *p = first;
-    while(first)
-    {
-        first = first->next;
-        delete p;
-        p = first;
-    }
-}
-
-void LinkedList::Display()
-{
-    Node *p = first;
-    while(p)
-    {
-        cout << p->data << " ";
-        p = p->next;
-    }
-    cout << endl;
-}
-
-int LinkedList::Length()
-{
-    Node *p = first;
-    int len = 0;
-    while(p)
-    {
-        len++;
-        p = p->next;
-    }
-    return len;
-}
-
-void LinkedList::Insert(int index, int x)
-{
-    Node *t, *p = first;
-    if(index <0 || index > Length())
+    struct Node *t;
+    int i;
+    if(index < 0 || index > Length(p))
         return;
 
-    t = new Node;
-    t->data = x;
-    t->next = NULL;
+    //this part relates to the insertion before the head node
     if(index == 0)
     {
-        t->next = first;
-        first = t;
+        t = (struct Node *) malloc(sizeof(struct Node));
+        t->data = x;
+        if (Head == NULL)
+        {
+            Head = t;
+            Head->next = Head;
+        }
+        else
+        {
+            while(p->next != Head)
+                p = p->next;
+                
+            p->next = t;
+            t->next = Head;
+            Head = t;
+        }
     }
+    //this part relates to the insertion at any other point after the head node
     else
     {
-        for(int i = 0; i < index-1; i++)
-            p = p->next;
+        for(i = 0; i < index-1; i++)
+            p=p->next;
 
+        t=(struct Node *)malloc(sizeof(struct Node));
+        t->data = x;
         t->next = p->next;
         p->next = t;
     }
 }
+```
 
-int LinkedList::Delete(int index)
+## Deletion of a node in a circular linked list ##
+
+The deletion of a node at any point after the head node (but not before it) is the same as the deletion of a node of a linear linked list.
+The deletion of the head node is a new consideration in this article. The deletion requires the reassignment of the head node and then the deletion of the head node.
+
+```cpp
+struct Node
 {
-    Node *p, *q = NULL;
-    int x = -1;
-    if(index < 1 || index > Length())
+    int data;
+    struct Node *next;
+} * Head;
+
+int Delete(struct Node *p, int index)
+{
+    struct Node *q;
+    int i, x;
+    if(index < 0 || index > Length(Head))
         return -1;
     
+    //deleting the head node starts here...
     if(index == 1)
     {
-        p = first;
-        first = first->next;
-        x = p->data;
-        delete p;
-    }
-    else
-    {
-        p = first;
-        for(int i = 0; i < index-1; i++)
+        //start at any node and traverse to the last node with pointer p
+        while(p->next != Head)
+            p = p->next;        
+            
+        x = Head->data;
+        //if circular linked list is made up of one node (the head node)
+        if(Head == p)        
         {
-            q = p;
-            p = p->next;
-        }
-        q->next = p->next;
-        x = p->data;
-        delete p;
+            free(Head);
+            Head = NULL;
+        } 
+        //if the circular list has more than one node then re-assign the node addresses
+        else
+        {
+            p->next = Head->next;
+            free(Head);
+            Head = p->next;
+        }    
     }
-    
+    //deleting any other node starts here...
+    else    
+    {
+        for(i = 0; i < index-2; i++)
+            p = p->next;        
+        
+        q = p->next;        
+        p->next = q->next;       
+        x = q->data;
+        free(q);    
+    }
     return x;
 }
 ```

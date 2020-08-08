@@ -783,4 +783,165 @@ int Delete(struct Node *p, int index)
 
 ## Doubly linked lists ##
 
-## Comparing arrays to linked lists ##
+Linked lists discussed to this point are known specifically as singly linked lists, which contain only one address, referred here as `next`. A linked list with two addresses, `previous` and `next` as it were, are known as `doubly linked lists`.
+
+Doubly linked lists can be traversed in two directions, whereas singly linked lists can only be traversed in one direction.
+
+The structure of a doubly linked list can take the following form:
+
+```cpp
+struct Node
+{
+    struct Node * prev;
+    int data;   //could also take other data-types if needed
+    struct Node * next;
+}
+```
+
+Initially, a new node is set such that the `prev` and `next` addresses are initially `null` and the data value is assigned as required. Many of the methods on singly linked lists apply to doubly linked lists.
+
+The initialisation of an array of integers (in this case) starts by preparing the first node and then handling all other nodes.
+
+```cpp
+class Node{
+public:
+    Node* prev;
+    int data;
+    Node* next;
+};
+
+//this could also be approached from a constructor point of view
+void newLinkedList(int *A, int n) {
+ 
+    head = new Node;
+    head->prev = NULL;
+    head->data = A[0];
+    head->next = NULL;
+    Node* tail = head;  //this will be updated below, as appropriate
+    
+    //prepare all remaining nodes
+    for (int i = 1; i < n; i++){
+        Node* t = new Node;
+        t->prev = tail;
+        t->data = A[i];
+        t->next = tail->next; // tail->next is pointing to NULL
+        tail->next = t;
+        tail = t;   //doubly-linked list in action
+    }
+}
+```
+
+### Inserting nodes in a doubly linked list ###
+
+This is where one utilises the `prev` pointer. Inserting before the head node involves the setting of three pointers, and then changing the pointer of the list, `first`. The time complexity is constant, O(1).
+
+```cpp
+Node *t = new Node;
+t->data = someValue;
+t->prev = NULL;
+t->next = first;    //first could labelled instead as head
+first->prev = t;
+first = t;
+```
+
+Inserting at any point after the head node to position `pos` (that is, position lies in between the nodes where insertion is needed), can be achieved with:
+
+```cpp
+Node *t = new Node;
+Node *p = first;
+t->data = someValue;
+for (int i = 0; i < pos-1; i++)
+    p = p->next;
+
+t->next = p->next;  //p->next might be NULL, thus t becomes the tail node
+t->prev = p;
+//if p-next was NULL then p->next->prev is also NULL, so we only set p->next->prev if p->next is not NULL
+if (p->next)
+    p->next->prev = t;
+p->next = t;
+```
+
+Note the notation `p->next->prev` is actually the next node's `prev` pointer, visualised from:
+
+![InsertDoublyLinkedList](/images/InsertDoublyLinkedList.svg)
+
+The worst-case time complexity is O(n), n is the length of the linked list.
+
+### Deleting from a doubly linked list ###
+
+As with insertion, the deletion of the first node is special case and the deletion of other nodes can be generalised. For deletion of the first node:
+
+```cpp
+Node *p = first;
+first = first->next;    //this could be NULL if there is only one node present; no problem
+extractedValue = p->data;
+delete p;
+//if there is more than one node present
+if(first)
+    first->prev = NULL;
+```
+
+Deleting any other node (in this example, node `N`) is carried out with:
+
+```cpp
+Node *p = first;
+for (int i = 0; i < N-1 i++)
+    p = p->next;
+
+p->prev->next = p->next;    //this might be NULL, again, no problem
+//as above insertion, check if there is a successive node
+if (p->next)
+    p->next->prev = p->prev;
+extractedValue = p->data;
+delete p;
+```
+
+The time complexity of deleting the first node is O(1) and the complexity of other nodes is worst-case O(n).
+
+### Reversing a doubly-linked list ###
+
+Reversal is achieved by swapping `prev` and `next` for all nodes in the doubly linked list. The conditional applied to the last node also applies here.
+
+```cpp
+void Reverse() {
+    Node* p = head;
+    Node* temp;
+    while (p){
+        temp = p->next;
+        p->next = p->prev;
+        p->prev = temp;
+        p = p->prev;
+ 
+        // Need to check the condition at the last node again
+        if (!p->next){
+            p->next = p->prev;
+            p->prev = NULL;
+            head = p;
+            break;  //reversal finished
+        }
+    }
+```
+
+`Circular doubly linked list` operations involve the greatest number of pointer changes. There are never any tail (or head) nodes as such, so both `prev` and `next` pointers of three nodes are edited on insertion and deletion.
+
+In summary, the node labelled `head` (or `first`) functions as a reference point for all pointer based operations on linked lists.
+
+## Summary and comparisons between linked lists and arrays ##
+
+Doubly linked lists require more memory than singly linked lists. Both require more memory than equally sized arrays.
+
+Doubly linked lists generally require more pointer based operations then singly linked lists.
+
+These days, circular doubly linked lists offer all features of the linked lists available and are implemented in libraries provided in other languages, such as Java. To save memory, one can implement their own circular singly linked lists.
+
+### Arrays and linked lists ###
+
++ Arrays are preferentially used when the number of elements is already known. Otherwise, use linked lists.
++ Arrays are more compact than linked lists, since there is no pointer associated with each data value.
++ Elements of an array can be accessed randomly, the address of an element is uniformly determined by the size of the element.
++ Linked lists are always located in the heap whereas arrays are arrays can be saved in the stack (faster) or the heap.
++ _Insertion and deletions at the beginning of arrays is generally slower than the same operations at the beginning of linked lists_. This is because one needs to shuffle all other elements in the array. For linked lists, one only changes the address of the node pointers, while leaving all other nodes alone.
++ The converse is also true: _insertion and deletion closer to the end of an array (esp. the last element) is generally faster than that for linked lists_. Linked lists must be traversed to reach the end of the list, arrays are accessed directly.
++ For the shuffling of large data values (anything other than primitive types) is more of a concern when arrays are involved. Linked lists do not involve shuffling of data.
++ Linear and binary search are available for data structures. Binary search of arrays is O(log n) but longer for linked lists at O(n log n). This is because one can access the central element directly in arrays whereas in linked lists, the central element is accessed by traversing the linked list.
++ As will be demonstrated later, sorting methods are generally preferred with arrays compared to linked lists.

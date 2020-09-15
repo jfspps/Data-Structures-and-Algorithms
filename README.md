@@ -18,3 +18,4 @@ My notes from an online C++ course
 15. [Matrices](15_Matrices.md)
 16. [Sparse matrices and polynomials](16_Sparse_matrices_and_Polynomials.md)
 17. [Linked Lists](17_LinkedLists.md)
+18. [Sparse matrices and polynomials as linked lists](18_Sparse-matrices_and_Linked_lists.md)

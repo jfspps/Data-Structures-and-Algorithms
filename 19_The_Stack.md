@@ -41,7 +41,7 @@ st.top = -1;
 
 Note that the structure ADT is not tied to an array. The pointer stackPtr could just as easily point to the first node of a linked list.
 
-### The push operation ###
+### The push operation, O(1) ###
 
 Achieved generally as check if isFull() is false, then top++ and then assign the value to the element.
 
@@ -60,7 +60,7 @@ void push(struct stack *st, int x)
 }
 ```
 
-### The pop operation ###
+### The pop operation, O(1) ###
 
 The pop operation can be repeated if `top >= 0`.
 
@@ -81,7 +81,7 @@ int pop(struct stack *st)
 }
 ```
 
-### The peek operation ###
+### The peek operation, O(1) ###
 
 The `array index required = top - n + 1`, where n = 1, 2, 3, ... and represents the element starting from the uppermost element. If one wanted to peek at the 3rd element from the top, then the array index required would be `top - 3 + 1`.
 
@@ -103,7 +103,7 @@ int peek (struct stack st, int positionFromTop)
 }
 ```
 
-### The stackTop() operation ###
+### The stackTop() operation, O(1) ###
 
 In addition to using peek(), one can use a modified form to give stackTop().
 
@@ -116,7 +116,7 @@ int stackTop(struct stack st) {
 }
 ```
 
-### The isEmpty() operation ###
+### The isEmpty() operation, O(1) ###
 
 ```cpp
 int isEmpty(struct stack st) {
@@ -127,7 +127,7 @@ int isEmpty(struct stack st) {
 }
 ```
 
-### The isFull() operation ###
+### The isFull() operation, O(1) ###
 
 ```cpp
 int isFull(struct stack st) {
@@ -138,7 +138,7 @@ int isFull(struct stack st) {
 }
 ```
 
-### Displaying array based stacks ###
+### Displaying array based stacks, O(n) ###
 
 ```cpp
 void Display(struct stack st)
@@ -169,7 +169,7 @@ Note that top is already declared and accessible to any function which calls `to
 
 Within this scope, a linked list based stack is empty if `top == NULL` and full if pointer `t` is `NULL` following `Node * t = new Node;`. 
 
-### Push operations on linked list based stacks ###
+### Push operations on linked list based stacks, O(1) ###
 
 First check that the stack (that is, the heap) is not full before proceeding.
 
@@ -194,7 +194,7 @@ void push(int x)
 }
 ```
 
-### Pop operations on linked list based stacks ###
+### Pop operations on linked list based stacks, O(1) ###
 
 ```cpp
 int pop()
@@ -215,7 +215,7 @@ int pop()
 }
 ```
 
-### Peek operations on linked list based stacks ###
+### Peek operations on linked list based stacks, O(n) ###
 
 Since linked lists are filled 'from the beginning', one can pass the position required directly.
 
@@ -240,7 +240,7 @@ int peek (int positionFromTop)
 }
 ```
 
-### The stackTop() operation ###
+### The stackTop() operation, O(1) ###
 
 In addition to using peek(), one can use a modified form to give stackTop().
 
@@ -253,7 +253,7 @@ int stackTop() {
 }
 ```
 
-### The isEmpty() operation ###
+### The isEmpty() operation, O(1) ###
 
 ```cpp
 int isEmpty() {
@@ -264,7 +264,7 @@ int isEmpty() {
 }
 ```
 
-### The isFull() operation ###
+### The isFull() operation, O(1) ###
 
 ```cpp
 int isFull() {
@@ -278,7 +278,7 @@ int isFull() {
 }
 ```
 
-### Displaying linked list based stacks ###
+### Displaying linked list based stacks, O(n) ###
 
 ```cpp
 void Display()
@@ -294,4 +294,34 @@ void Display()
 }
 ```
 
-All array and linked list stack operations presented above are O(1) time complexity.
+## Applications of using the stack ADT ##
+
+### Checking parentheses: no. of opening parentheses = no. of closing parentheses ###
+
+Evaluate a string and push an opening parenthesis and then pop when closing parenthesis is found. Then check if the stack is empty at the end of the string expression.
+
+```cpp
+int containsMatchingParentheses(char * mathExp)
+{
+    //note that '/0' is null character
+    for(int i = 0; mathExp[i] != '\0'; i++)
+    {
+        if (mathExp[i] == '(' || mathExp[i] == '{' || mathExp[i] == '[')
+            push(mathExp[i]);
+        else if(mathExp[i] == ')' || mathExp[i] == '}' || mathExp[i] == ']')
+        {
+            if(top == NULL)
+                return 0;
+            pop();
+        }
+    }
+
+    //check if top pointer is at the beginning again
+    if(top == NULL)
+        return 1;
+    else
+        return 0;
+}
+```
+
+The above method checks for matching `(`, `{` and `[`.

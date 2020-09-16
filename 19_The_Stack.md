@@ -162,7 +162,7 @@ struct Node
 {
     int data;
     struct Node * next;
-} * top = NULL;
+} * top = NULL;     //recall, top is now a global variable (pointer)
 ```
 
 Note that top is already declared and accessible to any function which calls `top`. This demonstrates the difference when calling methods and passing parameters.

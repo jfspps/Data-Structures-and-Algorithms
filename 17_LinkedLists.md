@@ -117,7 +117,7 @@ struct Node
 {
     int data;
     struct Node *next;
-}*first = NULL, *second = NULL, *third = NULL;
+}*first = NULL, *second = NULL, *third = NULL;  //have three global pointers to potentially build three linked lists
 
 void newLinkedList(int A[], int n)
 {

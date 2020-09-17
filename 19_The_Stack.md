@@ -296,7 +296,7 @@ void Display()
 
 ## Applications of using the stack ADT ##
 
-### Checking parentheses: no. of opening parentheses = no. of closing parentheses ###
+## Checking parentheses: no. of opening parentheses = no. of closing parentheses ##
 
 Evaluate a string and push an opening parenthesis and then pop when closing parenthesis is found. Then check if the stack is empty at the end of the string expression.
 
@@ -325,3 +325,162 @@ int containsMatchingParentheses(char * mathExp)
 ```
 
 The above method checks for matching `(`, `{` and `[`.
+
+## Using the stack to manage prefix and postfix operations ##
+
+_Infix operations_ are of the form: operand operator operand. _Prefix operations_ in C and C++ include `+=` and `-=`. _Postfix operations_ include `=+` and `=-`.
+
+The evaluation of an expression which involves BODMAS operation precedence, one must scan the expression.
+
+Instead, one can convert an infix expression into postfix or prefix expressions. Compilers use __precedence__ to convert infix expressions such that all operations are closed, that is, are all parenthesised. Then it becomes clear what operations to evaluate. Precedence is not about the order of performing operations but specifically about parenthesising parts of an expression so that the order of evaluations is clear.
+
+```cpp
+a + b * c
+```
+Precedence leads to, in steps:
+
+1. a + b * c
+2. a + (b * c)
+3. (a + (b * c))
+
+One then converts the infix expression into a prefix expression, reading left-to-right, as:
+
+1. (a + [*bc])
+2. `+a *bc`
+
+Reading from left to right, it reads _add a to the product of b and c_. The operators appear first.
+
+To convert to a postfix expression, similarly:
+
+1. (a + [bc*])
+2. `a bc* +`
+
+The operators appear last. Postfix expressions tend to be used more frequently than prefix expressions.
+
+Here is another example: `a + b + c*d`
+
+The prefix would have to consider precedence as left-to-right (step 2):
+
+1. a + b + [*cd]
+2. [+ab] + [*cd]
+3. `+ [+ab][*cd]`
+4. `+ + ab * cd` (without parentheses)
+
+The postfix would be:
+
+1. a + b + [cd*]
+2. [ab+] + [cd*]
+3. `a b + c d * +`
+
+Finally, one last example: `(a + b) * (c - d)`
+
+The prefix would be:
+
+1. [+ab] * (c - d)
+2. [+ab] * [-cd]
+3. `* [+ab][-cd]`
+4. `* + a b - c d`
+
+The postfix would be:
+
+1. [ab+] * (c - d)
+2. [ab+] * [cd-]
+3. `a b + c d - *`
+
+#### Infix to postfix conversion, and associativity ####
+
+Compilers parenthesise expressions based in associativity, which indicates the direction of reading a sub-expression, with the first appearing first. It is required when two operators have the same precedence. 
+
+For example, left-to-right associativity indicates that the leftmost sub-expression takes precedence over anything to its right. Here is a summary of the rules (conventions):
+
+| Symbol   | Prec | Assoc |
+|:--------:|:----:|:-----:|
+| + -      | 1    | L- R  |
+| * /      | 2    | L- R  |
+|   ^      | 3    | R - L |
+| unary    | 4    | R - L |
+| (  )     | 5    | L - R |
+
+The unary operators take higher precedence than binary operators. 
+
+The assignment operator `=` is associativity R-L. So `a = b = c = 100` assigns c, then b then a. This is written by the compiler as:
+
+ `(a = (b = (c = 100)))`
+
+The postfix form would be:
+
+`a b c 100 = = =`
+
+More examples: `a ^ b ^ c`. With parentheses: (a ^ (b ^ c)). Note, the power operator is not part of the C language.
+
+As a postfix expressions, we would yield:
+
+`a b c ^ ^`
+
+Take a unary operator, for example `--a`. The parenthesised form would be (-(-a)). The postfix form is a--, the prefix is --a.
+
+Dereferencing pointers with *, a unary operator. `*p` is the prefix, and `p*` is the postfix form. Logarithms and factorials are other examples of unary operators. 
+
+Stated again, unary operators take precedence over binary operators. For example, `-a + b * log n!`.
+
+Going right-to-left, as per the table, we have the postfix form would be:
+
+1. `-a + b * log [n!]`
+2. `-a + b * [log [n!]]`
+3. `[a-] + b * [log [n!]]`
+4. `[a-] + [b [log [n!]]]*`
+5. `[[a-][b [log [n!]]]*]+`
+6. `a - b log  n! * +`
+
+### Infix to postfix using the stack ###
+
+__Method 1__
+
+The stack is used to store operators according to their precedence. All operands, are placed in a temporary string. Expressions are read from left to right.
+
+Essentially, operators of higher precedence are pushed to the top of the stack so that any operators beneath it are of lower precedence. If there are operators of higher or equal precedence at the top of the stack, then the operator is popped from the stack and added to the expression. If there are still operators of higher or equal precedence then the operator is popped. This is repeated until the top of the stack stores an operator of lower precedence or the stack is empty.
+
+At the end of the expression, the operators are popped in a LIFO approach and added to the end of the expression.
+
+__Method 2__
+
+Unlike method 1, in method 2 one fills the stack with operands and operators. Operands have the highest precedence over all operators. Operands have equal precedence, so consecutive operands pop other operands out of the stack. The popping and pushing of the stack follows the same conventions.
+
+The code below uses predefined pop(), push(), isOperand() and pre() methods. The method pre() returns the precedence of `+`, `-`, `*` and `/`. The expression is stored in an array of characters, `infix` and ultimately transferred to another array `postfix`.
+
+```cpp
+char * infixToPostfix(char *infix)
+{
+    int i = 0, j = 0;
+    char *postfix;
+
+    //may need to use long instead of int
+    int len = strlen(infix);
+
+    //len+1 would be the minimum
+    postfix = (char *) malloc((len+2)*sizeof(char));
+    while(infix[i]!='\0')
+    {
+        if(isOperand(infix[i]))
+            postfix[j++] = infix[i++];
+        else
+        {
+        if(pre(infix[i]) > pre(top->data))
+            push(infix[i++]);
+        else
+            {
+                postfix[j++] = pop();
+                //stay in the current position of infix, i, until all uppermost stack elements have been compared
+            }
+        }
+    }
+
+    //copy across remaining stack elements
+    while(top != NULL)
+        postfix[j++] = pop();
+
+    //terminate with a null char
+    postfix[j] = '\0';
+    return postfix;
+}
+```

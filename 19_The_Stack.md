@@ -332,7 +332,7 @@ _Infix operations_ are of the form: operand operator operand. _Prefix operations
 
 The evaluation of an expression which involves BODMAS operation precedence, one must scan the expression.
 
-Instead, one can convert an infix expression into postfix or prefix expressions. Compilers use __precedence__ to convert infix expressions such that all operations are closed, that is, are all parenthesised. Then it becomes clear what operations to evaluate. Precedence is not about the order of performing operations but specifically about parenthesising parts of an expression so that the order of evaluations is clear.
+Compilers convert an infix expression into postfix before evaluation. Compilers use __precedence__ to convert infix expressions such that all operations are closed, that is, are all parenthesised. Then it becomes clear the sequence of operations to evaluate. Precedence is not about the order of executing operations but specifically about parenthesising parts of an expression so that the order of evaluations is clear for the compiler to evaluate. The order in which operations are performed depends on the order of the elements in the postfix expression, not precedence (examples shown later).
 
 ```cpp
 a + b * c
@@ -343,7 +343,7 @@ Precedence leads to, in steps:
 2. a + (b * c)
 3. (a + (b * c))
 
-One then converts the infix expression into a prefix expression, reading left-to-right, as:
+This is not how a compiler assigns parentheses as such. One then converts the infix expression into a prefix expression, reading left-to-right, as:
 
 1. (a + [*bc])
 2. `+a *bc`
@@ -355,7 +355,7 @@ To convert to a postfix expression, similarly:
 1. (a + [bc*])
 2. `a bc* +`
 
-The operators appear last. Postfix expressions tend to be used more frequently than prefix expressions.
+One writes a growing postfix expression by adding operands to the left and operators to the right. The rightmost operator is the most recent 'addition' to the list of operators. Postfix expressions tend to be used more frequently than prefix expressions.
 
 Here is another example: `a + b + c*d`
 
@@ -436,17 +436,13 @@ Going right-to-left, as per the table, we have the postfix form would be:
 
 __Method 1__
 
-The stack is used to store operators according to their precedence. All operands, are placed in a temporary string. Expressions are read from left to right.
+The stack is used to store operators according to their precedence. All operands, are placed in a temporary array. Expressions are read from left to right.
 
 Essentially, operators of higher precedence are pushed to the top of the stack so that any operators beneath it are of lower precedence. If there are operators of higher or equal precedence at the top of the stack, then the operator is popped from the stack and added to the expression. If there are still operators of higher or equal precedence then the operator is popped. This is repeated until the top of the stack stores an operator of lower precedence or the stack is empty.
 
 At the end of the expression, the operators are popped in a LIFO approach and added to the end of the expression.
 
-__Method 2__
-
-Unlike method 1, in method 2 one fills the stack with operands and operators. Operands have the highest precedence over all operators. Operands have equal precedence, so consecutive operands pop other operands out of the stack. The popping and pushing of the stack follows the same conventions.
-
-The code below uses predefined pop(), push(), isOperand() and pre() methods. The method pre() returns the precedence of `+`, `-`, `*` and `/`. The expression is stored in an array of characters, `infix` and ultimately transferred to another array `postfix`.
+The code below uses predefined pop(), push(), isOperand() and pre() methods. The method pop() returns a `char`. The method pre() returns the precedence of `+`, `-`, `*` and `/`. The expression is stored in an array of characters, `infix` and ultimately transferred to another array `postfix`.
 
 ```cpp
 char * infixToPostfix(char *infix)
@@ -461,26 +457,114 @@ char * infixToPostfix(char *infix)
     postfix = (char *) malloc((len+2)*sizeof(char));
     while(infix[i]!='\0')
     {
+        //operands go into the array, operators go into the stack
         if(isOperand(infix[i]))
             postfix[j++] = infix[i++];
         else
         {
-        if(pre(infix[i]) > pre(top->data))
-            push(infix[i++]);
-        else
-            {
-                postfix[j++] = pop();
-                //stay in the current position of infix, i, until all uppermost stack elements have been compared
-            }
+            if(pre(infix[i]) > pre(top->data))
+                push(infix[i++]);
+            else
+                {
+                    postfix[j++] = pop();
+                    //stay in the current position of infix, i, until all uppermost stack elements have been compared
+                }
         }
     }
 
-    //copy across remaining stack elements
+    //copy across remaining stack operators
     while(top != NULL)
         postfix[j++] = pop();
 
     //terminate with a null char
     postfix[j] = '\0';
     return postfix;
+}
+```
+
+A more advanced method which can include parentheses requires a change to the precedence depending on whether the operator is in the stack (IN) or out of the stack (OUT).
+
+| Symbol   | IN   | OUT   |
+|:--------:|:----:|:-----:|
+| + -      | 1    | 2     |
+| * /      | 3    | 4     |
+|   ^      | 7    | 5     |
+| (        | 6    | 0     |
+| )        | 0    | N/A   |
+
+Note that L-R associative operators have higher precedence out of the stack compared to in the stack. The parentheses are not passed to any `postfix` array and instead cancel each other when an incoming `)` is compared to a resident `(`.
+
+For the expression `((a + b) * c ) - d ^ e ^ f` the first two `(` are pushed to the stack and given a precedence of 0 (from 6). Operand `a` is passed to an array. Incoming operator `+` has higher precedence than resident `(`, so is pushed to the stack. Operand `b` is sent to the array and then the next two `)` nullify the resident `(`. No parentheses are passed to the array. The next operands and operators are handled as outlined previously. The result is `ab+ c* def ^^ -`.
+
+__Method 2__
+
+Unlike method 1, in method 2 one fills the stack with operands and operators. Operands have the highest precedence over all operators. Operands have equal precedence, so consecutive operands pop other operands out of the stack. The popping and pushing of the stack follows the same conventions.
+
+### Evaluating postfix expressions ###
+
+Following some aspects of method 2 above, first an infix expression is converted into a postfix expression. The expression is then scanned and the stack is populated with operands. When an operator is found, two operands from the top are popped from the stack and evaluated. Using `ab+ c* def ^^ -` as an example, one can see how the stack and computation is handled:
+
+| Stack                | OP              | 
+|:--------------------:|:---------------:|
+| a                    |                 |
+| b, a                 |                 |
+|                      | a + b           |
+| a + b                |                 |
+| c, a + b             |                 |
+|                      | ((a + b)*c)     |
+| ((a + b)*c)          |                 |
+| d, ((a + b)*c)       |                 |
+| e, d, ((a + b)*c)    |                 |
+| f, e, d, ((a + b)*c) |                 |
+| d, ((a + b)*c)       |  e^f            |
+| e^f, d, ((a + b)*c)  |                 |
+|                      | d^(e^f)         |
+| d^(e^f), ((a + b)*c) |                 |
+
+The last operation would be `((a + b)*c) - d^(e^f)`, as given by the original infix expression.
+
+The order in which operations are performed depends on the order of the elements in the postfix expression, not precedence. Take `x = 6 + 5 + 3 * 4`. Precedence would indicate that 3*4 is computed first. However, the stack elements and even the infix expression shows that `6 + 5` is executed first. The postfix expression is generated as:
+
+1. 3 4 *
+2. 6 5 + (3 4 *)
+3. (6 5 + (3 4 *)) +
+4. x ((6 5 + (3 4 *)) +) =
+5. Without parentheses, as the compiler sees it: `x 6 5 + 3 4 * + =`
+
+Thus, one can see that `6 + 5`, once popped by `+`, is computed first and then added to the stack giving `[(top) 11, x]`. The next two operands are pushed, giving `[(top) 4, 3, 11, x]`. Then multiplication is performed, and so on.
+
+When parenthesised, `x = 6 + 5 + 3 * 4` is also `x = ((6 + 5) + (3 * 4))`, which shows the sub-expression `(6 + 5)` is evaluated first.
+
+The C code is given below. Methods pop() and push() are defined to work with a global pointer `top` to an integer stack.
+
+```cpp
+int evaluatePostfixExp(char *postfix)
+{
+    int i = 0;
+    int x1, x2, r = 0;
+    for(i = 0; postfix[i] != '\0'; i++)
+    {
+        if(isOperand(postfix[i]))
+        {
+            ///convert ASCII codes and store in an integer stack, not a char stack; ASCII for char '0' is 48.
+            push(postfix[i] - '0');
+        }
+        else
+        {
+            //operator found...
+            //...pop the two uppermost from stack and perform the operation based on the incoming operator
+            x2 = pop();
+            x1 = pop();
+            switch(postfix[i])
+            {
+                case '+': r = x1+x2; break;
+                case '-': r = x1-x2; break;
+                case '*': r = x1*x2; break;
+                case '/': r = x1/x2; break;
+            }
+            push(r);
+        }
+    }
+    return top->data;
 }
 ```

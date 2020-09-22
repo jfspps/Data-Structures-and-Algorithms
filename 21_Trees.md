@@ -8,7 +8,7 @@ Tree data structures are composed of _nodes_ and _edges_. Some other terminology
 + __Parent__: node connected above a given node
 + __Child__: node connected below a given node
 + __Siblings__: nodes with the same parent node
-+ __Descendents__: all nodes connected below a given node
++ __Descendants__: all nodes connected below a given node
 + __Ancestors__: all nodes connected above a given node (not including siblings)
 + __Degree of a node__: number of edges or nodes below a given node
 + __Degree of a tree__ : (usually) any value greater than or equal to the largest degree of a node (see later)

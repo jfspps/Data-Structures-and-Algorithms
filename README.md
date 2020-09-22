@@ -21,3 +21,4 @@ My notes from an online C++ course
 18. [Sparse matrices and polynomials as linked lists](18_Sparse-matrices_and_Linked_lists.md)
 19. [The stack](19_The_Stack.md)
 20. [The Queue](20_Queues.md)
+21. [Trees](21_Trees.md)

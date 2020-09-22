@@ -25,6 +25,8 @@ Enqueueing takes O(1) time provided one knows the number of elements present. De
 
 To avoid shuffling the elements, one can instead employ two pointers and shift the position of the first element of the array. The array in memory is not changed during this process.
 
+![](/images/queueTwoPointers.svg)
+
 The condition `isEmpty` is true of `ptr(front) == ptr(rear)` _after_ the last element is removed from the array. That is, remove the element, check if `ptr(front) == ptr(rear)`. If true then the queue is empty, otherwise advance ptr(front). Repeat until `ptr(front) == ptr(rear)`. Some authors may prefer `ptr(front) > ptr(rear)` condition.
 
 When applying two pointers, the condition `isFull()` is true when `ptr(rear) == array.size - 1`.
@@ -87,6 +89,8 @@ By default, the pointers can be reset whenever the condition `isEmpty` is true. 
 ## Circular queues ##
 
 In a circular queue, the element pointed to by the front pointer is always vacant. The front and rear pointers advance but once they reach the end of the array, they are pointed to the beginning again. This ensures that the array is filled up to `size - 1` elements, unlike the non-circular queue described above.
+
+![](/images/circularQueue.svg)
 
 A circular queue `isFull()` is true when the rear pointer is behind the front pointer. We use the remainder arithmetic, mod or `%` to deduce the next index.
 
@@ -188,6 +192,8 @@ int dequeue()
 ## Double-ended queues, DEQueues ##
 
 Referred to as DEQueue, these can be implemented with arrays or linked lists. With regular queues, front and rear pointers are used for insertion and deletion, respectively. DEQueues permit front and rear pointers to facilitate both insertion and deletion. Thus, DEQueues do not adhere to the FIFO principle.
+
+![](/images/DEQueue.svg)
 
 There is much more flexibility with linked lists since arrays are of fixed length and it is not always possible to insert from the front of an array. One can insert with front pointers if the pointer points to an element other than the first element.
 

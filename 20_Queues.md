@@ -125,3 +125,121 @@ As with non-circular queues, enqueue() and dequeue() are both O(1) time complexi
 
 ## Queues and linked lists ##
 
+Queues are implemented with linked lists using two pointers, to ensure that insertion time is constant O(1). Initially, both pointers are null. The condition `isEmpty()` is true when the front pointer is null. 
+
+The condition `isFull()` is true when the heap is full, and signified when instantiation of a new node fails, _i.e._
+
+```cpp
+Node * t = new Node;
+if (t == NULL)
+{
+    isEmpty() = true;
+}
+```
+
+Enqueuing. With the first node added, both front and rear pointers are pointed to the non-NULL address of the first node. From this point, `front != NULL` and this means that the next node will not be the first node. Further additions mean `front != rear` and rear points to the last node. Then `rear->next == NULL` is true.
+
+With dequeuing, the front node is advanced before the first node is removed. Both enqueuing and dequeuing in this way means both are O(1) operations.
+
+```cpp
+struct Node
+{
+int data;
+struct Node *next;
+}*front = NULL, *rear = NULL;
+
+void enqueue(int x)
+{
+    struct Node *t;
+    t = (struct Node*) malloc(sizeof(struct Node));
+    if(t == NULL)
+        printf("Queue is full\n");
+    else
+    {
+        t->data = x;
+        t->next = NULL;
+        if(front == NULL)
+            front = rear = t;
+        else
+        {
+            rear->next = ;
+            rear = t;
+        }
+    }
+}
+
+int dequeue()
+{
+    int x =- 1;
+    struct Node* t;
+    if(front == NULL)
+        printf("Queue is Empty\n");
+    else
+    {
+        x = front->data;
+        t = front;
+        front = front->next;
+        free(t);
+    }
+    return x;
+}
+```
+
+## Double-ended queues, DEQueues ##
+
+Referred to as DEQueue, these can be implemented with arrays or linked lists. With regular queues, front and rear pointers are used for insertion and deletion, respectively. DEQueues permit front and rear pointers to facilitate both insertion and deletion. Thus, DEQueues do not adhere to the FIFO principle.
+
+There is much more flexibility with linked lists since arrays are of fixed length and it is not always possible to insert from the front of an array. One can insert with front pointers if the pointer points to an element other than the first element.
+
+There are other variants of DEQueues. `Input-restricted DEQueues` prohibit insertion from the front and `Output-restricted DEQueues` prohibit deletion from the rear. Deletion from the rear and insertion from the front, respectively, are permitted. Again, these variants are still not FIFO data structures.
+
+## Priority Queues ##
+
+Some OSes support prioritisation of threads. Elements in an arrays can be prioritised similarly, and passed to queues with the same priority designation. Such queues are referred to as priority queues.
+
+Priority queues group elements which are acted on based on priority. The queue with the highest priority is acted on first, followed by any others.
+
+### Single priority queues ###
+
+Some elements contain data types which themselves signify a priority. For example, lower integers could have higher priority than larger integers. 
+
+Each element is inserted into a queue in the usual way above. Such insertions are constant time operations. However, deletion is based on priority, so one must scan the queue and look for the element with the highest priority, and then delete it. Thus the queue is behaving as a priority queue. Deletion is then, at worst, O(n). Remaining elements of an array (not a linked list) are then reshuffled, which also takes O(n). 
+
+Insertion (and reshuffling) based on priority is also possible. One would eventually build an array of, for example, integers in descending order (highest priority first) which takes O(2n) time. Deletion is constant time and performed at the front of the priority queue.
+
+## Implementing queues with two stack ADTs ##
+
+A queue has been built and now one will use two stack ADTs to manage enqueueing and dequeueing.
+
+Enqueue means push an element from a collection into a stack S1. 
+
+Dequeueing an element is given by two steps: 
+
+1. Check if stack S2 is empty. If not, then check and delete the top element from S2. If S2 is empty, then pop all all elements from S1 and push to S2.
+2. Pop an element from S2.
+
+Overall, we have not used the queue ADT to implement a queue but instead two stack ADTs. The code below is based on a C++ class `Queue`:
+
+```cpp
+void Queue::enqueue(int x) {
+    S1.push(x);
+}
+ 
+int Queue::dequeue() {
+    int x = -1;
+    if (S2.empty()){
+        if (S1.empty()){
+            cout << "Queue is empty" << endl;
+            return x;
+        } else {
+            while (!S1.empty()){
+                S2.push(S1.top());
+                S1.pop();
+            }
+        }
+    }
+    x = S2.top();
+    S2.pop();
+    return x;
+}
+ ```

@@ -144,3 +144,141 @@ If we remove elements E - G (above), then we have a binary tree which is complet
 
 ## Binary tree traversal ##
 
+There are four types of tree traversal: _preorder_, _postorder_, _inorder_ and _level_.
+
+![](/images/TreeTraversalIntro.svg)
+
+Pre-order: (node) A, B (left-subtree), C (right-subtree)
+In-order: B (left-subtree), A (node), C (right-subtree)
+Post-order (vertical L-to-R, then parent node): B (left), C (right), A (node)
+Level-order (horizontal top-to-bottom): (first level) A, (second level) B, C
+
+For the second tree, we have:
+
+Pre-order: A, B, ... or just A, B
+In-order: B, A, ... or just B, A
+Post-order: B, ..., A, or just B, A
+Level-order: A, B, ... or just A, B
+
+For the third tree, we have:
+
+Pre-order: A, ..., C or just A, C
+In-order: ..., A, C or just A, C
+Post-order: ..., C, A or just C, A
+Level, order: A, ..., C or just A, C
+
+For larger trees, one breaks down to subtrees and handles traversal within each subtree.
+
+![](/images/TreeTraversal1.svg)
+
+Pre-order: A, (B, D, E), (C, F, G) or just A, B, D, E, C, F, G
+In-order: (D, B, E), A, (F, C, G)
+Post-order: (D, E, B), (F, G, C), A
+Level-order: A, (B, C), (D, E, F, G)
+
+### Visual methods when traversing trees ###
+
+Draw lines from each node and scan along the horizontal line.
+
+![](/images/TreeTraversal2.svg)
+
+![](/images/TreeTraversal3.svg)
+
+![](/images/TreeTraversal4.svg)
+
+An alternative visual method with markings:
+
+![](/images/TreeTraversal5.svg)
+
+Another involves pointing either left, up or right and move along the boundary similarly, and then record the node to which your finger or an arrow is pointing to the node. This method is appreciated with a good following of the previous method.
+
+Note that the first element of a pre-order travesal of a tree is always the same the last element of a post-order traversal.
+
+### Building a binary tree ###
+
+Each node of the binary tree is represented by a node of a doubly linked list. Another array Q (if the number of tree nodes is already known) or a linked list Q (if not) stores the address of the node being initialised. The construction of a binary tree follows the level-order traversal method, so the sequence of elements (pointers) in the array Q follows the order of a level-traversed binary tree.
+
+```cpp
+/*
+the following utilises a structure and class, Queue:
+    class Node{
+    public:
+        Node* lchild;
+        int data;
+        Node* rchild;
+    };
+
+    class Queue{
+    private:
+        int size;
+        int front;
+        int rear;
+        Node** Q;  // [Node*]*: Pointer to [Pointer to Node]
+    public:
+        Queue(int size);
+        ~Queue();
+        bool isFull();
+        bool isEmpty();
+        void enqueue(Node* x);
+        Node* dequeue();
+    };
+*/
+
+struct Node *root = NULL;
+
+void buildBinaryTree()
+{
+    //temporary pointers to the binary tree nodes
+    //t is used to build new tree nodes, p is used to store the address of the previously created tree node
+    struct Node *p, *t;
+    int x;
+
+    //Linked queue with 100 elements
+    struct Queue q;
+    create(&q, 100);
+
+    //start building the tree
+    printf("Enter root value ");
+    scanf("%d", &x);
+
+    root=(struct Node *) malloc(sizeof(struct Node));
+    root->data = x;
+    root->lchild = root->rchild = NULL;
+
+    //send the address of the root node to Queue q
+    enqueue(&q, root);
+
+    //start building the child nodes
+    while(!isEmpty(q))
+    {
+        //store the previous node address in p in preparation with link to next node
+        p = dequeue(&q);
+        printf("Enter left child of %d ", p->data);
+        scanf("%d",&x);
+
+        //when x == -1, there is no node, start with the left then the right nodes
+        if(x != -1)
+        {
+            t=(struct Node *) malloc(sizeof(struct Node));
+            t->data = x;
+            t->lchild = t->rchild = NULL;
+            p->lchild = t;
+            enqueue(&q, t);
+        }
+
+        printf("Enter right child of %d ", p->data);
+        scanf("%d", &x);
+        
+        if(x != -1)
+        {
+            t=(struct Node *) malloc(sizeof(struct Node));
+            t->data = x;
+            t->lchild = t->rchild = NULL;
+            p->rchild = t;
+            enqueue(&q, t);
+        }
+    }   
+}
+```
+
+

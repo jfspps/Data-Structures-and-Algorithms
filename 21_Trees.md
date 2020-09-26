@@ -281,4 +281,183 @@ void buildBinaryTree()
 }
 ```
 
+## Traversing a tree recursively ##
+
+### Pre-order traversal ###
+
+Here, one navigates to the left-child until the last (leaf) node is reached. Following this, the sibling right-hand node is called, which itself is also a leaf node. The parent node is then processed.
+
+Each node is initialised with two pointers, the left-child and the right-child.
+
+```cpp
+void preOrder(Node *t)
+{
+    //check if this is a leaf node
+    if (t != null)
+    {
+        printf("%d", t->data);
+        preOrder(t->left_child);
+        preOrder(t->right_child);
+    }
+}
+```
+
+The resident (newly-found) node is printed before any of its child nodes.
+
+Note that the stack will store at most the height `h` of the tree `h + 2`, to include the self-called null pointers of the leaf nodes. The space complexity matches the minimum and maximum height of a general (though complete) tree: `h = n - 1`, that is, O(n). The best-case would be `h = [log[2](n + 1)] - 1`, that is,O(log[2]n).
+
+The method preOrder() is called `2n + 1` times for a tree with n nodes, hence the degree of time complexity is O(n).
+
+### In-order traversal ###
+
+The in-order method block differs to the pre-order method by the sequence of recursive calls.
+
+```cpp
+void inOrder(Node *t)
+{
+    //check if this is a leaf node
+    if (t != null)
+    {
+        preOrder(t->left_child);
+        printf("%d", t->data);
+        preOrder(t->right_child);
+    }
+}
+```
+
+In-order calls place precedence to the left-child before printing the new resident node itself (cf. pre-order). The time and space complexities for inOrder() are the same as that for preOrder().
+
+### Post-order traversal ###
+
+The postn-order method block is essentially a different sequence of calls, this time with both child nodes handled first before the resident node.
+
+```cpp
+void postOrder(Node *t)
+{
+    //check if this is a leaf node
+    if (t != null)
+    {
+        preOrder(t->left_child);
+        preOrder(t->right_child);
+        printf("%d", t->data);
+    }
+}
+```
+
+### Iterative tree traversal methods ###
+
+Here are some of the key conditions:
+
++ whenever one attempts to traverse to the left- or right-child of node, store the address of the resident node in the stack.
++ if the current pointer to a node is `NULL` it means that there are no child nodes, so to return to the parent node, pop the stored address from the stack
++ if the current pointer is `NULL` and the stack is empty, it means that one has completed tree traversal
+
+A new structure which represents the stack, which store the addresses of nodes, pointers.
+
+```cpp
+void Tree::iterativePreOrder(Node *p) {
+    struct Stack stk;
+
+    while (p != NULL || !isEmpty(stk)){
+        if (p != NULL)
+        {
+            printf("%d", p->data);
+            push(&stk, p);
+            p = p->lchild;
+        } else {
+            //at the end of a left, leaf node, go to the right-child node
+            p = pop(stk);
+            p = p->rchild;
+        }
+    }
+}
+ 
+void Tree::iterativeInOrder(Node *p) {
+    struct Stack stk;
+
+    while (p != NULL || !isEmpty(stk)){
+        if (p != NULL)
+        {
+            push(&stk, p);
+            p = p->lchild;
+        } else {
+            //at the end of a left, leaf node, print the current node and then go to the right-child node
+            p = pop(stk);
+            printf("%d", p->data);
+            p = p->rchild;
+        }
+    }
+}
+ 
+void Tree::iterativePostOrder(Node *p) {
+    struct Stack stk;
+
+    //stores the address as a int (used twice, see below)
+    long int temp;
+
+    while (p != NULL || !isEmpty(stk)){
+        // p is looking along all left-child nodes until NULL is found (no more left-child nodes) while storing parent node addresses in
+        // the stack
+
+        if (p != NULL)
+        {
+            push(&stk, p);
+            p = p->lchild;
+        } 
+        else
+        {
+            temp = pop(stk);
+            if (temp > 0)
+            {
+                push(&stk, -temp);
+                p = ((Node *) temp->rchild);
+            }
+            else
+            {
+                printf("%d", ((Node *) temp->data));
+                p = NULL;
+            }
+        }
+    }
+}
+```
+
+Post-operator, with the stack status, is outlined below:
+
+![](/images/postOrderTraversal.svg)
+
+### Level traversal ###
+
+In this method, one employs a queue data structure to store the address of the node to be processed. This also means that the sequence of addresses matches the level-order traversal of the nodes of the tree.
+
+```cpp
+void LevelOrder(struct Node *root)
+{
+    struct Queue q;
+    create(&q, 100);
+
+    printf("%d ", root->data);
+    enqueue(&q, root);
+
+    while(!isEmpty(q))
+    {
+        //note the following pertains to nodes in the same subtree, with a parent node 'root'; each iteration moves to a different subtree
+        root=dequeue(&q);
+
+        if(root->lchild)
+        {
+            printf("%d ", root->lchild->data);
+            // this next enqueue stores the starting point of the next level (the queue is populated with null elements so only the 
+            // enqueueing of non-null elements changes the overall queue ADT)
+            enqueue(&q, root->lchild);
+        }
+
+        if(root->rchild)
+        {
+            printf("%d ", root->rchild->data);
+            enqueue(&q, root->rchild);
+        }
+    }
+}
+```
 

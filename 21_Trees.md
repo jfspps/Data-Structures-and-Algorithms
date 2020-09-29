@@ -461,3 +461,66 @@ void LevelOrder(struct Node *root)
 }
 ```
 
+## Building trees from traversals ##
+
+All of pre-order, in-order and post-order traversals will generate multiple trees. It is not possible to generate a desired tree from a combination of all traversals without also generating other trees.
+
+In some cases, choosing a pair of traversals will also yield different trees. A pre-order sequence and post-order sequence will result in different trees. 
+
+![](/images/BinaryTrees.svg)
+
+Revisiting this figure, the pre-order A, B, C and post-order C, B, A can yield the first two and last two trees (assume the node A is the parent, followed by node B).
+
+There are unique trees formed however. A pre-order of A, B, C and in-order of C, B, A is represented by the first tree only. A post-order of C, B, A and in-order A, B, C is represented by the last tree only.
+
+To generate a tree from two traversals (pre- and in-, post- and in-), list the pre (or post) order traversal and write the in-order below. Go through each node in the pre or post traversal and locate the same node in the in-order traversal. This node in the in-order traversal will form the parent/root node of the present subtree. Nodes listed to the left are part of a left-child subtree and all nodes listed to the right are part of a right-child subtree.
+
+For example, pre-order (A, B, C) and in-order (C, B, A) shows (C, B) are to the left of the root node A.
+
+![](/images/traversalToTree.svg)
+
+Time complexity is O(n) to scan the pre-order sequence and for each scan, process up to n nodes from the in-order sequence, so worst-case, traversal to tree is O(n^2). A C++ implementation is provided [here](https://algorithms.tutorialhorizon.com/make-a-binary-tree-from-given-inorder-and-preorder-traveral/).
+
+## Deducing the number of nodes and height of a tree ##
+
+Regarding the number of nodes, one starts at the root node and recursively calls the same function `count()` on the left child nodes, followed by the right child nodes.
+
+```cpp
+int count(Node *p) {
+    int x;
+    int y;
+    if (p != NULL){
+        //follows a post-order form of method calls (general approach for most tree processing)
+        x = count(p->lchild);
+        y = count(p->rchild);
+
+        //note that the return value below can be used to find, for example, the sum or product of all nodes, instead of the number of nodes
+        return x + y + 1;
+    }
+    return 0;
+}
+```
+
+When a given terminal subtree is processed, the two recursive calls return a value of two. All leaf nodes `return 0`.
+
+The height of the tree is based on summing the largest number of consecutive nodes, either from the left-child or right-child.
+
+```cpp
+int height(Node *p) {
+    int l = 0;
+    int r = 0;
+ 
+    if (p != NULL){
+        l = height(p->lchild);
+        r = height(p->rchild);
+
+        // pick the longest sequence of nodes
+        if (l > r){
+            return l + 1;
+        } else {
+            return r + 1;
+        }
+    }
+    return 0;
+}
+```

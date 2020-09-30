@@ -22,3 +22,4 @@ My notes from an online C++ course
 19. [The stack](19_The_Stack.md)
 20. [The Queue](20_Queues.md)
 21. [Trees](21_Trees.md)
+22. [Binary Search Trees](22_Binary_search_trees.md)

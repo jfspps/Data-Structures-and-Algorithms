@@ -348,7 +348,7 @@ void postOrder(Node *t)
 
 Here are some of the key conditions:
 
-+ whenever one attempts to traverse to the left- or right-child of node, store the address of the resident node in the stack.
++ whenever one attempts to traverse to the left- or right-child of a node, store the address of the resident node in the stack
 + if the current pointer to a node is `NULL` it means that there are no child nodes, so to return to the parent node, pop the stored address from the stack
 + if the current pointer is `NULL` and the stack is empty, it means that one has completed tree traversal
 

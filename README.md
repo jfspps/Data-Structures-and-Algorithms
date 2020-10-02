@@ -24,3 +24,4 @@ My notes from an online C++ course
 21. [Trees](21_Trees.md)
 22. [Binary Search Trees](22_Binary_search_trees.md)
 23. [AVL trees](23_AVL_trees.md)
+24. [Search trees](24_Search_trees.md)

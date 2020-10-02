@@ -32,7 +32,7 @@ There are three main operations: delete from a pair of keys, delete from one key
 
 ![](/images/2-3_trees_deletion.svg)
 
-When deleting a sole key from a middle node, one can then merge either the left or right sibling nodes with the vacant middle node. _Note how the parent node is singly occupied and therefore the right child node is removed_.
+When deleting a sole key from a middle node, one can then merge either the left or right sibling nodes with the vacant middle node. _Note how the parent node is singly occupied to the left, meaning that the right-child node is always removed and the left-child is always present_.
 
 + If merging the right node and the vacant middle node, move the higher value from the parent node down to the revised middle node (and remove the vacant right node)
 + If merging the left node and the vacant middle node, move the lower value from the parent node down to the left child node (and remove the vacant right node). Shift the right child node to the middle child node and shift remaining parent key to the left.
@@ -60,3 +60,18 @@ The minimum height with a given number of nodes `n` is given by `h = log[3] (2*n
 ## Uses of 2-3 trees ##
 
 Database management systems. Binary searches are quite efficient and storing more than one value per node permits quick access to more data, compared to BSTs. 2-3 trees are generally lower in height than BSTs (log[3] cf. log[2]).
+
+## 2-3-4 trees ##
+
+Many of the ideas about 2-3 trees carry across to 2-3-4 trees. They are height balanced binary trees with a degree of up to four, and with three keys per node.
+
+![](/images/2-3-4_trees.svg)
+
+### Inserting into and deleting from a 2-3-4 tree ###
+
+![](/images/2-3-4_trees_insertion.svg)
+
+The operations for deletion for 2-3 trees are more or less appicable to 2-3-4 trees. Borrowing is permitted when a sibling has two or more keys (there is no requirement for a node to have a full three keys).
+
+## Red-black search trees ##
+

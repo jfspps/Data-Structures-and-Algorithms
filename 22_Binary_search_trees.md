@@ -136,7 +136,7 @@ Thinking about it, the in-order predecessor will always be larger than all nodes
 
 ![](/images/deletingFromBST.svg)
 
-Likewise, the in-order successor will always be the smallest element of the right-subtree of the root node but also larger than the root node. Deciding which node to assign as the new root node is not discussed further here and at this stage is chosen arbitrarily.
+Likewise, the in-order successor will always be the smallest element of the right-subtree of the root node but also larger than the root node. Deciding which node to assign as the new root node is not discussed further here and at this stage is chosen arbitrarily. (Generally, for fewer operations it is simpler to assign the node which itself is a leaf node.)
 
 Note that the deletion of leaf nodes satisfies the criteria that there are no in-order predecessor or in-order successor nodes. Concern with what node replaces the leaf node is not required.
 

@@ -75,11 +75,11 @@ The operations for deletion for 2-3 trees are more or less appicable to 2-3-4 tr
 
 ## Red-black search trees ##
 
-Red-black trees are height-balanced binary search trees, in which each node is either red or black. Some of the ideas about balancing come from 2-3-4 trees.
+Red-black trees are height-balanced binary search trees, in which each node is either red or black. Some of the ideas about balancing come from 2-3-4 trees. As will be apparent, red-black trees are essentially a different way of describing 2-3-4 trees, and shows the same operations and restrictions however with respect to the colour of the node: red and black.
 
 The root node is black. `NULL` nodes (e.g. nodes after leaf nodes) are signified by black nodes.
 
-The number of black nodes from and including the root to other black nodes is always the same (a red-black tree is balanced if it satisfies this criteria).
+The number of black nodes from and including the root to other black nodes is always the same (a red-black tree is balanced if it satisfies this criteria). One can include or preclude the black NULL 'leaf' nodes when assessing the balance, the sum should be the same provided the choice is the same.
 
 Two consecutive/joined red nodes are not permitted. 
 
@@ -109,3 +109,39 @@ More adjustments are needed of the ancestors yield more red-red sequences.
 
 ![](/images/redBlack_rotateAbove.svg)
 
+### 2-3-4 trees and Red-black trees ###
+
+This mostly relates to the relationship between a black node and a child black or red node.
+
+All red child nodes are related to their black parental nodes. A black parent node and any red child nodes belong to the same node of a 2-3-4 node. The maximum number of values would be from one black and two red, i.e. three values, precisely what each node in a 2-3-4 tree can take.
+
+Two consecutive black nodes are not related to each other, or in other words, are not part of the same node. A black parent node belongs to a parent 2-3-4 node, and the black child node belongs to a different, child 2-3-4 node.
+
+Following the guidelines regarding the building of a small 2-3-4 tree example and red-black tree with the same key values reveals the above.
+
+![](/images/redblack_2-3-4trees.svg)
+
+## Deleting from red-black trees ##
+
+When deleting nodes, it is necessary to maintain tree balance (no. of black nodes in sequence from the root).
+
+Some guidelines:
+
++ Deleting a red leaf node is simple, nothing-else to follow up with
++ Deleting a red internal node then requires choosing the in-order predecessor or successor. If one happens to be a red leaf node, then perform the replacement (same as BSTs) and delete the red leaf node.
++ All red nodes are followed by at least one black node (NULL or non-NULL). Deleting a red internal node with one (not two) non-NULL black node is then followed by replacing the red internal node with the black node.
+
+The complications of red-black tree deletion are all due to the handling of black nodes. Deleting black nodes temporarily breaks the sequence of black nodes and therefore balance of the tree. As such, rotations and recolouring are employed to re-balance the tree. The increase in the number of black nodes is measured by a tree's _blackness_, which is not explored in more depth here.
+
++ If one wants to delete a black leaf node, check its sibling. If the sibling is red _and_ lies to the right then delete the black node and perform a zig-zig/RR-rotation. If the sibling is red _and_ lies to the left then delete the black node and perform an zig-zig/LL-rotation.
+
+![](/images/redblack_deletion.svg)
+
+If the black node has a red parent node and a black sibling node then there are choices:
+- If the sibling has (also) black children then delete the required node and recolour the sibling and parent node
+
+![](/images/redblack_deletion2.svg)
+
+- If the sibling has one red child node then delete the required node and perform a zig-zag rotation (LR or RL). No recolouring is needed.
+
+![](/images/redblack_deletion3.svg)

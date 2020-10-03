@@ -75,3 +75,37 @@ The operations for deletion for 2-3 trees are more or less appicable to 2-3-4 tr
 
 ## Red-black search trees ##
 
+Red-black trees are height-balanced binary search trees, in which each node is either red or black. Some of the ideas about balancing come from 2-3-4 trees.
+
+The root node is black. `NULL` nodes (e.g. nodes after leaf nodes) are signified by black nodes.
+
+The number of black nodes from and including the root to other black nodes is always the same (a red-black tree is balanced if it satisfies this criteria).
+
+Two consecutive/joined red nodes are not permitted. 
+
+Newly inserted nodes (except for the root node) are always red.
+
+The height of a red-black tree is given by `log n < height < 2 log n`. Recall, AVL trees are up to about `1.44 log n`.
+
+![](/images/redBlackTrees.svg)
+
+## Inserting and building red-black trees ##
+
+Insertion is performed like all other BSTs, with the lower value branching to the left and higher value branching to the right.
+
+The insertion of root is always black. It may seem as though inserting new nodes as red opposes the requirement that no two neighbouring nodes are red. This is addressed via (a) re-colouring or (b) rotation, depending on what else is in the tree.
+
++ If the sibling of the parent is also red, then the parent node and its sibling are recoloured black. The newly inserted node remains red. For larger trees, all other ancestor nodes are recoloured (inverted, as red <-> black) in steps until there are no red-red sequences. Root remains black.
+
+![](/images/redBlack_recolour.svg)
+
++ If the sibling of the red parent is NULL (and therefore black), then one performs rotation. 
+  - With the equivalent RR and LL imbalanced nodes of AVL trees, one performs the same rotation for red-black trees. However, such rotations are known as `zig-zig` rotations not RR- or LL-rotations.
+  - Similarly, for RL and LR imbalanced nodes of AVL trees, one performs the described RL- and LR-rotations, this time known as `zig-zag` rotations (some reference here to the relationship between the three nodes)
+
+![](/images/redBlack_rotate.svg)
+
+More adjustments are needed of the ancestors yield more red-red sequences.
+
+![](/images/redBlack_rotateAbove.svg)
+

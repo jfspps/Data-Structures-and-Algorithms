@@ -59,7 +59,7 @@ The time complexity for inserting `n` elements is `n * log[2] n` or just O(n log
 
 ## Deleting from binary heaps and Heap sorting arrays ##
 
-To maintain a complete binary on deletion and sorting, the only node that can be deleted from a binary heap is the root node. This frees the first (`i = 1`) element in the array and then populated with the last element. This ensures the binary heap is complete. The array is then sorted, depending on whether it is a maximum binary heap or minimum binary heap.
+To maintain a complete binary on deletion and sorting, the only node that can be deleted from a binary heap is the root node. This frees the first (`i = 1`) element in the array and then populated with the last element of the array. This ensures the binary heap is complete. The array is then sorted, depending on whether it is a maximum binary heap or minimum binary heap.
 
 ![](/images/BinaryHeapDeletion.svg)
 
@@ -67,12 +67,12 @@ As demonstrated below, the delete method can be extended to give a heap sort met
 
 ![](/images/BinaryHeapSort.svg)
 
-Notice how the elements in the array are sorted in increasing order. Each time an element is deleted, the next largest element becomes the root (and becomes the next element to be deleted). The child node of element `i` is given by `2i` and `2i + 1`.
+Notice how the elements in the array are becoming sorted in increasing order. Each time an element is deleted, the next largest element becomes the root (and becomes the next element to be deleted). The child node of element `i` is given by `2i` and `2i + 1`.
 
 ```cpp
 void deleteFromBinaryHeap(int A[], int n){
 
-    //i is used to traverse the parent node, j traverses the child nodes
+    //x temporarily stores the element to be deleted, i is used to traverse the parent node, j traverses the child nodes
     int x, i = 1;
     int j = 2 * i;
 
@@ -101,3 +101,50 @@ void deleteFromBinaryHeap(int A[], int n){
     }
 }
 ```
+
+## Heapify: fast binary heap creation ##
+
+The insertion of an element involves the upward traversal of a node towards the root until the maximum or minimum heap requirements are satisfied. The deletion of the root node involves the downward traversal of the node.
+
+Instead of starting from the first element of the array (for insertion), we start at the last element. One then applies the following protocol for each element, going from right-to-left in the array (sim here is to create a maximum heap):
+
++ Inspect the child nodes and check if any are larger
++ Swap with the largest child (if present)
++ Inspect the child and their children and swap if necessary. Continue until the values are ordered correctly or whenever there are no remaining child nodes.
+
+The approach of this algorithm involves fewer operations because all leaf nodes are (`(n + 1)/2` elements) never require swapping. The binary tree is already built and all that remains is to process each node, effectively starting from the penultimate level. Contrast to insert, which builds the binary tree and swaps elements before continuing. Some swapping may end up being superseded. The time complexity of heapify is O(n), compared to insert which is O(n log n).
+
+The traversal progresses down the tree as opposed to the aforementioned inert method which processes nodes up the tree.
+
+```cpp
+void Heapify(int A[], int n){
+    // # of leaf elements: (n+1)/2, index of last leaf element's parent = (n/2)-1
+    for (int i = (n/2)-1; i >= 0; i--){
+ 
+        int j = 2 * i + 1;  // Left child for current i
+ 
+        while(j < n - 1){
+            // Compare left and right children of current i
+            if (A[j] < A[j+1]){
+                j = j++;
+            }
+ 
+            // Compare parent and largest child
+            if (A[i] < A[j]){
+                swap(A, i, j);
+                //move down another level and check the grandchildren...
+                i = j;
+                j = 2 * i + 1;
+            } else {
+                break;
+            }
+        }
+    }
+}
+```
+
+## Binary heaps as priority queues ##
+
+Take a list of integers. Assume that the magnitude of the value is the same as its priority, the higher the number the higher the priority. (Values of lowest magnitude which have higher priority can also be implemented.)
+
+If the higher value has higher priority, then build a maximum binary heap, `O(log n)` time. On deletion, also `O(log n)`, (or processing at least), the root node is the highest priority, one need not search for it. If a lower value has higher priority then build a minimum binary heap. The root node is then (automatically) the lowest value and highest priority element.

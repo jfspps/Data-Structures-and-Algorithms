@@ -213,6 +213,8 @@ Each element is inserted into a queue in the usual way above. Such insertions ar
 
 Insertion (and reshuffling) based on priority is also possible. One would eventually build an array of, for example, integers in descending order (highest priority first) which takes O(2n) time. Deletion is constant time and performed at the front of the priority queue.
 
+Priority queues are best represented as binary heaps, [discussed later](/25_Binary_Heaps.md). The insertion and deletion methods are both `O(log n)` time complexity.
+
 ## Implementing queues with two stack ADTs ##
 
 A queue has been built and now one will use two stack ADTs to manage enqueueing and dequeueing.
@@ -249,5 +251,3 @@ int Queue::dequeue() {
     return x;
 }
  ```
-
- Priority queues can represent binary heaps, [discussed later](/25_Binary_Heaps.md).

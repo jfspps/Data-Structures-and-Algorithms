@@ -249,3 +249,5 @@ int Queue::dequeue() {
     return x;
 }
  ```
+
+ Priority queues can represent binary heaps, [discussed later](/25_Binary_Heaps.md).

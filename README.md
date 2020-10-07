@@ -26,3 +26,4 @@ My notes from an online C++ course
 23. [AVL trees](23_AVL_trees.md)
 24. [Search trees](24_Search_trees.md)
 25. [Binary Heaps](25_Binary_Heaps.md)
+26. [Sorting methods](26_sorting_methods.md)

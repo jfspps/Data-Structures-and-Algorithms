@@ -327,3 +327,26 @@ void iterativeMergeSort(int A[], int n)
 The above snippet can be visualised and traced with the following:
 
 ![](/images/iterativeMergeSort.svg)
+
+Instead of calling MergeFromOneArray() iteratively, one can call MergeFromOneArray() recursively. The method block appears much simpler and is traced below the snippet. The method breaks down the array to sub-arrays with one element only, which is deemed sorted, and then merges the left and right partitions.
+
+```cpp
+void recursiveMergeSort(int A[], int l, int h)
+{
+  int mid;
+  //only runs if the array contains at least two elements, otherwise it terminates the recursion chain
+  if(l < h)
+  {
+    mid = (l+h)/2;
+    recursiveMergeSort(A, l, mid);    //LHS
+    recursiveMergeSort(A, mid+1, h);  //RHS
+    MergeFromOneArray(A, l, mid, h);
+  }
+}
+```
+
+![](/images/recursiveMergeSort.svg)
+
+As shown, there are (ceiling of) `log[2] n` recursive calls. Each call will compare at most `n` elements. Hence the time complexity of recursive merge sort is O(n log[2] n), just as it is for iterative merge sort. Memory requirements will naturally be more demanding for the former compared to the latter.
+
+Note that merging occurs after two recursive calls, and is therefore a post-order recursion. The space complexity is based on 'the array + the copy of the array' from calling MergeFromOneArray(), and the height of the longest strand of successive calls log[2] n. The space complexity is thus `n + log[2] n`.

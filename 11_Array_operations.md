@@ -150,7 +150,7 @@ void insertIntoSorted(struct Array *arr, int newElement){
 }
 ```
 
-## Merging sorted arrays
+## Merging sorted arrays ##
 
 Two sorted arrays can be merged such that the resultant array is also sorted. This is achieved by comparing sequential elements from both arrays and then deciding about which element to copy across to the new, larger array.
 

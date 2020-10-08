@@ -219,7 +219,7 @@ The time complexity of quick sort is O(n^2) (more precisely a total of `n(n + 1)
 
 The first pass compared `n = 7` elements (because of pointer `j`), the second pass compared `n = 6` elements. A total of `1 + 2 + ... + n` comparisons or `n(n + 1)/2` comparisons were carried out. The passes with a list of elements in decreasing order results in the same analysis, except that the empty partition appears on the RHS.
 
-If the pivot element chosen resides in the centre of the list, then overall it presents a somewhat faster O(n log[2] n) time complexity.
+If the pivot element chosen resides in the centre of the list, then overall it presents a somewhat faster O(n log[2] n) time complexity. From the identical elements `4`, below, one can see that quick sort is not stable, as red `4` is swapped with black `4`.
 
 ![](/images/quickSort3.svg)
 
@@ -230,3 +230,100 @@ Selecting elements more central to the list may help reduce the time required to
 Selection sort focuses on finding the desired _element_ (the smallest or largest element to take the place of zeroth element) and placing it in a chosen/selected position (usually the zeroth element placeholder). Quick sort focuses on finding the _position_ (where all elements to the left and all elements to the right satisfy a certain criteria) and placing the chosen/selected element (the pivot element) there.
 
 Quick sort is sometimes also referred to as 'selection exchange sort' or 'partition exchange sort'.
+
+## Merge sort ##
+
+The aim is to combine to two ordered lists to produce a single, ordered list. We have already covered the merging of two ordered arrays [here](/11_Array_operations.md)
+
+```cpp
+int* MergeFromTwoArrays(int A[], int B[], int m, int n)
+{
+  int i = j = k = 0;
+  int C[100];
+
+  while(i <= m && j <= n)
+  {
+    if(A[i] < B[j])
+      C[k++] = A[i++];
+    else
+      C[k++]=B[j++];
+  }
+
+  for(; i <= m; i++)
+    C[k++] = A[i];
+  for(; j <= n; j++)
+    C[k++] = B[j];
+  
+  return C;
+}
+```
+
+Another example. Take a single array in which there appears to be two ordered lists: [1, 3, 5, 2, 8, 10]. List one starts at index 0 and list two starts at index 2. How would one sort the array as one ordered list and save to the same array? We mark the boundaries: index 0 with pointer `l`, the last element of the first sub-array with a pointer `mid` and the end of the second sub-array with pointer `h`. Proceed similarly to Merge and copy the values to a new auxiliary array of identical length.
+
+The modifications needed:
+
+```cpp
+void MergeFromOneArray(int A[], int l, int mid, int h)
+{
+  int i = l, j = mid+1, k = l;
+  int B[h+1];
+
+  while(i <= mid && j <= h)    
+  {
+    if(A[i] < A[j])            
+      B[k++] = A[i++];
+    else            
+      B[k++] = A[j++];    
+  }
+      
+  for(; i <= mid; i++)        
+    B[k++] = A[i];
+  
+  for(; j <= h; j++)        
+    B[k++] = A[j];
+  
+  //copy across B back to A
+  for(i = l; i <= h; i++)
+    A[i] = B[i];
+}
+```
+
+Extending the idea, merging more than two arrays, is achieved iteratively. For m-lists, one performs 'm-way merging'. This would involve m-comparisons. Alternatively, one can merge two lists at a time and then merge another list with the merged list. It is not necessary to merge all lists at the same time.
+
+With this extension, one can treat each element in an array  [1, 3, 5, 2, 8, 10] as a sub-array with one element. This approach then means that each sub-array is already sorted. Then one could merge [1] with [3], and then merge [5] with [2], and so on. These new merged lists, each with two elements can be merged again. When carried out iteratively (which is characterised by passes), there will be n elements compared per pass. There will be `log[2] n` passes (an array of eight elements is processed in three passes, a bit like an inverted binary tree). Hence the time complexity for iterative merge sort is `O(n log[2] n)`.
+
+```cpp
+void iterativeMergeSort(int A[], int n)
+{
+  //p handles pass number and is given by p/2
+  int p, l, h, mid, i;
+
+  //p cycles through 2, 4, 8, 16,...(corresponds to pass 1, 2, 3, 4,...) until it exceeds the number of elements n
+  //p actually represents the maximum number of elements to be merged and is required for h in MergeFromOneArray()
+  for(p = 2; p <= n; p = p*2)
+  {
+    //within each pass are a finite number of merges on an array of length n
+    //the first pass p = 2 (and say n = 9), then there are i = 0, 2, 4, 6 (8 won't execute for loop), four merges (h = 1, 3, 5, 7)
+    //the second pass p = 4, then i = 0, 4, or two merges (h = 3, 7)
+    //the third and final pass p = 8, then i = 0, or one merge (h = 7)
+    //i serves as the index to low l, which other indices are based on
+    for(i = 0; i+p-1 < n; i = i+p)
+    {
+      //set low, mid and high parameters
+      l = i;
+      h = i + p - 1;
+      mid = (l+h)/2;  //floor value to get mid
+      MergeFromOneArray(A, l, mid, h);
+    }
+  }
+
+  //this handles the sole odd list left over from the very beginning (e.g. p = 16 and n = 9, then the last element would be missed)
+  //l = 0, mid = 7, h = 8
+  if(p/2 < n)
+    MergeFromOneArray(A, 0, p/2-1, n-1);
+}
+```
+
+The above snippet can be visualised and traced with the following:
+
+![](/images/iterativeMergeSort.svg)

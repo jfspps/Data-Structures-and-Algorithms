@@ -375,7 +375,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -469,13 +469,13 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:7.7611px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="117.89816"
-       y="60.002014"
+       x="126.71806"
+       y="14.566195"
        id="text837-1-0"><tspan
          sodipodi:role="line"
          id="tspan835-7-4"
-         x="117.89816"
-         y="60.002014"
+         x="126.71806"
+         y="14.566195"
          style="font-size:7.7611px;stroke-width:0.264583">12</tspan></text>
     <rect
        style="fill:none;fill-rule:evenodd;stroke:#0034ff;stroke-width:0.264583;stroke-opacity:1"
@@ -776,5 +776,16 @@
        style="fill:none;stroke:#ff0000;stroke-width:0.465;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.79, 2.79;stroke-dashoffset:0;stroke-opacity:1"
        d="m 256.31207,97.689787 0.26727,-1.33635 6.1472,-27.261492"
        id="path1018-2-7-4-5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.7611px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="144.30562"
+       y="66.16423"
+       id="text837-16-7-7-0-4"><tspan
+         sodipodi:role="line"
+         id="tspan835-8-3-9-0-6"
+         x="144.30562"
+         y="66.16423"
+         style="font-size:7.7611px;stroke-width:0.264583">4</tspan></text>
   </g>
 </svg>

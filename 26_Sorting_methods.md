@@ -350,3 +350,241 @@ void recursiveMergeSort(int A[], int l, int h)
 As shown, there are (ceiling of) `log[2] n` recursive calls. Each call will compare at most `n` elements. Hence the time complexity of recursive merge sort is O(n log[2] n), just as it is for iterative merge sort. Memory requirements will naturally be more demanding for the former compared to the latter.
 
 Note that merging occurs after two recursive calls, and is therefore a post-order recursion. The space complexity is based on 'the array + the copy of the array' from calling MergeFromOneArray(), and the height of the longest strand of successive calls log[2] n. The space complexity is thus `n + log[2] n`.
+
+## Count sort ##
+
+This is an index based sorting method and is the quickest, though quite memory demanding.
+
+With an unsorted array of integers, build another auxiliary array which has the same length as the magnitude of the largest element. Take for example `[3, 5, 7, 5, 5, 12, 8, 4]`. Tally the number of times each element of a certain value appears in the auxiliary array with the corresponding index. That is:
+
+`[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]`
+
+becomes
+
+`[0, 0, 1, 1, 3, 0, 1, 1, 0, 0, 0, 1]`
+
+Then parse the auxiliary array and re-populate the array in the required order. Iteratively process each element and decrement the tally until each reaches zero, then move on.
+
+Time complexity is linear - O(n) and space complexity depends on the magnitude of the largest element. We break up the algorithm so that it determines the largest element and then orders the array.
+
+```cpp
+int findMax(int A[], int n)
+{
+  int max = INT32_MIN;
+  int i;
+  for(i = 0; i < n; i++)
+  {
+    if(A[i]>max)
+      max=A[i];
+  }
+  
+  return max;
+}
+
+void CountSort(int A[], int n)
+{
+  int i, j, max, *C;
+
+  max = findMax(A, n);
+  C = (int *)malloc(sizeof(int)*(max+1));
+
+  //fill auxiliary array C with zeros
+  for(i = 0; i < max+1; i++)
+  {
+    C[i] = 0;
+  }
+
+  //process array A and tally up corresponding element count in array C
+  for(i = 0; i < n; i++)
+  {
+    C[A[i]]++;
+  }
+
+  //re-populate the array C
+  i = 0; j = 0;
+  while(j < max+1)
+  {
+    if(C[j] > 0)
+    {
+      A[i++] = j;
+      C[j]--;
+    }
+    else
+      j++;
+  }
+}
+```
+## Bucket (or bin) sort ##
+
+The ideas carry over from count sort. Bucket, or bin, sort is suitable when only one scan or pass of the array is needed. The auxiliary array is initialised with `NULL` pointers. Each element in the auxiliary array is referred to as a 'bin'. One scans the array that needs sorting and copies the value to the bin whose index matches the value of the element copied. The values are stored in a linked list. As a result, the auxiliary array must have a length which equals the magnitude of the largest element.
+
+![](/images/bin_bucket_sort.svg)
+
+The auxiliary array is then scanned and the unsorted array repopulated, giving a sorted array. For larger elements, a larger auxiliary array is required. The elements are scanned and then repopulated, hence the time complexity is O(n).
+
+```cpp
+void binSort(int A[], int n){
+  int max, i, j;
+
+  Node * bins;
+  max = findMax (A, n);
+  bins = new Node* [max + 1]; // array of Node list pointers, including the zeroth bin
+
+  //setup the bins array with NULL pointers
+  for (i = 0; i < max+1; i++){
+    bins[i] = NULL;
+  }
+
+  for (i = 0; i < v; i++){
+    Insert(bins[A[i]], A[i]); //pass value from A[] to next node in bins[]
+  }
+
+  i = 0;  //traverses bins[]
+  j = 0;  //traverses unsorted array A[]
+
+  //re-populate the unsorted array
+  while (i < max + 1){
+    //keep working on bins[i] until it is emptied
+    while (bins[i] != NULL){
+      A[j++] = Delete(bins[i]); //Delete() updates the head pointer allowing the auxiliary array to remain attached to the list
+    }
+    i++;
+  }
+}
+```
+
+The time complexity can be expressed as O(n).
+
+Note that in some cases, a lot of the bins are not used. An alternative, more space-saving approach is the radix sort, outlined next.
+
+## Radix sort ##
+
+For arrays containing large integers, count sort would require very large amounts of memory. Bucket (or bin) sort would not sort large elements in one pass.
+
+Radix refers the number of characters which represent a quantity. For decimals, one represents each value with 10 distinct characters: 0, 1, 2, 3 ... 9.  The auxiliary array will contain the same number of elements as the radix of (in this case) decimal quantities.
+
+Each element in the auxiliary array is referred to as a 'bin'. For decimal based elements, there will be 10 bins, for hexadecimals there will be 16 bins.
+
+One uses the last digit of the element to be sorted (take % 10 or mod-10 of the value) and then assign the value to the bin with the same index. Thus, all possible integers with a last decimal digit are represented in some way with its bin index.
+
+The bins are then emptied (the array is re-populated) left to right and then FIFO (if there is more than one element in a bin). This, however, does not guarantee that the elements are sorted. They are only sorted on the basis of the last digit. 
+
+`[512, 965, 788, 476]` is assigned to bins as `[/, /, 512, /, /, 965, 476, /, 788, /]` and then re-populated as `[512, 965, 476, 788]`.
+
+We often have to sort in terms of the second digit. Divide each element by 100 then % 10, and repeat the process.
+
+`[512, 965, 476, 788]` is assigned by second digit as `[/, 512, /, /, /, /, 965, 476, 788, /]`, and then back to `[512, 965, 476, 788]`. Note how it is sorted according to the last then penultimate digit. Finally we sort according to the first digit, by dividing by 100, then % 10.
+
+`[512, 965, 476, 788]` is assigned by the first digit as `[/, /, /, /, 476, 512, /, 788, /, 965]` and then sorted as `[476, 512, 788, 965]`.
+
+One repeats the sorting method depending on the magnitude (scale) of the elements to be sorted.
+
+In outline, the code snippet would be:
+
+```cpp
+
+int getBinIndex(int x, int idx){
+    return (int)(x / pow(10, idx)) % 10;
+}
+
+int countDigits(int x){
+    int count = 0;
+    while (x != 0){
+        x = x / 10;
+        count++;
+    }
+    return count;
+}
+
+void RadixSort(int A[], int n){
+
+    //return the largest element of array A
+    int max = Max(A, n); 
+
+    //deduce the most number of digits that will need processing, nPass
+    int nPass = countDigits(max);
+ 
+    // Create bins, an array of linked lists
+    Node** bins = new Node* [10];
+ 
+    // Initialize bins array with null pointers
+    initializeBins(bins, 10);
+ 
+    // Update bins and A for nPass times
+    for (int pass=0; pass<nPass; pass++){
+ 
+        // Update bins based on A values
+        for (int i=0; i<n; i++){
+            //getBinIndex() works out the required digit (pass is n in 10^n for decimals)
+            int binIdx = getBinIndex(A[i], pass);
+            Insert(bins, A[i], binIdx);
+        }
+ 
+        // Update A with sorted elements from bin
+        int i = 0;
+        int j = 0;
+        while (i < 10){
+            while (bins[i] != nullptr){
+                A[j++] = Delete(bins, i);
+            }
+            i++;
+        }
+        // Initialize bins with null pointers again
+        initializeBins(bins, 10);
+    }
+ 
+    // Delete heap memory
+    delete [] bins;
+}
+```
+
+The time complexity can be expressed as O(dn), where d = number of digits (or order) for the largest integer. Assuming that the order is roughly the same between datasets, then the time complexity of radix sort is O(n).
+
+## Shell sort ##
+
+Shell sort, named after Donald Shell, is an extension of insertion sort and is useful for very large lists.
+
+With insertion sort, one traverses along the list and compares two consecutive elements, and then shuffles the position until both are sorted. With shell sort, one determines the floor value of `n/2` where `n` is the number of elements to be sorted. The two elements which are compared are given by the index `i` and `i + n/2`, and iterated from `i = 0`. The spacing (the floor value of `n/2` between the two pointers is referred to as a 'gap'. Unlike insertion sort, other neighbouring elements are not automatically shuffled. Only two elements pointed to are shuffled.
+
+![](/images/shellSort.svg)
+
+Note that for an odd number of elements, this results in the introduction of a third pointer which facilitates the swapping of three elements, if required. The requirement is clear: if the pair of pointers results in no swapping, then the introduction of the third pointer is not carried out. If however, the first two pointers swapped values then the third pointer is introduced and the value is checked. 
+
+![](/images/shellSort2.svg)
+
+The gap between all three pointers is still the floor value of `9/2`.
+
+Returning to the previous example, the array is then processed again. In the next pass, one sets up a smaller gap, the floor value of `n/4`. Each time a new pass is carried out, the gap is halved. This continues until `n/2*(pass no.) < 1`. 
+
+Note that the number of pointers is eventually increased as the pass number increases. Going back to the introduction of the third pointer, this is done on a needs basis. For small gaps, the third pointer is introduced if the first pointers swapped elements. If the second and third pointer also swapped values then a fourth (non-NULL with the same gap) pointer earlier in the list is introduced and compared. If the third and fourth pointer swapped values then a fifth pointer is introduced. If not, then no preceding pointers are introduced. The index `i` is incremented.
+
+In the extreme case where the gap is one, shell sort behaves just like an insertion sort. The aim of shell sort is to reduce the number of elements swapped in the latter passes.
+
+There are maximum of `log[2] n` passes possible. The worst case time complexity is thus O(n log[2] n). Some analyses of shell sort expresses time complexity as O(n^[3/2]). We ignore the number of swap procedures since it is insignificant compared to traversals and passes.
+
+```cpp
+void ShellSort(int A[], int n)
+{
+  int gap, i, j, temp;
+
+  //iterate over each pass by dividing gap by 2 each time
+  for(gap = n/2; gap >= 1; gap/= 2)
+  {
+    //i is the leading pointer; j represents the trailing pointer
+    for(i = gap; i < n; i++)
+    {
+      temp = A[i];
+      j = i-gap;
+      //check the first pair; if swapped decrement j and repeat until j is out-of-bounds
+      while(j >= 0 && A[j] > temp)
+      {
+        A[j+gap] = A[j];
+        j = j - gap;
+      }
+
+      //temp stores the leading element and assigned to the appropriate position
+      A[j+gap] = temp;
+    }
+  }
+}
+```

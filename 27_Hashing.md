@@ -77,3 +77,74 @@ void main()
     printf("%d ", temp->data);
 }
 ```
+
+Note here that the size of the hash table is not bound by a given value and chosen to best suit the problem at hand.
+
+## Closed hashing: Linear probing ##
+
+Use the same approach as chaining. Instead of compiling a hash table as an array of linked list, build an array of data types which match the data type of the key. In this example, we will handle integers as keys, and so create an array of integers for the hash table.
+
+When a collision occurs, pass the key to another hash function. The (primary) hash function is `H(x) = x%10`, and the (secondary) hash function is `H'(x) = [H(x) + f(i)] % 10`, where `f(i) = i, i = 0, 1, 2,...`. The result is to attempt to store the key at the next available element (of the hash table) with higher index.
+
+The first collision occurs when `i = 0`, that is H(x) = H'(x). The secondary hash function gives the same hash table index as the primary hash function. One repeats the computation of H'(x) to find a value of `i` such that H'(x) is empty or vacant. The act of searching for a vacant space is referred to as a 'linear probe', that is, one changes (increases) `i` linearly, probing for a vacant element until one is found. In the example below, `i = 0` results in a collision but `i = 1` is vacant.
+
+![](/images/linearProbing.svg)
+
+Note that the introduction of mod 10 ensures that the probing is cyclic. Each element is probed as `i` increases. When key = 19 collides with another key 9 at index 9, the hashing function H'(x) returns 10 (when i = 1) and so the pointer returns to the top of the hash table.
+
+Searching is performed by using the primary hashing function. If the sought key does not match the hash table key then the next element in the hash table is compared. This continues until either:
+
++ the next element is vacant (recall that the insertion method does not skip vacant elements so neither would search)
++ hash table has been traversed fully? This is considered next...
+
+The loading factor of linearly probed hash tables is always less than one. In other words, the size of the hash table is greater than the number of keys present. Consequently, there will always be a vacant element somewhere in the hash table. Therefore, the searching of a key will always terminate when a vacant element is found and never require the traversal of the entire hash table.
+
+The desired conditions for a loading factor for linearly probed hash tables is `lambda <= 0.5`, the hash table is at most half-filled. This usually helps reduce the number of comparisons needed while balancing this aspect with redundant memory. One issue with linearly probed hash tables is the formation of groups of keys, referred to as 'primary clustering' of keys.
+
+The deletion of keys is not trivial. Once a key is found (using the same search method), the table is re-populated to ensure that all keys are in their appropriate slot. If one was to delete key 35 (above) then it would not be possible to locate key 5 because element 5 is now vacant. The re-populating of the hash table is known as 'rehashing'.
+
+Generally, deletion from linearly probed hash tables is not recommended. A slight modification (not explored in detail here) is to build another array of the same size as the hash table and mark each element with `NULL`, `0` or `1`, to indicate whether the corresponding hash table element is vacant, deleted or present, respectively.
+
+```cpp
+//choosing the right SIZE is important if this is to work
+#define SIZE 10
+
+int hash(int key)
+{
+    return key%SIZE;
+}
+
+int probe(int H[], int key)
+{
+    int index = hash(key);
+    int i = 0;
+    while(H[(index+i)%SIZE] != 0)
+        i++;
+
+    return (index+i)%SIZE;
+}
+
+void Insert(int H[], int key)
+{
+    int index = hash(key);
+    if(H[index] != 0)
+        //find the first vacant element
+        index = probe(H,key);
+
+    H[index] = key;
+}
+
+int Search(int H[],int key)
+{
+    int index = hash(key);
+    int i = 0;
+
+    //an empty element would be NULL and also terminate the loop
+    while(H[(index+i)%SIZE] != key)
+        i++;
+
+    return (index+i)%SIZE;
+}
+```
+
+The average time of a successful search of a key is taken as `1/lambda ln(1/(1-lambda))`. The average time of an unsuccessful search is taken as `1/(1-lambda)`.

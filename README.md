@@ -27,3 +27,4 @@ My notes from an online C++ course
 24. [Search trees](24_Search_trees.md)
 25. [Binary Heaps](25_Binary_Heaps.md)
 26. [Sorting methods](26_Sorting_methods.md)
+27. [Hashing techniques](27_Hashing.md)

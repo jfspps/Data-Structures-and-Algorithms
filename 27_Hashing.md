@@ -15,7 +15,7 @@ So far, our function is H(x) = x, where the value maps itself in a one-to-one ap
 
 `[2, 3, 6, 10, 0, 15]` could be stored in an array of ten (not 15) elements, `B [-1, 10, 2, 3, -1, 15, 6, -1, -1, -1]`
 
-The problem now is how to store two keys which are mapped to the same index (try storing key 35 in B, above). This results in a __collision__ between two keys. The hashing function H(x) = x % 10 is thus an example of a many-to-one function. There are two main approaches to addressing collisions:
+The problem now is how to store two keys which are mapped to the same index (try storing key 35 in B, above). This results in a __collision__ between two keys. The hashing function H(x) = x % 10 is thus an example of a many-to-one function. There are two main resolutions to addressing collisions:
 
 + Open hashing (characteristic of using dynamic memory allocation)
   - Chaining
@@ -84,15 +84,15 @@ Note here that the size of the hash table is not bound by a given value and chos
 
 Use the same approach as chaining. Instead of compiling a hash table as an array of linked list, build an array of data types which match the data type of the key. In this example, we will handle integers as keys, and so create an array of integers for the hash table.
 
-When a collision occurs, pass the key to another hash function. The (primary) hash function is `H(x) = x%10`, and the (secondary) hash function is `H'(x) = [H(x) + f(i)] % 10`, where `f(i) = i, i = 0, 1, 2,...`. The result is to attempt to store the key at the next available element (of the hash table) with higher index.
+When a collision occurs, pass the key to a probing function. The hash function is `H(x) = x % 10`, and another hash function (referred to here as a probing function since it attempts to probe the table one collision) is `h'(x) = [H(x) + f(i)] % 10`, where `f(i) = i, i = 0, 1, 2,...`. The result is to attempt to store the key at the next available element (of the hash table) with higher index.
 
-The first collision occurs when `i = 0`, that is H(x) = H'(x). The secondary hash function gives the same hash table index as the primary hash function. One repeats the computation of H'(x) to find a value of `i` such that H'(x) is empty or vacant. The act of searching for a vacant space is referred to as a 'linear probe', that is, one changes (increases) `i` linearly, probing for a vacant element until one is found. In the example below, `i = 0` results in a collision but `i = 1` is vacant.
+The first collision occurs when `i = 0`, that is H(x) = h'(x). The probing function gives the same hash table index as the primary hash function. One repeats the computation of h'(x) to find a value of `i` such that h'(x) is empty or vacant. The act of searching for a vacant space is referred to as a 'linear probe', that is, one changes (increases) `i` linearly, probing for a vacant element until one is found. In the example below, `i = 0` results in a collision but `i = 1` is vacant.
 
 ![](/images/linearProbing.svg)
 
-Note that the introduction of mod 10 ensures that the probing is cyclic. Each element is probed as `i` increases. When key = 19 collides with another key 9 at index 9, the hashing function H'(x) returns 10 (when i = 1) and so the pointer returns to the top of the hash table.
+Note that the introduction of mod 10 ensures that the probing is cyclic. Each element is probed as `i` increases. When key = 19 collides with another key 9 at index 9, the probing function h'(x) returns 10 (when i = 1) and so the pointer returns to the top of the hash table.
 
-Searching is performed by using the primary hashing function. If the sought key does not match the hash table key then the next element in the hash table is compared. This continues until either:
+Searching is performed by using the hash function. If the sought key does not match the hash table key then the next element in the hash table is compared. This continues until either:
 
 + the next element is vacant (recall that the insertion method does not skip vacant elements so neither would search)
 + hash table has been traversed fully? This is considered next...
@@ -148,3 +148,121 @@ int Search(int H[],int key)
 ```
 
 The average time of a successful search of a key is taken as `1/lambda ln(1/(1-lambda))`. The average time of an unsuccessful search is taken as `1/(1-lambda)`.
+
+## Closed hashing: Quadratic probing ##
+
+Linear probing tends to build whole blocks of keys which when traversed would not terminate very often on unsuccessful searches. Quadratic probing attempts to break up the blocks along the hash table.
+
+The only difference is a modified probing function:
+
+`h'(x) = [H(x) + f(i)] % 10`, where `f(i) = i^2, i = 0, 1, 2,...`
+
+This effectively cycles through `h'(x) = H(x) % 10`, then `h'(x) = (H(x) + 1) % 10`, then `h'(x) = (H(x) + 4) % 10` and so on. Note that when a key is assigned to `h'(x) = (H(x) + 1) % 10` then `h'(x) = (H(x) + 4) % 10` is potentially zero. 
+
+![](/images/quadraticProbing.svg)
+
+In other words, when `h'(x) = (H(x) + 1) % 10 != NULL` and `h'(x) = (H(x) + 4) % 10 = 0`, then `x` is not present.
+
+When searching for a key, one can call the following with the same quadratic hash function:
+
+```cpp
+int Search(int H[], int key){
+    int index = hash(key);
+    int i = 0;
+
+    //if key found is not the same or is NULL, and the next hashed index is vacant, then cease the search; otherwise check the next hashed index and its successor
+    while (H[(index+i*i) % SIZE] != key){
+        i++;
+        if (H[(index + i*i) % SIZE] == 0){
+            return -1;
+        }
+    }
+    return (index + i*i) % SIZE;
+}
+```
+
+The analysis of quadratic probing is given below, without justification:
+
++ average successful search taken as `-ln(1 - lambda)/lambda`
++ average unsuccessful search taken as `1/(1 - lambda)`
+
+## Closed hashing: Double hashing ##
+
+In this case, one uses two hash functions H(x) to map keys to the hash table, `H1(x)` and `H2(x)` and resolve collisions.
+
++ `H1(x) = x % 10`
++ `H2(x) = R - (x % R)` where `R` is the largest prime number smaller than the hash table length (determined after hash table initialisation)
++ `h'(x) = (H1(x) + i*H2(x)) % 10` where `i = 0, 1, 2,...`
+
+Note that the second hash function never returns zero. The hashing ensures that all elements are utilised.
+
+First attempt to assign the key to the hash table index using `H1(x)`. If there is a collision then deduce `h'(x)` (practically start from `i = 1` for each* key; `h'(x)` with `i = 0` would always result in a collision). If there is a second collision, then repeat with `i = 2`. In a way, `i` signifies the collision no.
+
+See below (n = 9, R = 7). The first hash function for keys ending with 5 are always `H1(x) = 5` and the second is `H2(x) = 7 - (x % 7)`. 
+
+Overall, `h'(x) = [5 + i*(7 - (x % 7))] % 10`.
+
+![](/images/doubleHashing.svg)
+
+This demonstrates that the mapping of the key is based on the key and is not always consistent. Both linear and quadratic mapping consistently maps keys which collide (e.g. all those ending with the same digit), `h'(x) = [x % 10 + f(i)] % 10`. The grouping of the keys illustrated with quadratic probing is the same.
+
+```cpp
+#define SIZE 10
+#define PRIME 7
+
+//...
+
+int Hash(int key){
+    return key % SIZE;
+}
+ 
+int PrimeHash(int key){
+    return PRIME - (key % PRIME);
+}
+ 
+int DoubleHash(int H[], int key){
+    int index = Hash(key);
+    int i = 0;
+    while (H[(Hash(index) + i * PrimeHash(index)) % SIZE] != 0){
+        i++;
+    }
+    return (index + i * PrimeHash(index)) % SIZE;
+}
+ 
+void Insert(int H[], int key){
+    int index = Hash(key);
+ 
+    if (H[index] != 0){
+        index = DoubleHash(H, key);
+    }
+    H[index] = key;
+}
+ 
+int Search(int H[], int key){
+    int index = Hash(key);
+    int i = 0;
+    while (H[(Hash(index) + i * PrimeHash(index)) % SIZE] != key){
+        i++;
+        if (H[(Hash(index) + i * PrimeHash(index)) % SIZE] == 0){
+            return -1;
+        }
+    }
+    return (Hash(index) + i * PrimeHash(index)) % SIZE;
+}
+```
+
+## Hashing functions ##
+
+Some general aims:
+
++ The keys mapped should be uniformly distributed
++ For closed hashing, the size of the hash table must be double the number of keys present. Furthermore, the size should equal a prime number, to minimise collisions
++ Hash functions must return the same index for a given key
+
+Other hashing functions include midsquare() and folding().
+
+'Midsquare' squares the key and then returns the middle digit, which is then used as the hash table index. One can also take the middle two digits if the square contains an even number of digits.
+
+'Folding' involves breaking up a large value into pairs of digits and then summing each pair. `123456` becomes `12 + 34 + 56`. If this results in too large an index then one can 'fold' the sum.
+
+We have only considered integers as keys so far. For characters, one can convert the character into its ASCII codes and then design a hash function which operates on the ASCII codes. Other languages, for example Java, build hash-codes which identify objects based on various metadata properties such as date stamps, file size etc.

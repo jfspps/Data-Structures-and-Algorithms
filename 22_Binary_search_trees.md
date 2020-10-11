@@ -12,7 +12,7 @@ Some value properties:
 
 BSTs are usually represented by linked lists ('linked representation') but can be implemented with arrays. Assume that BSTs are not strict binary trees in the following discussion.
 
-## Searching from a BST ##
+## Searching with a BST ##
 
 Starting from the parent node, one compares the required element with the node value and traverses either left or right if the required element does not equal the current node. Move to the left if the required element is less than the parent element, or, move to the right if the required element is greater than the parent node.
 

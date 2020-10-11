@@ -43,9 +43,9 @@ void fun(int n)
 
 ![](/images/recursiveTracing2.svg)
 
-Both recursive exmaples shown are of the order `O(n)`.
+Both recursive examples shown are of the order `O(n)`.
 
 # The stack and recursion #
-Iterative loops are usually less demanding on the stack, than resursive functions, since fewer stack frames are generated for each function call. Some compilers convert recursive functions into iterative ones.
+Iterative loops are usually less demanding on the stack, than recursive functions, since fewer stack frames are generated for each function call. Some compilers convert recursive functions into iterative ones.
 
 In many cases, recursive and iterative functions have the same time complexity. Some recursions are termed _excessive_. A reduction in recursive calling can be achieved using _memoisation_, a method involving the storage of recursive output which can be recalled, instead of executing recursive functions again. See later, when Fibonacci by recursion is discussed.

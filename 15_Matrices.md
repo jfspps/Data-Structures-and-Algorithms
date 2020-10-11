@@ -4,7 +4,7 @@
 
 Define as matrix `M[i,j] = 0 if i != j`
 
-For space savig benefits, one uses a single-dimensioned array to store all diagonal elements. Arrays are zero based, whereas matrices covered here are one-based. 
+For space saving benefits, one uses a single-dimensioned array to store all diagonal elements. Arrays are zero based, whereas matrices covered here are one-based. 
 
 The dimensions of the matrix `M` are given by m and n, and accessed by array `A` indices i and j.
 
@@ -319,7 +319,7 @@ Approach the method by first asking for the indices of the element in matrix M r
 
 A tridiagonal matrix is one type of _square-band matrix_ where the number of diagonals on either side of the diagonal is equal but can be greater than one. All elements off the diagonals are zero.
 
-## Topelitz matrices ##
+## Toeplitz matrices ##
 
 This is matrix in which all elements in the same diagonal are equal. That is, `M[i][j] = M[i-1][j-1]`.
 

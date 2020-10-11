@@ -35,7 +35,7 @@ p->next = 0;    //points to nothing; a null pointer NULL
 
 ## Moving along the linked list ##
 
-A useful set of statements in which the head node traverses the linked list is given below:. Pointer `q` is the temporary pointer which traverses across the linked list. Pointer `p` is initially located in the stack, as the head node.
+A useful set of statements in which the head node traverses the linked list is given below. Pointer `q` is the temporary pointer which traverses across the linked list. Pointer `p` is initially located in the stack, as the head node.
 
 ```cpp
 struct Node *p, *q;

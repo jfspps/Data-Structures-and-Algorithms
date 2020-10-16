@@ -157,3 +157,12 @@ My notes from an online C++ course
     - Linear probing
     - Quadratic probing
     - Double hashing
+28. [Graphs](28_Graphs.md)
+  + Directed and undirected graphs
+  + Breadth first search
+  + Depth first search
+  + Spanning tree
+  + Prim's programming
+  + Kruskal's minimum cost spanning tree
+  + Disjoint subsets
+  + Kruskal's program

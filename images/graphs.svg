@@ -650,7 +650,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
      inkscape:cx="484.012"
-     inkscape:cy="480.52096"
+     inkscape:cy="157.27214"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -669,7 +669,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -833,15 +833,15 @@
        id="path924" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:7.05556px;line-height:1.25;font-family:sans-serif;fill:#800000;fill-opacity:1;stroke:none;stroke-width:0.264583;"
        x="44.901276"
-       y="52.384823"
+       y="57.997482"
        id="text928"><tspan
          sodipodi:role="line"
          id="tspan926"
          x="44.901276"
-         y="52.384823"
-         style="font-size:7.05556px;stroke-width:0.264583">non-connected</tspan></text>
+         y="57.997482"
+         style="font-size:7.05556px;stroke-width:0.264583;fill:#800000;">non-connected</tspan></text>
     <ellipse
        style="fill:none;stroke:#800000;stroke-width:0.264999"
        id="path833-7"
@@ -1628,5 +1628,12 @@
          x="88.700478"
          y="225.92351"
          style="font-size:7.05556px;stroke-width:0.264583">Topological ordering</tspan></text>
+    <ellipse
+       style="fill:none;stroke:#800000;stroke-width:0.264999"
+       id="path4692"
+       cx="66.1492"
+       cy="25.390606"
+       rx="54.389347"
+       ry="24.588797" />
   </g>
 </svg>

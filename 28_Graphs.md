@@ -396,7 +396,7 @@ When handling tree structures, it is necessary to modify this convention and sig
 
 + Instead of assigning a -1 value to the appropriate element, one assigns the parent node value as its value. A value of 2 at index 17 means an element with the value of 17 is child node to parent, which has the value of 2.
 + The parent node is symbolised by the negative value of the number of members (the _cardinality_ of the set), including itself and all other descendants.
-+ A value of -1 is assigned to all other elements which do not represent any member.
++ A value of -1 is assigned to all other elements which do not represent any member (they are essentially _singletons_)
 
 Overall, an array such as {2, -4, 2, 2} shows that elements 0, 2 and 3 are child nodes each having, respectively, the values 0, 2 and 3. They are child nodes to node 2. There are a total of four members in this set, where the parent node is symbolised with the negative of the _cardinality_ of the set.
 
@@ -442,3 +442,80 @@ int findParent(int u){
     return x;
 }
 ```
+
+### Writing Kruskal's algorithm ###
+
+We start by designing the data structures applied. A `3 x e` array `edges` is used to store all `e` edges. The zeroth row lists lower valued vertex, the first row stores the light valued vertex and the second row stores with weighing.
+
+Two single-dimensioned arrays `set` and `edgesIncluded` are used to store the set built up and a means to identify the index of the edge (from `edges`) has already been considered, respectively.
+
+Finally, an array `t` is used to denote the edges of the built tree.
+
+![](images/KruskalsMCST_method.svg)
+
+Find the minimum edge. Then check that the nodes/vertices pair are represented by negative values (trees have only one parent but elements with -1 are their own parent) using `set`.  If so, then proceed with the (weighted) union. If both are their own parent then assign one as the parent arbitrarily (element 4 was chosen in this example). Update the arrays are required.
+
+![](images/KruskalsMCST_method2.svg)
+
+Find the next minimum edge and see if was already included by examining the `edgesIncluded` array. This time, we include (3, 6) at index 4. `edgesIncluded[4] = 0` so this edge hasn't been included yet. We will assign 6 as the parent node.
+
+![](images/KruskalsMCST_method3.svg)
+
+Repeat the process.
+
+![](images/KruskalsMCST_method4.svg)
+
+Repeat again. This time (1, 2) is the next pair, and join singleton {2} to 4 (join to the parent). Update all arrays. Note that adding (1, 2) does not mean 1 is directly connected to 2 in the tree.
+
+![](images/KruskalsMCST_method5.svg)
+
+Repeat with (3, 4).
+
+![](images/KruskalsMCST_method6.svg)
+
+Finally, we process (6, 7).
+
+![](images/KruskalsMCST_method7.svg)
+
+Now that all required edges have been processed, we cease further iterations for this analysis. In practice, a more general method which builds array `edgesIncluded` and `edges` with dimensions that match the number of edges in the original graph (`e` would equal eight in this example). One continues until all edges are considered i.e. all elements with non-zero indices are populated with 1s.
+
+Do not compare the tree built with the original graph. Looking at array `t`, one can see that the larger weighted edges are omitted, and Kruskal's method has given a valid MCST.
+
+In this example, no cyclic graphs (or potential to build cyclic graphs) were encountered. If cyclic graphs are about to form, simply change the tally `edgesIncluded` with a 1 but do not add the pair to `t`.
+
+An example of the main() implementation, using `findParent()` and `union()`, is provided below.
+
+```cpp
+//global I = 32767
+void main(){
+    int i = 0, j, k, n = 7, e = 8, min, u, v;
+
+    while(i < n-1){
+        min = I;
+
+        //process edges for locate the next minimum edge
+        for (j = 0; j < e; j++){
+            if (edgesIncluded[j] == 0 && edges[2][j] < min){
+                min = edges[2][j];
+                k = j;  //store location of new minimum
+                u = edges[0][j];
+                v = edges[1][j];
+            }
+        }
+
+        //perform union if both parent nodes belong to different subsets
+        if (findParent(u) != findParent(v)){
+            t[0][i] = u;
+            t[1][i] = v;
+            //union() will determine the root node formed
+            union(findParent(u), findParent(v));
+            i++
+        }
+
+        //flag this edge as done
+        edgesIncluded[k] = 1;
+    }
+}
+```
+
+Note that `set` is not implemented here since the goal is to build an MCST.

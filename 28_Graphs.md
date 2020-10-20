@@ -373,3 +373,72 @@ for (i = 1; i < n-1; i++){
     print_tree();
 }
 ```
+
+### Kruskal's minimum cost spanning tree ###
+
+A somewhat simpler algorithm compared to Prim's algorithm, there is no initialisation step. The approach starts by choosing edges with the lowest weight possible and building up the spanning tree. This repeats as long as no cyclic tree if formed. If a cyclic tree is about to be formed then select the next lowest weighted edge.
+
+![](images/KruskalsMCST.svg)
+
+The time complexity as outlined above is O(n*e) or just O(n^2). This applies regardless of the data type structures used.
+
+Computationally, Kruskal's method can employ minimum (binary) heaps to find the minimum edge. For `e` edges, the time taken to find the weighted edge is `log e` time. Therefore, Kruskal's method becomes O(n log n) time.
+
+Compared to Kruskal's method, Prim's method places less emphasis on finding the minimum cost spanning tree and is more aligned to finding 'a' valid spanning tree. If one were to take a non-connected graph, Prim's method would produce only one of the components, which has the lowest edge of the entire graph. On the other hand, Kruskal's method builds paths separately, and such paths may derive from any component. As a result, Kruskal's method will build MCSTs of all components.
+
+### Disjointed sets - testing for cyclic graphs ###
+
+Disjointed sets do not have elements in common with each other. The intersection of two disjointed sets is a null set or empty set.
+
+Sets if integers can be stored in arrays. When building the array, the existence of an element is given by the value -1 at the appropriate element. For instance, the value -1 at the element with index 5 means the set contains an element with the value of 5.
+
+When handling tree structures, it is necessary to modify this convention and signify the parent node or vertex. One also needs to be able to identify the child nodes of any given parent. A potential (there are others) revised convention is then applied:
+
++ Instead of assigning a -1 value to the appropriate element, one assigns the parent node value as its value. A value of 2 at index 17 means an element with the value of 17 is child node to parent, which has the value of 2.
++ The parent node is symbolised by the negative value of the number of members (the _cardinality_ of the set), including itself and all other descendants.
++ A value of -1 is assigned to all other elements which do not represent any member.
+
+Overall, an array such as {2, -4, 2, 2} shows that elements 0, 2 and 3 are child nodes each having, respectively, the values 0, 2 and 3. They are child nodes to node 2. There are a total of four members in this set, where the parent node is symbolised with the negative of the _cardinality_ of the set.
+
+When joining two subsets, the root node is assigned to the parent of the largest set. The parent of the smaller set is represented by the value of the new parent (the index of the parent node does not change: this is needed regarding _its_ children). The magnitude of the new parent node is changed to reflect the new cardinality.
+
+- as two subsets (the parent of each is in __bold__) {__3__, 5, 9} and {__4__, 7, 8, 10} can be stored as [-1, -1, -1, -3, -4, 3, -1, 4, 4, 3, 4]. Note here there are two different positive numbers meaning there are two parent nodes of disjointed sets.
+- the union of {__3__, 5, 9} and {__4__, 7, 8, 10} is given by [-1, -1, -1, 4, -7, 3, -1, 4, 4, 3, 4]
+
+One can check if a cycle is formed by comparing the parent nodes to the top of the tree. In the set, element _5_ [-1, -1, -1, 4, -7, _3_, -1, 4, 4, 3, 4] belongs to __3__ [-1, -1, -1, __4__, -7, _3_, -1, 4, 4, 3, 4] where 3 belongs to 4. Element _10_ [-1, -1, -1, 4, -7, 3, -1, 4, 4, 3, _4_] also belongs to 4. Thus both elements belong to the same set and tree, so joining them would result in a cyclic graph.
+
+#### The union of two sets ####
+
+One can design a method union() which joins two vertices. Assume the required global variables have been initialised.
+
+```cpp
+void union(int u, int v){
+    //array s stores all subsets or joined subsets
+    //s[x] < -1 for all parent nodes of subsets with at least two elements
+    if (s[u] < s[v]){
+        //u is the parent to more children
+        s[u] += s[v];
+        s[v] = u;
+    } else {
+        s[v] += s[u];
+        s[u] = v;
+    }
+}
+```
+
+#### Finding the parent node ####
+
+Overall, one can deduce the root node by examining the value at consecutive elements until a negative value is returned.
+
+```cpp
+int findParent(int u){
+    int x = u;
+
+    //loop through all elements until a negative value (root node) is found
+    while (s[x] > 0){
+        x = s[x];
+    }
+
+    return x;
+}
+```

@@ -189,7 +189,7 @@ A spanning tree is a subgraph such that the for a given number of vertices `v`, 
 
 When drawn, a spanning tree links all vertices together with the minimum number of edges required. 
 
-There are usually numerous spanning trees per graph and is deduced with a binomial expansion `|E|_C_(|V|-1) - no. of cyclic subgraphs`. For a graph with four vertices, this results in `20 - 4` spanning trees.
+There are usually numerous spanning trees per graph and is deduced with a binomial coefficient `eC(v-1) - no. of cyclic subgraphs`. For a graph with four vertices, this results in `20 - 4` spanning trees.
 
 Notice that if a graph is non-connected (there are two or more non-connected subgraphs) then it is not possible to find a spanning tree since all vertices will not be connected.
 

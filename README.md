@@ -1,16 +1,16 @@
 # Data-Structures-and-Algorithms
 My notes from an online C++ course
 
-1. [Essential C and C++](/1_Essential_C_and_C++.md)
+1. [Essential C and C++](1_Essential_C_and_C++.md)
   + Structures
   + Pointers
   + References
   + Passing to functions
-2. [Classes in C++](/2_Classes_in_C++.md)
+2. [Classes in C++](2_Classes_in_C++.md)
   + General syntax
   + Scope resolution
   + Templates
-3. [The stack and the heap](/3_Stack_and_Heap.md)
+3. [The stack and the heap](3_Stack_and_Heap.md)
 4. [Types of data structures](4_Types_of_data_structures.md)
   + Physical and logical data structures
   + Abstract data types

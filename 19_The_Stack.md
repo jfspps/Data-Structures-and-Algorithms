@@ -15,7 +15,7 @@ The stack data is composed of a collection of elements (an array or linked list)
 
 ## Implementing stacks with arrays ##
 
-Declare an array of given size and set the pointer to -1. An array is filled starting from the zeroth index and the pointer is adjusted to point to the non-null element. Constant inserting at the head of the array would require constant reshuffling of the elements, so it is preferable to fill an array starting from the first element.
+Declare an array of given size and set the pointer to -1. An array is filled starting from the zeroth index and the pointer is adjusted to point to the non-null element. Constant insertion at the head of the array would require constant reshuffling of the elements, so it is preferable to fill an array starting from the first element.
 
 One uses a `struct` to define a stack:
 
@@ -33,7 +33,7 @@ struct stack st;
 
 //size required from another method or the user
 //build a new array of required size in the heap with the pointer 
-st.stack = new int[st.size];
+st.stackPtr = new int[st.size];
 
 //represents an empty stack (this will change soon enough), when isEmpty == true
 st.top = -1;    

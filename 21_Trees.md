@@ -186,6 +186,8 @@ Draw lines from each node and scan along the horizontal line.
 
 ![](/images/TreeTraversal4.svg)
 
+Note how in pre-order, the node is examined before its children (hence "pre-order"). In in-order, the nodes are viewed left-to-right as shown in the tree. In post-order, the node is viewed after its children (hence "post-order"). 
+
 An alternative visual method with markings:
 
 ![](/images/TreeTraversal5.svg)

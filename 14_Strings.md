@@ -367,4 +367,4 @@ void swap(char &x, char &y)
 }
 
 ```
-The program is in [/code/StringPermutationRecursive/](/code/StringPermutationRecursive/)
+The program is in [/code/StringPermutationRecursive/](https://github.com/jfspps/Data-Structures-and-Algorithms/tree/gh-pages/code/StringPermutationRecursive/StringPermutationRecursive)

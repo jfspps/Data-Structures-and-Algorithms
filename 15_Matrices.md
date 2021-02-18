@@ -297,7 +297,7 @@ int main()
 
 ```
 
-The program is located in [/code/SymmetricMatrices/](/code/SymmetricMatrices/).
+The program is located in [/code/SymmetricMatrices/](https://github.com/jfspps/Data-Structures-and-Algorithms/tree/gh-pages/code/SymmetricMatrices).
 
 ## Tridiagonal matrices ##
 

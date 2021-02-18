@@ -97,7 +97,9 @@ int Delete(struct Array *arr, int index)
     }
     return 0;
 }
+```
 
+```
 //somewhere in main(){}
 struct Array arr1 = {{2,3,4,5,6},10,5};
 printf("%d", Delete(&arr1, 0));     //prints 2

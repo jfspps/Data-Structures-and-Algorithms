@@ -286,14 +286,14 @@ Initialising the global variables is given by:
 ```cpp
 #define I = 32767  //highest 16-bit integer
 
-int cost[8][8] =   {{I, I, I, I, I, I, I, I},
+int cost[8][8] =   { {I, I, I, I, I, I, I, I},
                     {I, I, 4, I, 1, I, I, I},
                     {I, 4, I, 8, I, I, I, I},
                     {I, I, 8, I, 5, I, 2, I},
                     {I, 1, I, 5, I, 10, I, I},
                     {I, I, I, I, 10, I, I, 3},
                     {I, I, I, 2, I, I, I, 6},
-                    {I, I, I, I, I, 3, 6, I}};
+                    {I, I, I, I, I, 3, 6, I} };
 
 int near[8] = {I, I, I, I, I, I, I, I};
 

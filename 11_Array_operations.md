@@ -180,8 +180,8 @@ Two sorted arrays can be merged such that the resultant array is also sorted. Th
     }
 
     //somewhere in main(){}
-        struct Array array1 = {{2,6,10,15,25}, 10, 5};
-        struct Array array2 = {{3,4,7,18,20}, 10, 5};
+        struct Array array1 = { { 2,6,10,15,25 }, 10, 5};
+        struct Array array2 = { { 3,4,7,18,20 }, 10, 5};
 
         struct Array array3 = array1.Merge(array2)
 

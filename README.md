@@ -1,5 +1,5 @@
 # Data-Structures-and-Algorithms
-My notes from an online C++ course
+My notes from an online C++ course. The GitHub pages landing page is [here](https://jfspps.github.io/Data-Structures-and-Algorithms)
 
 1. [Essential C and C++](1_Essential_C_and_C++.md)
   + Structures

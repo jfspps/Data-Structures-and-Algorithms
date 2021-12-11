@@ -1,4 +1,54 @@
 # Essential C and C++ #
+
+## Enumerations
+
+Enumerations are indexed by integers by default but can be indexed with characters instead.
+
+	int main(){
+
+		// of type int by default, MondayN = 0 etc.
+		enum WeekDayNum {
+			MondayN,
+			TuesdayN,
+			WednesdayN,
+			ThursdayN,
+			FridayN
+		};
+
+		// of type char, Monday = M
+		enum WeekDay : char {
+			Monday = 'M',
+			Tuesday = 'T',
+			Wednesday = 'W',
+			Thursday = 'T',
+			Friday = 'F'
+		};
+
+		WeekDay someWeekDay = Monday;
+		WeekDayNum someWeekDayNum = MondayN;
+
+		// use a more modern form of type-casting
+		cout << "The current weekday set is: " << static_cast<char>(someWeekDay) << endl;
+		cout << "The current weekday (num) set is: " << someWeekDayNum << endl;
+
+		cout << "Pick a number between 0 and 4: " << endl;
+
+		int customDay;
+		cin >> customDay;
+
+		while (customDay < 0 || customDay > 4){
+			cout << "Please enter a value between 0 and 4, inclusive: " << endl;
+			cin >> customDay;
+		}
+
+		if (someWeekDayNum == customDay){
+			cout << "You picked the same day" << endl;
+		} else
+			cout << "You picked a different day" << endl;
+
+		return 0;
+	}
+
 ## Structures ##
 These are collections of data types under one name
 

@@ -1,4 +1,54 @@
 # Essential C and C++ #
+
+## Enumerations
+
+Enumerations are indexed by integers by default but can be indexed with characters instead.
+
+	int main(){
+
+		// of type int by default, MondayN = 0 etc.
+		enum WeekDayNum {
+			MondayN,
+			TuesdayN,
+			WednesdayN,
+			ThursdayN,
+			FridayN
+		};
+
+		// of type char, Monday = M
+		enum WeekDay : char {
+			Monday = 'M',
+			Tuesday = 'T',
+			Wednesday = 'W',
+			Thursday = 'T',
+			Friday = 'F'
+		};
+
+		WeekDay someWeekDay = Monday;
+		WeekDayNum someWeekDayNum = MondayN;
+
+		// use a more modern form of type-casting
+		cout << "The current weekday set is: " << static_cast<char>(someWeekDay) << endl;
+		cout << "The current weekday (num) set is: " << someWeekDayNum << endl;
+
+		cout << "Pick a number between 0 and 4: " << endl;
+
+		int customDay;
+		cin >> customDay;
+
+		while (customDay < 0 || customDay > 4){
+			cout << "Please enter a value between 0 and 4, inclusive: " << endl;
+			cin >> customDay;
+		}
+
+		if (someWeekDayNum == customDay){
+			cout << "You picked the same day" << endl;
+		} else
+			cout << "You picked a different day" << endl;
+
+		return 0;
+	}
+
 ## Structures ##
 These are collections of data types under one name
 
@@ -49,8 +99,110 @@ In C++:
 
     p = new int[5];
 
+This next example shows a little about pointer arithmetic and how to free arrays in heap.
+
+	#include <iostream>
+
+	using std::cin;
+	using std::cout;
+	using std::endl;
+
+	int main(){
+
+		int arraySize = 5;
+
+		// assign the int pointer to a new array of int, which resides in the heap;
+		// note that both int declarations must match
+		int *arrayOne = new int[arraySize];
+		int *tempArray;
+
+		// use this to mark the actual number of elements present
+		int added = 0;
+
+		int heapIndex = 0;
+		int answer = 0;
+
+		// assume that at least one value is entered
+		while (true){
+			cout << "Enter an non-zero integer value (enter 0 to quit): ";
+
+			// using the int equivalent of the input would also work here
+			cin >> answer;
+
+			if (answer == 0 || answer == 0){
+				cout << "Terminating input...";
+				break;
+			}
+
+			added++;
+			arrayOne[heapIndex++] = answer;
+			// the array name is the same as a pointer pointing to the first element, 
+			// i.e. int someInt = *arrayOne is the same as int someInt = arrayOne[0]
+			// then int someInt = *(arrayOne + 2) is the same as int someInt = arrayOne[2]
+			// and hence *(arrayOne + 2) = *(arrayOne + 3) assigns the third element 
+			// value to the second
+
+			// if the last element was assigned, 
+			if (heapIndex == arraySize){
+				cout << "Increasing the array size..." << endl;
+
+				arraySize += 5;
+				cout << "New array size: " << arraySize << endl;
+
+				tempArray = new int[arraySize];
+				for (int j = 0; j < added; j++){
+					tempArray[j] = arrayOne[j];
+				}
+
+				// remove the current arrayOne elements from the heap
+				delete[] arrayOne;
+
+				// pointers (unlike references) are mutable so reassign arrayOne
+				arrayOne = tempArray;
+				tempArray = 0;
+			}
+		}
+
+		cout << "You entered a total of " << heapIndex << " value(s)" << endl;
+
+		int sum = 0;
+		bool groupDoneYet = false;
+		int i = 0;
+
+		// only process as many elements that were added
+		for (; i < added; i++){
+			groupDoneYet = false;
+			cout << arrayOne[i] << " ";
+			sum += arrayOne[i];
+
+			if ((i + 1) % 5 == 0){
+				cout << "sum: " << sum << " and average: " <<  
+							static_cast<double>(sum/5) << endl;
+				sum = 0;
+				groupDoneYet = true;
+			}
+		}
+
+		// handle the trailing elements
+		if (!groupDoneYet)
+			cout << "sum: " << sum << " and average: " << 
+							static_cast<double>(sum/(i%5)) << endl;
+
+		cout << "Clearing up..." << endl;
+
+		// release all heap memory
+		delete[] arrayOne;
+
+		// remove the address
+		arrayOne = 0;
+
+		return 0;
+	}
+
 ## References ##
-References are aliases to variables, and not part of C. They do not create copies of variables they reference to in any function call (other than `main()`). Functions which handle the references do not reside in separate stack frames and instead are part of the `main()` stack frame.
+References are aliases to variables, and not part of C. They do not create copies of variables they reference to in any function call (other than `main()`). Unlike pointers, __references are immutable__ and so must be assigned as an alias to one variable for the program's entire lifecycle.
+
+Functions which handle the references do not reside in separate stack frames and instead are part of the `main()` stack frame.
 
     //general form i: type & identifier
 	int main(){

@@ -85,6 +85,8 @@ Grant access to stack and heap resources, by address. Functions called are store
 	}
 
 Note that C++ pointers to the left of the assignment operator are declarations (and initialisations) of pointers. Pointers to the right of the assignment operator are dereferencing right-hand variables.
+	
+### Storing data on the heap with pointers in C and C++
 
 In C, data is stored in the heap using `malloc()`. In C++, use the keyword `new`. Below is a comparison. In C:
 
@@ -98,6 +100,20 @@ In C, data is stored in the heap using `malloc()`. In C++, use the keyword `new`
 In C++:
 
     p = new int[5];
+    
+### Pointer and Arrays
+
+A pointer to an array can be expressed in the form:
+
+	// array of pointers to integers
+	int *ptr[arraySize];
+	
+	// used for comparison:
+	int someArray[arraySize];
+	
+In this case, `ptr` is an array of pointers to integers. In comparison, the literal `someArray` represents an array of integers.
+
+The array name or literal is essentially a pointer to the first element. The expression `*ptr` refers to the _value_ of the first element of the array and is equivalent to `ptr[0]`. The expression `*(ptr + 1)` is equivalent to `ptr[1]` and all are examples of 'pointer arithmetic'.
 
 This next example shows a little about pointer arithmetic and how to free arrays in heap.
 
@@ -224,28 +240,42 @@ Alternatively, one can use the indirect member operator, instead of (*p).
 Tokens `&r` to the right of the assignment operator return the address the reference points to. All references MUST be initialised.
 
 ## Functions and parameter passing ##
-Passing by value assigns a variable, local to the function,  with the parameter. The actual-parameter cannot be changed. To change a parameter variable, pass by reference or by pointer.
+Passing by value assigns a variable, local to the function, with the parameter. The variable passed as the parameter resides in a different part of memory. Only a copy of the variable is handled by the function: hence the original variable cannot be changed. To change a parameter passed as a variable, send its address in the form of a reference or a pointer.
 
-### Passing and calling by addresses ###
+### Passing pointers ###
 From the given block (quite often `main()`), the address of parameter(s) can be sent to a function so as to allow the parameter values to change. The following function call passes the address of the variables `a` and `b`.
 
     swap(&a, &b);
 
-Then, by the following function signature, one then needs to have formal parameters as pointers:
+It is also possible to send pointers directly instead of addresses of variables.
 
-    swap(int *x, int *y);
+    swap(pointerA, pointerB);
 
-The above definition expects references, which are then referred to as `x` and `y` in the `swap()`. The function body would then need to dereference `x` and `y` (using `*x` and `*y`) in order to access the values of `a` and `b`.
+The corresponding function prototype (or _declaration_, that is, the function signature: function return and parameter types, and, the function name), one then needs to have formal parameters as pointers, for example:
 
-### Passing and calling by reference (C++ only) ###
-Instead of passing by value, one can use references to the values and pass references.
+    void swap(int *x, int *y);
+
+The above definition expects pointers, which are then referred to as `x` and `y` in the `swap()`. The function body would then need to dereference `x` and `y` (using `*x` and `*y`) in order to access the values of `a` and `b`.
+
+The `main()` method can have arguments defined which end up representing command-line parameters.
+
+	int main(int argc, char* argv[]){
+	...
+	}
+
+The first argument `argc` represents the number of arguments and the second argument `argv` is an array of pointers to characters. The latter equivalent to an array of pointers to strings, since each character pointer points to the first character of the string. The first element of `argv` is always the program name and so `argc` is always at least 1.
+
+### Passing by reference (C++ only) ###
+Instead of passing by value or pointer, one can use references to the values and pass references.
 
     swap(int &x, int &y);
 
-The above call assigns x and y as references to the actual-parameters `a` and `b`. Thus, the function call `swap(a, b)` can change the values of the actual-parameters. This provides an alternative to the pointer approach above.
+The above call assigns x and y as references to the function-local parameters `a` and `b`. Thus, the function call `swap(a, b)` can change the values of the actual-parameters. This provides an alternative to the pointer approach above. The function prototype would take the form of:
+
+    void swap(int &x, int &y);
 
 ### Passing arrays ###
-Arrays can be thought of as pointers to the first element of an array. The type of the array and number of elements present indicates how much storage space is required.
+Recall that arrays can be thought of as pointers to the first element of an array. The type of the array and number of elements present indicates how much storage space is required.
 
 Passing arrays is equivalent to passing pointers.
 
@@ -255,7 +285,20 @@ The above call is equivalent to the following but not specific for arrays:
 
     fun(int *A, int n);
 
+The function prototype would be something like:
+
+    void fun(int someArray[], int someInt);
+    
+### Passing read-only addresses
+
+It is possible to force the compiler to prevent the function from editing the address of variable by using the `const` keyword in the function prototype:
+
+    void swap(const int &x, int &y);
+
+In this case, the reference corresponding to x cannot be changed, however, that corresponding to y can.
+
 ### Passing structures ###
+
 One can pass structures as values, references and pointers. Here is an example of a function definition involving references and pointers to structures. Both approaches allow one to change the actual-parameter passed.
 
     int area(struct Rectangle &z){
@@ -271,3 +314,28 @@ One can pass structures as values, references and pointers. Here is an example o
 ## Static variables ##
 
 The keyword `static` declares variables (as well as objects and functions) which are initialised once (all subsequent initialisations are ignored) and retain their value for the duration of the function call, including `main()`.
+
+## A note on returning pointers and references
+
+In all cases, do not return the address (by pointer or reference) of local variables to the function. This is because the local variable is freed once the function termiantes and so the pointer or reference will be pointing to an undefined region of memory. Instead, build a new pointer to the local variable in the heap with `new` and return the pointer.
+
+The first snippet will not work but the second will:
+
+	double* someFunc(double data){
+	  double someData = 3*data;
+	  return &someData;
+	}
+	
+	double* someFunc2(double data){
+	  double* something = new double(3*data);
+	  return something;
+	}
+
+Returning references is also similarly fraught with errors. Additionally, avoid the mistake of returning pointers when references are called for:
+
+	double& someFunc3(double someArray[]){
+	  // do stuff...
+	  return someArray[2];
+	}
+
+Here the function is defined such that it returns a reference to the third element of `someArray`.  Note that using `&someArray[2]` would return the address (pointer) of the result, which is not an alias to the result.

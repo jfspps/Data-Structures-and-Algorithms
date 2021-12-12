@@ -199,7 +199,7 @@ This next example shows a little about pointer arithmetic and how to free arrays
 		return 0;
 	}
 
-## References ##
+## References (C++ only) ##
 References are aliases to variables, and not part of C. They do not create copies of variables they reference to in any function call (other than `main()`). Unlike pointers, __references are immutable__ and so must be assigned as an alias to one variable for the program's entire lifecycle.
 
 Functions which handle the references do not reside in separate stack frames and instead are part of the `main()` stack frame.
@@ -209,6 +209,8 @@ Functions which handle the references do not reside in separate stack frames and
 		int a = 10;
 		int &r = a;
 	}
+
+References do not need dereferencing and their identifier (i.e. `r`) automatically provides the value it points to. The address the reference points to is given by `&r`.
 
 The address of `a` and `r` are the same, so any operations on `a` and `r `are the same. So `r++` is equivalent to `a++`. The tokens `&r` to the left of the assignment operator assign a reference `r` to some variable. Pointers can be assigned to the address held by references, e.g. structures:
 

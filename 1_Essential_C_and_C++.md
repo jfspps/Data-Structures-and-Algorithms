@@ -200,7 +200,9 @@ This next example shows a little about pointer arithmetic and how to free arrays
 	}
 
 ## References ##
-References are aliases to variables, and not part of C. They do not create copies of variables they reference to in any function call (other than `main()`). Functions which handle the references do not reside in separate stack frames and instead are part of the `main()` stack frame.
+References are aliases to variables, and not part of C. They do not create copies of variables they reference to in any function call (other than `main()`). Unlike pointers, __references are immutable__ and so must be assigned as an alias to one variable for the program's entire lifecycle.
+
+Functions which handle the references do not reside in separate stack frames and instead are part of the `main()` stack frame.
 
     //general form i: type & identifier
 	int main(){

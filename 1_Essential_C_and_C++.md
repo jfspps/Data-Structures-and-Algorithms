@@ -339,3 +339,5 @@ Returning references is also similarly fraught with errors. Additionally, avoid 
 	}
 
 Here the function is defined such that it returns a reference to the third element of `someArray`.  Note that using `&someArray[2]` would return the address (pointer) of the result, which is not an alias to the result.
+
+Anyway, the main point here is that `someArray[]` was initialised before `someFunc3` was called.

@@ -82,6 +82,7 @@ int dequeue(struct Queue *q)
     return x;
 }
 ```
+
 Both methods are constant time complexity. Notice here how the front and rear indices are always advanced forward, so at some point the queue must be reinitialised or the 'pointers' must be reset (otherwise one would find the queue is empty or full). Some of the array placeholders prior to the front pointer may be vacant.
 
 By default, the pointers can be reset whenever the condition `isEmpty` is true. Another solution would be to employ circular queues.
@@ -129,7 +130,7 @@ As with non-circular queues, enqueue() and dequeue() are both O(1) time complexi
 
 ## Queues and linked lists ##
 
-Queues are implemented with linked lists using two pointers, to ensure that insertion time is constant O(1). Initially, both pointers are null. The condition `isEmpty()` is true when the front pointer is null. 
+Queues are implemented with linked lists using two pointers, to ensure that insertion time is constant O(1). Initially, both pointers are null. The condition `isEmpty()` is true when the front pointer is null.
 
 The condition `isFull()` is true when the heap is full, and signified when instantiation of a new node fails, _i.e._
 
@@ -207,9 +208,9 @@ Priority queues group elements which are acted on based on priority. The queue w
 
 ### Single priority queues ###
 
-Some elements contain data types which themselves signify a priority. For example, lower integers could have higher priority than larger integers. 
+Some elements contain data types which themselves signify a priority. For example, lower integers could have higher priority than larger integers.
 
-Each element is inserted into a queue in the usual way above. Such insertions are constant time operations. However, deletion is based on priority, so one must scan the queue and look for the element with the highest priority, and then delete it. Thus the queue is behaving as a priority queue. Deletion is then, at worst, O(n). Remaining elements of an array (not a linked list) are then reshuffled, which also takes O(n). 
+Each element is inserted into a queue in the usual way above. Such insertions are constant time operations. However, deletion is based on priority, so one must scan the queue and look for the element with the highest priority, and then delete it. Thus the queue is behaving as a priority queue. Deletion is then, at worst, O(n). Remaining elements of an array (not a linked list) are then reshuffled, which also takes O(n).
 
 Insertion (and reshuffling) based on priority is also possible. One would eventually build an array of, for example, integers in descending order (highest priority first) which takes O(2n) time. Deletion is constant time and performed at the front of the priority queue.
 
@@ -219,9 +220,9 @@ Priority queues are best represented as binary heaps, [discussed later](/25_Bina
 
 A queue has been built and now one will use two stack ADTs to manage enqueueing and dequeueing.
 
-Enqueue means push an element from a collection into a stack S1. 
+Enqueue means push an element from a collection into a stack S1.
 
-Dequeueing an element is given by two steps: 
+Dequeueing an element is given by two steps:
 
 1. Check if stack S2 is empty. If not, then check and delete the top element from S2. If S2 is empty, then pop all all elements from S1 and push to S2.
 2. Pop an element from S2.

@@ -68,7 +68,6 @@ for (int i = 0; i < m; i++){
 }
 ```
 
-
 ## Representing polynomials with linked lists ##
 
 A node with the coefficient and the exponent (and the pointer to the next node) is sufficient to represent each term in a polynomial.

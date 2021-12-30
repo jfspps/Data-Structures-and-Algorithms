@@ -167,7 +167,7 @@ struct Node
 
 Note that top is already declared and accessible to any function which calls `top`. This demonstrates the difference when calling methods and passing parameters.
 
-Within this scope, a linked list based stack is empty if `top == NULL` and full if pointer `t` is `NULL` following `Node * t = new Node;`. 
+Within this scope, a linked list based stack is empty if `top == NULL` and full if pointer `t` is `NULL` following `Node * t = new Node;`.
 
 ### Push operations on linked list based stacks, O(1) ###
 
@@ -337,6 +337,7 @@ Compilers convert an infix expression into postfix before evaluation. Compilers 
 ```cpp
 a + b * c
 ```
+
 Precedence leads to, in steps:
 
 1. a + b * c
@@ -387,9 +388,9 @@ The postfix would be:
 2. [ab+] * [cd-]
 3. `a b + c d - *`
 
-#### Infix to postfix conversion, and associativity ####
+### Infix to postfix conversion, and associativity ###
 
-Compilers parenthesise expressions based in associativity, which indicates the direction of reading a sub-expression, with the first appearing first. It is required when two operators have the same precedence. 
+Compilers parenthesise expressions based in associativity, which indicates the direction of reading a sub-expression, with the first appearing first. It is required when two operators have the same precedence.
 
 For example, left-to-right associativity indicates that the leftmost sub-expression takes precedence over anything to its right. Here is a summary of the rules (conventions):
 
@@ -401,7 +402,7 @@ For example, left-to-right associativity indicates that the leftmost sub-express
 | unary    | 4    | R - L |
 | (  )     | 5    | L - R |
 
-The unary operators take higher precedence than binary operators. 
+The unary operators take higher precedence than binary operators.
 
 The assignment operator `=` is associativity R-L. So `a = b = c = 100` assigns c, then b then a. This is written by the compiler as:
 
@@ -419,7 +420,7 @@ As a postfix expressions, we would yield:
 
 Take a unary operator, for example `--a`. The parenthesised form would be (-(-a)). The postfix form is a--, the prefix is --a.
 
-Dereferencing pointers with *, a unary operator. `*p` is the prefix, and `p*` is the postfix form. Logarithms and factorials are other examples of unary operators. 
+Dereferencing pointers with *, a unary operator. `*p` is the prefix, and `p*` is the postfix form. Logarithms and factorials are other examples of unary operators.
 
 Stated again, unary operators take precedence over binary operators. For example, `-a + b * log n!`.
 
@@ -434,7 +435,7 @@ Going right-to-left, as per the table, we have the postfix form would be:
 
 ### Infix to postfix using the stack ###
 
-__Method 1__
+#### Method 1 ####
 
 The stack is used to store operators according to their precedence. All operands, are placed in a temporary array. Expressions are read from left to right.
 
@@ -496,7 +497,7 @@ Note that L-R associative operators have higher precedence out of the stack comp
 
 For the expression `((a + b) * c ) - d ^ e ^ f` the first two `(` are pushed to the stack and given a precedence of 0 (from 6). Operand `a` is passed to an array. Incoming operator `+` has higher precedence than resident `(`, so is pushed to the stack. Operand `b` is sent to the array and then the next two `)` nullify the resident `(`. No parentheses are passed to the array. The next operands and operators are handled as outlined previously. The result is `ab+ c* def ^^ -`.
 
-__Method 2__
+#### Method 2 ####
 
 Unlike method 1, in method 2 one fills the stack with operands and operators. Operands have the highest precedence over all operators. Operands have equal precedence, so consecutive operands pop other operands out of the stack. The popping and pushing of the stack follows the same conventions.
 
@@ -504,7 +505,7 @@ Unlike method 1, in method 2 one fills the stack with operands and operators. Op
 
 Following some aspects of method 2 above, first an infix expression is converted into a postfix expression. The expression is then scanned and the stack is populated with operands. When an operator is found, two operands from the top are popped from the stack and evaluated. Using `ab+ c* def ^^ -` as an example, one can see how the stack and computation is handled:
 
-| Stack                | OP              | 
+| Stack                | OP              |
 |:--------------------:|:---------------:|
 | a                    |                 |
 | b, a                 |                 |

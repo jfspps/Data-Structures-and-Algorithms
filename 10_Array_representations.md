@@ -66,6 +66,7 @@ A[2] = new int[4];
 
 A[1][2] = 5; //etc...
 ```
+
 One can also set a pointer to a +pointer to an +array, where +pointer resides in the heap.
 
 ```cpp

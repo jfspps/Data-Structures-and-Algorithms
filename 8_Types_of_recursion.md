@@ -1,14 +1,15 @@
 # Types of recursive functions #
+
 + Tail recursion: when the recursive function is the last call of a a block, for example
 
 ```C++
 void fun(int n)
 {
-	if(n > 0)
-	{
-	printf("%d ", n);	
-	fun(n - 1);
-	}
+ if(n > 0)
+ {
+ printf("%d ", n); 
+ fun(n - 1);
+ }
 }
 ```
 
@@ -17,11 +18,11 @@ Note this example is not a tail recursion because the final call is the `+` oper
 ```C++
 void fun(int n)
 {
-	if(n > 0)
-	{
-	printf("%d ", n);	
-	fun(n - 1) + n;
-	}
+ if(n > 0)
+ {
+ printf("%d ", n); 
+ fun(n - 1) + n;
+ }
 }
 ```
 
@@ -34,12 +35,12 @@ Tail and head recursion, with only one recursive call, are termed _linear recurs
 ```cpp
 void fun(int n)
 {
-	if (n > 0)
-	{
-		printf("%d ", n);
-		fun(n - 1);
-		fun(n - 1);
-	}
+ if (n > 0)
+ {
+  printf("%d ", n);
+  fun(n - 1);
+  fun(n - 1);
+ }
 }
 ```
 
@@ -52,22 +53,22 @@ Above, the output is "3, 2, 1, 1, 2, 1, 1". The space complexity is `(n + 1)` wh
 ```cpp
 void A()
 {
-	if(...)
-	{
-	...
-	B();
-	...
-	}
+ if(...)
+ {
+ ...
+ B();
+ ...
+ }
 }
 
 void B()
 {
-	if(...)
-	{
-	...
-	A();
-	...
-	}
+ if(...)
+ {
+ ...
+ A();
+ ...
+ }
 }
 ```
 
@@ -76,12 +77,11 @@ void B()
 ```cpp
 void fun(int n)
 {
-	if(...)
-	{
-	...
-	fun(fun(n-1));
-	...
-	}
+ if(...)
+ {
+ ...
+ fun(fun(n-1));
+ ...
+ }
 }
 ```
-

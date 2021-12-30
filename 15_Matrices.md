@@ -55,7 +55,8 @@ void DisplayMatrix(struct Matrix m)
     }
 }
 ```
-### Class implementation of diagonal matrices ###
+
+## Class implementation of diagonal matrices ##
 
 Moving towards a C++ class form of a matrix, as opposed to C structure:
 
@@ -118,6 +119,7 @@ void Diagonal::Display()
     }
 }
 ```
+
 ## Lower-triangular matrices ##
 
 This can defined as an array A[i,j] such that
@@ -129,7 +131,7 @@ if (i < j)
 
 The matrix is stored in a single-dimensioned array. The number of elements in the lower triangle is the __ceiling value__ of:
 
-```
+```math
 1 + 2 + 3 + ... + n = n(n+1)/2 elements
 ```
 

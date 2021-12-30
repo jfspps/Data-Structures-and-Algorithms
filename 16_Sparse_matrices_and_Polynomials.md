@@ -23,7 +23,7 @@ The above table is not complete but illustrates the idea. The first row is reser
 
 ## Compressed sparse rows ##
 
-This approach uses three arrays. 
+This approach uses three arrays.
 
 + The first array lists the value of the non-zero elements one row at a time, left-to-right. Hence the length of the first array is the same as the number of non-zero elements present.
 
@@ -93,22 +93,23 @@ void create(struct Sparse *s)
 {
     int i;
 
-    //prepare the Sparse matrix structure
+    // prepare the Sparse matrix structure
     printf("Enter the dimensions of the sparse matrix:");
     scanf("%d%d", &s->m, &s->n);
     printf("Number of non-zero elements present:");
     scanf("%d", &s->num);
 
-    //build the array e in the Sparse matrix structure S
+    // build the array e in the Sparse matrix structure S
     s->e = (struct Element *) malloc(s->num*sizeof(struct Element));
 
-    //populate array e with coords and value of the non-zero element
+    // populate array e with coords and value of the non-zero element
     printf("Enter non-zero Elements (press enter after each row):");
 
     for(i = 0; i < s->num; i++)
         scanf("%d%d%d", &s->e[i].i, &s->e[i].j, &s->e[i].x);
 }
 ```
+
 One can display the sparse matrix as a sparse matrix (so including the zero elements) using:
 
 ```cpp
@@ -119,14 +120,14 @@ void display(struct Sparse s)
     {
         for(j = 0; j < s.n; j++)
         {
-            //only print non-zeros if the coords in e[k].i and e[k].j match the current position i and j
+            // only print non-zeros if the coords in e[k].i and e[k].j match the current position i and j
             if(i == s.e[k].i && j == s.e[k].j)
                 printf("%d ", s.ele[k++].x);
             else
                 printf("0 ");
         }
         printf("\n");
-        //next row
+        // next row
     }
 }
 ```
@@ -210,7 +211,7 @@ struct Sparse* add(struct Sparse *s1, struct Sparse *s2)
     sum->n = s1->n;
     sum->num = k;
 
-    //return the address of the new structure in the heap
+    // return the address of the new structure in the heap
     return sum;
 }
 ```
@@ -255,7 +256,7 @@ int main()
         scanf("%d%d", &p.terms[i].coeff, &p.terms[i].exp);
     }
 
-    //display and manipulate as required
+    // display and manipulate as required
 
     return 0;
 }
@@ -288,21 +289,21 @@ struct Poly* add(struct Poly *p1, struct Poly *p2)
     i = j = k = 0;
     while(i < p1->n && j < p2->n)
     {
-        //p1 has the larger exponent; advance p1 index i, leave p2 index j
+        // p1 has the larger exponent; advance p1 index i, leave p2 index j
         if(p1->terms[i].exp > p2->terms[j].exp)
             sum->terms[k++] = p1->terms[i++];
-            //p2 has the larger exponent; advance p2 index j, leave p1 index i
+            // p2 has the larger exponent; advance p2 index j, leave p1 index i
         else if(p1->terms[i].exp < p2->terms[j].exp)
             sum->terms[k++] = p2->terms[j++];
         else
         {
-            //both exponents are equal, so copy either of the exponents and add the coefficients; advance all indices
+            // both exponents are equal, so copy either of the exponents and add the coefficients; advance all indices
             sum->terms[k].exp = p1->terms[i].exp;
             sum->terms[k++].coeff = p1->terms[i++].coeff + p2->terms[j++].coeff;
         }
     }
 
-    //copy across remaining terms from polynomial incompletely processed
+    // copy across remaining terms from polynomial incompletely processed
     for( ; i < p1->n; i++)
         sum->terms[k++] = p1->terms[i];
     for( ; j < p2->n; j++)

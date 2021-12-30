@@ -1,11 +1,12 @@
 # Array operations in C++
 
-### The dot (.) and arrow (->) operators ###
+## The dot (.) and arrow (->) operators
+
 The dot operator is used to call a given method or member (of a structure) on an object which was passed by reference. See Display(), below, for an example.
 
 The arrow operator is used when the object was passed as a pointer. See Append() for an example.
 
-### The array structure ###
+## The array structure
 
 The following examples are based on an array structure, with three variables.
 
@@ -18,11 +19,11 @@ struct Array
 }
 ```
 
-### Operations on the array structure ###
+## Operations on the array structure
 
 We store the structure in the heap. For display functions we simply pass by value (a copy is temporarily stored in the stack) but for other operations which can edit elements, we pass by pointer.
 
-### Dot and arrow operators
+## Dot and arrow operators
 
 The dot `(.)` operator calls a method on the given object when the object was passed by value. See `Display()` below for an example. If the object was passed by pointer then the arrow operator `(->)` is used instead. See `Append()` for an example.
 
@@ -41,6 +42,7 @@ void Display(struct Array arr)
 struct Array arr1 = {5, {2,3,4,5,6},10};
 Display(arr1);
 ```
+
 The add() operation increases `length` and changes a padded zero element accordingly. Append() is the same as add().
 
 ```cpp
@@ -152,7 +154,7 @@ void insertIntoSorted(struct Array *arr, int newElement){
 }
 ```
 
-## Merging sorted arrays ##
+## Merging sorted arrays
 
 Two sorted arrays can be merged such that the resultant array is also sorted. This is achieved by comparing sequential elements from both arrays and then deciding about which element to copy across to the new, larger array.
 

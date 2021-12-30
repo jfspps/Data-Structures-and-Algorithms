@@ -28,7 +28,7 @@ There are three main operations: delete from a pair of keys, delete from one key
 
 (iii) When deleting from a leaf left or right node with one key value, delete the key value and merge the empty node and middle node.
 
-+ If deleting from the right leaf node (remove the empty right node) and send the higher value of the parent pair down to the middle node (this should create a full child node) 
++ If deleting from the right leaf node (remove the empty right node) and send the higher value of the parent pair down to the middle node (this should create a full child node)
 
 ![](/images/2-3_trees_deletion.svg)
 
@@ -81,7 +81,7 @@ The root node is black. `NULL` nodes (e.g. nodes after leaf nodes) are signified
 
 The number of black nodes from and including the root to other black nodes is always the same (a red-black tree is balanced if it satisfies this criteria). One can include or preclude the black NULL 'leaf' nodes when assessing the balance, the sum should be the same provided the choice is the same.
 
-Two consecutive/joined red nodes are not permitted. 
+Two consecutive/joined red nodes are not permitted.
 
 Newly inserted nodes (except for the root node) are always red.
 
@@ -99,9 +99,9 @@ The insertion of root is always black. It may seem as though inserting new nodes
 
 ![](/images/redBlack_recolour.svg)
 
-+ If the sibling of the red parent is NULL (and therefore black), then one performs rotation. 
-  - With the equivalent RR and LL imbalanced nodes of AVL trees, one performs the same rotation for red-black trees. However, such rotations are known as `zig-zig` rotations not RR- or LL-rotations.
-  - Similarly, for RL and LR imbalanced nodes of AVL trees, one performs the described RL- and LR-rotations, this time known as `zig-zag` rotations (some reference here to the relationship between the three nodes)
++ If the sibling of the red parent is NULL (and therefore black), then one performs rotation.
+  + With the equivalent RR and LL imbalanced nodes of AVL trees, one performs the same rotation for red-black trees. However, such rotations are known as `zig-zig` rotations not RR- or LL-rotations.
+  + Similarly, for RL and LR imbalanced nodes of AVL trees, one performs the described RL- and LR-rotations, this time known as `zig-zag` rotations (some reference here to the relationship between the three nodes)
 
 ![](/images/redBlack_rotate.svg)
 
@@ -138,10 +138,10 @@ The complications of red-black tree deletion are all due to the handling of blac
 ![](/images/redblack_deletion.svg)
 
 If the black node has a red parent node and a black sibling node then there are choices:
-- If the sibling has (also) black children then delete the required node and recolour the sibling and parent node
++ If the sibling has (also) black children then delete the required node and recolour the sibling and parent node
 
 ![](/images/redblack_deletion2.svg)
 
-- If the sibling has one red child node then delete the required node and perform a zig-zag rotation (LR or RL). No recolouring is needed.
++ If the sibling has one red child node then delete the required node and perform a zig-zag rotation (LR or RL). No recolouring is needed.
 
 ![](/images/redblack_deletion3.svg)

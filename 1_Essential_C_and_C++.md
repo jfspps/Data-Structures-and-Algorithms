@@ -368,19 +368,19 @@ One can pass structures as values, references and pointers. Here is an example o
 
 The keyword `static` declares variables (as well as objects and functions) which are initialised once (all subsequent initialisations are ignored) and retain their value for the duration of the function call, including `main()`.
 
-## A note on returning pointers and references ##
+## Returning pointers and references ##
 
 In all cases, do not return the address (by pointer or reference) of local variables to the function. This is because the local variable is freed once the function termiantes and so the pointer or reference will be pointing to an undefined region of memory. Instead, build a new pointer to the local variable in the heap with `new` and return the pointer.
 
 The first snippet will not work but the second will:
 
 ```cpp
- double*someFunc(double data){
+ double* someFunc(double data){
   double someData = 3*data;
   return &someData;
  }
 
- double*someFunc2(double data){
+ double* someFunc2(double data){
   double* something = new double(3*data);
   return something;
  }
@@ -398,3 +398,119 @@ Returning references is also similarly fraught with errors. Additionally, avoid 
 Here the function is defined such that it returns a reference to the third element of `someArray`.  Note that using `&someArray[2]` would return the address (pointer) of the result, which is not an alias to the result.
 
 Overall, `someArray[]` was initialised before `someFunc3` was called.
+
+## Pointers to functions ##
+
+In relation to the syntax for returning pointers, it is also possible to build pointers to functions.
+
+```cpp
+// returns a pointer to a double
+ double* someFunc(double data){
+  // do stuff
+ }
+
+ // a standard function delarations
+ double specificFunc(double Num1, char* charPointer);
+
+ double specificFunc2(double NumA, char* charPointerB);
+
+// declares a pointer to a function, returning a double
+ double (*someFunc)(double, char*);
+
+ // assign the pointer to a function with same signature
+ someFunc = specificFunc;
+
+ // pointers are mutable so one can re-assign
+ someFunc = specificFunc2;
+
+ // or declare and assign in one go...
+ double (*someOtherFunc)(double, char*) = specificFunc2;
+```
+
+In the above case, the function name is `someFunc` and has two arguments, one of type double and the second of type pointer to char. The pointer `someFunc` can be assigned to any function with the same signature.
+
+The pointer can then be used in place of the function.
+
+```cpp
+double someDouble = 3.3;
+
+char someChar = 'E';
+char* charPointer = &someChar;
+
+someFunc(someDouble, charPointer);
+```
+
+## Functions as arguments of other functions ##
+
+With the pointer to a function, one can define a function argument list where at least one argument is a pointer to a function. This provides a way for the calling function to invoke other functions via the pointer.
+
+```cpp
+// these would normally be defined after main()
+double callingFunc(double anArray[], double (*someFunc)(int));
+double randomFunc(int value);
+
+int main(){
+  double array[] = {1.1, 2.2};
+
+  // call randomFunc with callingFunc
+  double newDouble =  callingFunc(array, randomFunc);
+}
+
+double randomFunc(int value){
+  return static_cast<double>(value);
+}
+
+double callingFunc(double anArray[], double (*someFunc)(int){
+  if (anArray[5] == 0){
+    return someFunc(5);
+  }
+  return 0.5;
+}
+```
+
+Note that someFunc is assigned to randomFunc without params so that it is called within the calling function, i.e. not
+
+```cpp
+double newDouble =  callingFunc(array, randomFunc(3));
+```
+
+The above executes randomFunc(3) before callingFunc() and so callingFunc does not call randomFunc within the body. Assign someFunc to randomFunc by passing randomFunc as a parameter and let callingFunc use the pointer.
+
+## Array of pointers to functions ##
+
+One can also declare an array of pointers to functions and call a specific element (function) with an index.
+
+```cpp
+// assigns a constant argument
+char charFunc(char);
+char charFuncAgain(char);
+
+char (*pointerArrayFunc[2])(char) = { charFunc, charFuncAgain};
+
+// call the second function element
+char someChar = pointerArrayFunc[1];
+```
+
+## Default arguments ##
+
+Default arguments amount to constant arguments which are assumed if the function call does not pass a required parameter. The default argument must be included in the function prototype.
+
+```cpp
+#include <iostream>
+
+void printMe(const char message[] = "Default message");
+
+int main(){
+  const char alternativeMessage[] = "Something odd going on here";
+
+  // use the default
+  printMe();
+
+  // use the alternative
+  printMe(alternativeMessage);
+}
+
+void printMe(const char message[]){
+  std::cout << message << endl;
+}
+```

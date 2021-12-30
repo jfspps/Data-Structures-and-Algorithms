@@ -57,10 +57,10 @@ Enumerations are indexed by integers by default but can be indexed with characte
 These are collections of data types under one name
 
 ```cpp
-    struct rectangle{
-     int length;
-     int breadth;
-    };
+  struct rectangle{
+    int length;
+    int breadth;
+  };
 
  void main(){
   struct rectangle r; //places r in the stack
@@ -102,16 +102,16 @@ In C, data is stored in the heap using `malloc()`. In C++, use the keyword `new`
 ```cpp
  #include<stdlib.c>
  int main(){
- int *p;
- malloc(5*sizeof(int)); //allocates space in the heap
- p = (int*)(malloc(5*sizeof(int));
+  int *p;
+  malloc(5*sizeof(int)); //allocates space in the heap
+  p = (int*)(malloc(5*sizeof(int));
  }
  ```
 
 In C++:
 
 ```cpp
-    p = new int[5];
+ p = new int[5];
 ```
 
 ### Pointer and Arrays ###
@@ -124,7 +124,7 @@ A pointer to an array can be expressed in the form:
 
  // used for comparison:
  int someArray[arraySize];
- ```
+```
 
 In this case, `ptr` is an array of pointers to integers. In comparison, the literal `someArray` represents an array of integers.
 
@@ -295,7 +295,7 @@ The `main()` method can have arguments defined which end up representing command
 
 ```cpp
  int main(int argc, char* argv[]){
- // do stuff...
+  // do stuff...
  }
 ```
 
@@ -376,13 +376,13 @@ The first snippet will not work but the second will:
 
 ```cpp
  double*someFunc(double data){
-   double someData = 3*data;
-   return &someData;
+  double someData = 3*data;
+  return &someData;
  }
 
  double*someFunc2(double data){
-   double* something = new double(3*data);
-   return something;
+  double* something = new double(3*data);
+  return something;
  }
 ```
 
@@ -390,8 +390,8 @@ Returning references is also similarly fraught with errors. Additionally, avoid 
 
 ```cpp
  double& someFunc3(double someArray[]){
-   // do stuff...
-   return someArray[2];
+  // do stuff...
+  return someArray[2];
  }
 ```
 

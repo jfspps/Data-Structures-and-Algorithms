@@ -89,8 +89,8 @@ My notes from an online C++ course
   + Implementing stacks with linked lists
   + Linked list based methods
   + Stack applications
-    - Checking paired parentheses
-    - Prefix and postfix operations (meaning of operator precedence)
+    + Checking paired parentheses
+    + Prefix and postfix operations (meaning of operator precedence)
 20. [The Queue](20_Queues.md)
   + Implementing queues with arrays
   + Enqueue and Dequeue methods
@@ -138,26 +138,26 @@ My notes from an online C++ course
   + Binary heaps and priority queues
 26. [Sorting methods](26_Sorting_methods.md)
   + Comparison based sorting methods
-    - Bubble sort
-    - Insertion sort
-    - Selection sort
-    - Heap sort
-    - Merge sort
-    - Quick sort
-    - Tree sort
-    - Shell sort
+    + Bubble sort
+    + Insertion sort
+    + Selection sort
+    + Heap sort
+    + Merge sort
+    + Quick sort
+    + Tree sort
+    + Shell sort
   + Index based sorting methods
-    - Bin/bucket sort
-    - Count sort
-    - Radix sort
+    + Bin/bucket sort
+    + Count sort
+    + Radix sort
 27. [Hashing techniques](27_Hashing.md)
   + Hash tables, keys and collisions
   + Open hashing
-    - Chaining
+    + Chaining
   + Closed hashing
-    - Linear probing
-    - Quadratic probing
-    - Double hashing
+    + Linear probing
+    + Quadratic probing
+    + Double hashing
 28. [Graphs](28_Graphs.md)
   + Directed and undirected graphs
   + Breadth first search

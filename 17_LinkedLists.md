@@ -278,6 +278,7 @@ int count(struct Node *p)
     return l;
 }
 ```
+
 Incidentally, the `insert()` method can be looped to create a new linked list, extending from the beginning or end, or inserting somewhere in between nodes.
 
 To insert a new node after the last node only, the time complexity is constant O(1), as long as you know the address of the first and last nodes.
@@ -474,7 +475,7 @@ void changeElements(struct Node *p)
 
 The time complexity is O(2n) or just O(n). The method requires the movement of data (with a type which must be known) between linked lists and arrays.
 
-#### Interchanging the links: sliding (tailing) pointers
+#### Interchanging the links: sliding (tailing) pointers ####
 
 This starts with three pointers. The three pointers `p`, `q` and `r` occupy three consecutive nodes. The central node is the node which is modified at the time. The first and third pointer are needed to recall the previous pointer values. 
 
@@ -534,6 +535,7 @@ while (p->next != NULL)
 p->next = B;
 B = NULL;   //previously pointed to the second node of Node B
 ```
+
 The time complexity depends on the number nodes in Node A, so O(n).
 
 One can also combine two sorted linked lists into a single linked list (specifically, _merging_) is somewhat analogous to the code needed to merge two sorted arrays, with the exception of data transfer. Briefly, one checks the value at both linked lists and re-assigns the link.
@@ -636,6 +638,7 @@ int isLoop(struct Node *f)
         return 0;
 }
 ```
+
 A node with a head node only, and one which points to itself, is also a circular linked list.
 
 ## Displaying a circular linked list ##
@@ -669,6 +672,7 @@ void Display(Node *p)
     flag = 0;
 }
 ```
+
 Once the second call to Display() is performed, `flag = 1`. When the last node is printed, `p = head`. Hence, the tail recursion ends and the circular list is not traversed a second time. The second assignment of `flag = 0` is needed if Display() is called again. Recall, static variables are initialised on program start-up and persist until shutdown. The static variable is only accessible in the block it is declared in.
 
 ## Inserting into a circular linked list ##

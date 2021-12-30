@@ -57,6 +57,7 @@ Node * iterativeBinarySearch(Node * t, int value)
     return NULL;
 }
 ```
+
 ## Inserting into a binary search tree ##
 
 BSTs are ordered, so searching for the element to be inserted establishes if insertion is needed and, if needed, where the element should go. The pointer t tracks the current position in the tree and can be `NULL` (when an insertion is needed). A trailing tail pointer is therefore needed to store the previous node's position, should pointer t be `NULL`. The code follows `iterativeBinarySearch()` quite closely.
@@ -91,6 +92,7 @@ Node * iterativeInsertIntoBST(Node * t, int value)
         tailPtr->rchild = p;
 }
 ```
+
 Since insertion follows the BST search, the time complexity is O(log[2] n).
 
 The recursive form of insertion is given below. The important call is whenever the current pointer t is `NULL`, at which point a new Node is created. The `lchild` or `rchild` conditions were established prior to the recursive call.
@@ -225,7 +227,7 @@ Moreover, BSTs can also be generated from isolated pre-order or post-order trave
 
 ![](/images/BSTsFromTraversal.svg)
 
-We do not need to look for an element from an in-order list in a pre-order list. 
+We do not need to look for an element from an in-order list in a pre-order list.
 
 Reiterate here that a BST subtree has elements in the left-subtree such that they are all less than the parent node. As one traverses to the next subtree, the requirement is the still true and so all nodes in the left-subtree to the next node are also lower in value. Similar conditions can be drawn for the right-subtrees. These checks are carried out on the pre-order array, in the snippet for generating a BST, below:
 

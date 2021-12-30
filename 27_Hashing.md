@@ -18,9 +18,9 @@ So far, our function is H(x) = x, where the value maps itself in a one-to-one ap
 The problem now is how to store two keys which are mapped to the same index (try storing key 35 in B, above). This results in a __collision__ between two keys. The hashing function H(x) = x % 10 is thus an example of a many-to-one function. There are two main resolutions to addressing collisions:
 
 + Open hashing (characteristic of using dynamic memory allocation)
-  - Chaining
+  + Chaining
 + Closed hashing (characteristic of using fixed memory allocation)
-  - Open addressing (mapping is not strict if collision occurs)
+  + Open addressing (mapping is not strict if collision occurs)
     1. Linear probing
     2. Quadratic probing
     3. Double hashing
@@ -33,7 +33,7 @@ Think about implementing an array of linked lists as the hash table. This keeps 
 
 By sorting the elements in the linked list, one can quickly ascertain if the key is present by comparing magnitudes and stopping the search if the next node stores a key whose magnitude is greater.
 
-The analysis of hashing functions is based on the load factor ` lambda = n/(hash table size)`. It represents the number of keys stored per hash table placeholder (how many nodes are linked per hash table element) assuming that all keys are equally distributed in the hash table.** Clearly, the higher the factor, the more consecutive comparisons are needed to reach (find) the latter nodes in a given chain. The load factor is taken as a measure of the maximum number of comparisons needed, the average is taken as half of this value.
+The analysis of hashing functions is based on the load factor `lambda = n/(hash table size)`. It represents the number of keys stored per hash table placeholder (how many nodes are linked per hash table element) assuming that all keys are equally distributed in the hash table.** Clearly, the higher the factor, the more consecutive comparisons are needed to reach (find) the latter nodes in a given chain. The load factor is taken as a measure of the maximum number of comparisons needed, the average is taken as half of this value.
 
 The average time required to search for any key which is present is given by `O(1) + lambda/2`. The average time required to search for any key which is not present is given by `O(1) + lambda`.
 
@@ -157,7 +157,7 @@ The only difference is a modified probing function:
 
 `h'(x) = [H(x) + f(i)] % 10`, where `f(i) = i^2, i = 0, 1, 2,...`
 
-This effectively cycles through `h'(x) = H(x) % 10`, then `h'(x) = (H(x) + 1) % 10`, then `h'(x) = (H(x) + 4) % 10` and so on. Note that when a key is assigned to `h'(x) = (H(x) + 1) % 10` then `h'(x) = (H(x) + 4) % 10` is potentially zero. 
+This effectively cycles through `h'(x) = H(x) % 10`, then `h'(x) = (H(x) + 1) % 10`, then `h'(x) = (H(x) + 4) % 10` and so on. Note that when a key is assigned to `h'(x) = (H(x) + 1) % 10` then `h'(x) = (H(x) + 4) % 10` is potentially zero.
 
 ![](/images/quadraticProbing.svg)
 
@@ -198,7 +198,7 @@ Note that the second hash function never returns zero. The hashing ensures that 
 
 First attempt to assign the key to the hash table index using `H1(x)`. If there is a collision then deduce `h'(x)` (practically start from `i = 1` for each* key; `h'(x)` with `i = 0` would always result in a collision). If there is a second collision, then repeat with `i = 2`. In a way, `i` signifies the collision no.
 
-See below (n = 9, R = 7). The first hash function for keys ending with 5 are always `H1(x) = 5` and the second is `H2(x) = 7 - (x % 7)`. 
+See below (n = 9, R = 7). The first hash function for keys ending with 5 are always `H1(x) = 5` and the second is `H2(x) = 7 - (x % 7)`.
 
 Overall, `h'(x) = [5 + i*(7 - (x % 7))] % 10`.
 

@@ -1,4 +1,4 @@
-# Examples of algorithms on arrays #
+# Examples of algorithms on arrays
 
 The code below comes straight from the [code example](/code/ArrayExamples). They all use the following structure:
 
@@ -11,7 +11,8 @@ struct Array
 };
 ```
 
-1. Finding out if there is a missing element in an array, O(n)
+## Finding out if there is a missing element in an array, O(n)
+
 ```cpp
 void findMissingSorted(struct Array arr)
 {
@@ -28,7 +29,8 @@ void findMissingSorted(struct Array arr)
 }
 ```
 
-2. Finding out if there are multiple missing elements in an array, O(n)
+## Finding out if there are multiple missing elements in an array, O(n)
+
 ```cpp
 void findMultipleMissingSorted(struct Array arr, struct Array* tally)
 {
@@ -49,7 +51,8 @@ void findMultipleMissingSorted(struct Array arr, struct Array* tally)
 }
 ```
 
-3. Finding duplicates in an array, O(n)
+## Finding duplicates in an array, O(n)
+
 ```cpp
 void findDuplicates(struct Array arr)
 {
@@ -67,7 +70,8 @@ void findDuplicates(struct Array arr)
 }
 ```
 
-4. Finding duplicates in an unsorted array, O(n^2)
+## Finding duplicates in an unsorted array, O(n^2)
+
 ```cpp
 void findDuplicatesUnsorted(struct Array arr)
 {
@@ -96,7 +100,8 @@ void findDuplicatesUnsorted(struct Array arr)
 }
 ```
 
-5. Finding a pair of elements with the sum 'sum' over a sorted array (increasing, non-repeating only), O(n)
+## Finding a pair of elements with the sum 'sum' over a sorted array (increasing, non-repeating only), O(n)
+
 ```cpp
 void findPairWithSumSortedInc(struct Array arr, int sum)
 {
@@ -125,7 +130,8 @@ void findPairWithSumSortedInc(struct Array arr, int sum)
 }
 ```
 
-6. Finding a pair of elements with the sum 'sum' in a sorted/unsorted array (O(n^2))
+## Finding a pair of elements with the sum 'sum' in a sorted/unsorted array (O(n^2))
+
 ```cpp
 void findPairWithSumGeneral(struct Array arr, int sum)
 {
@@ -153,7 +159,8 @@ void findPairWithSumGeneral(struct Array arr, int sum)
 }
 ```
 
-7. Finding the max and min of an array in one scan (O(n))
+## Finding the max and min of an array in one scan (O(n))
+
 ```cpp
 void findMaxAndMin(struct Array arr)
 {

@@ -52,7 +52,7 @@ Declare as `int A[m][n]`, where m is the number of rows and n is the number of c
 In memory, multidimensional arrays are stored linearly:
 
 ```cpp
-A = { row1, row2, row3, ..., rowN };
+A = {{...}, {...}, {...}};
 ```
 
 We can declare 2D arrays with pointers, this time the pointer is of type array[no_of_arrays]. For example, `int *A[3]` is a pointer to the first of three arrays `A`. __The address of the first array is given by `&A[1]`, where the index starts at one.__ The pointer *A[1] resides in the stack. 
@@ -66,6 +66,7 @@ A[2] = new int[4];
 
 A[1][2] = 5; //etc...
 ```
+
 One can also set a pointer to a +pointer to an +array, where +pointer resides in the heap.
 
 ```cpp

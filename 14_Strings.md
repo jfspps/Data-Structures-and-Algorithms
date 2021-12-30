@@ -8,7 +8,7 @@ Other languages, including Japanese, Chinese, Hindi etc. are defined in Unicode.
 
 Let `temp = 'A';`. Other than using `cout << temp`, a character can be printed with `printf()` as `printf("%c", temp);`.
 
-### Array of characters ###
+## Array of characters ##
 
 Declare `char arrayOfChars[10];`. One can also initialise each element on declaration.
 
@@ -152,7 +152,7 @@ The complete search for duplicates is O(n+n) or just O(n). A similar approach fo
 
 To review the necessary bitwise operations:
 
-#### Left-shift with `<<`
+### Left-shift with `<<` ###
 
 Recall that a byte is represented by eight bits, from left to right, `int 1` is 00000001, `int 8` is 00001000 and so on. The smallest int is 0 and the largest is 255. Bits in a byte are identified by zero-based indices so bit 0 is the right-most, and bit 7 is the left-most in a 8-bit byte.
 
@@ -160,7 +160,7 @@ Recall that a byte is represented by eight bits, from left to right, `int 1` is 
 
 The statement `H = H<<1` shifts all ones _and_ zeros to the left by one place in the byte `H`. Each shift to the left doubles (2^1) the present value. Two shifts `H<<2` increases the value by 2^2, four shifts `H<<4` increases the value by 2^4 and so on.
 
-#### Bits ORing (merging) and ANDIing (masking)
+### Bits ORing (merging) and ANDIing (masking) ###
 
 These operations are related to boolean logic `||` and `&&` expect that they are now bitwise, `|` and `&`.
 
@@ -186,7 +186,7 @@ For example, the decimal 8 is in binary as 00001000. We take a separate byte `a`
 
 The decimals 10 | 6 = 14. Using the same examples from ANDing (masking), merging is about turning any zero bit in `eight` to a 1. So to switch bit 6 in `eight` on, we perform five left-shifts and then perform a bitwise | operation. Overall, this is `a<<5; eight|a`.
 
-#### Using bitwise operations to find duplicated characters
+### Using bitwise operations to find duplicated characters ###
 
 The array hash table `H` needed must store states for all 26 characters, as a bit. Conveniently, we then use a 32-bit structure to store this representation, which in C or C++ is an `int` or `long int`. This example would use the first 26 bits of the int but pad all bits with zeros, 'off'.
 
@@ -258,7 +258,7 @@ int main()
 }
 ```
 
-## String permutations
+## String permutations ##
 
 Recall that a permutation is a set of possible configurations of a items, where the order of each item is important. A string "ABC" can be written in 3! permutations (for n items, then n!), some of which are "ACB", "BAC", "CAB" and so on. One can use a _state space tree_ to deduce all possible permutations.
 
@@ -367,4 +367,5 @@ void swap(char &x, char &y)
 }
 
 ```
-The program is in [/code/StringPermutationRecursive/](https://github.com/jfspps/Data-Structures-and-Algorithms/tree/gh-pages/code/StringPermutationRecursive/StringPermutationRecursive)
+
+The program is in [/code/StringPermutationRecursive/](/code/StringPermutationRecursive/)

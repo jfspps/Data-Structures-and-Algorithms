@@ -6,11 +6,11 @@ Graphs are made up of vertices and edges, and expressed as `G(V, E)`.
 
 Directed graphs have directed edges (outcoming one vertex and incoming to another). Two edges with opposing direction between the same vertices are parallel edges. Graphs which are not made up of self-loop(s) or parallel edges are known as _simple_ digraphs, in which a digraph is a _directed_ graph. When a graph is simply referred to as a graph then it is assumed to be non-directed. Graphs made up of two or more components are known as non-connected graph.
 
-Vertices, which when removed, result in two or more components are known as _articulation points_ (none of the above graphs contain articulation points). 
+Vertices, which when removed, result in two or more components are known as _articulation points_ (none of the above graphs contain articulation points).
 
 A _path_ is a set of all edges in between two vertices. Paths are cyclic (or circular) if it traverses to and from the same vertex.
 
-Graphs in which all vertices are connected by at least one path are referred to as _connected graphs_. A graph is termed _strongly connected_ if there is a path between each pair of vertices. 
+Graphs in which all vertices are connected by at least one path are referred to as _connected graphs_. A graph is termed _strongly connected_ if there is a path between each pair of vertices.
 
 Graphs in which all edges are directed in the same direction then the graph is termed _topological_.
 
@@ -24,7 +24,7 @@ The dimensions of the matrix above matches the vertices in the graph. One could 
 
 The graph vertices correspond to the row (i) and column (j) numbers of the matrix. Start with the row number (the starting vertex) and find the column number (the final vertex), or, vice versa, working from a column number and then to a row number.
 
-The elements in the matrix denote if there is one edge present. For a matrix A, then `A[i][j] = 1` when there is one edge between vertices `i` and `j`, and `A[i][j] = 0` otherwise. 
+The elements in the matrix denote if there is one edge present. For a matrix A, then `A[i][j] = 1` when there is one edge between vertices `i` and `j`, and `A[i][j] = 0` otherwise.
 
 It follows that `A[i][i] = 0` in all cases, except for self-loops (some implementations assign infinity instead of zero). Also see how the matrix is symmetric.
 
@@ -33,7 +33,6 @@ As will be demonstrated, algorithms generally have to process all elements in th
 ### Cost adjacency matrix (of Weighted graphs) ###
 
 ![](images/weighted_undirectedGraphs.svg)
-
 
 ### Adjacency list ###
 
@@ -87,17 +86,17 @@ A compact list for a directed graph is similar to that for an undirected graph. 
 
 ## Breadth first search BFS ##
 
-BFS is similar to level-order of a tree. First one re-draws the graph as a tree like structure, where the edges in the graph and tree are equal and match. Process the edges required in any logical order with each vertex (value). 
+BFS is similar to level-order of a tree. First one re-draws the graph as a tree like structure, where the edges in the graph and tree are equal and match. Process the edges required in any logical order with each vertex (value).
 
 A dotted edge is used to represent edges already present in the graph but are not drawn in the conventional tree structure way. Hiding the dotted edges shows that data structure as a tree.
 
 ![](images/breadthFirstSearch.svg)
 
-Then take the level-order traversal of the 'tree' to find the BFS sequence. The results of BFS can vary depending on how the graph was re-drawn. 
+Then take the level-order traversal of the 'tree' to find the BFS sequence. The results of BFS can vary depending on how the graph was re-drawn.
 
 Additionally, we used vertex `1` as the starting point. This is not a requirement and any other vertex can be used as a starting vertex. Note, dotted lines can cross solid lines if needed. What is important is that in _visiting_ each intermediate child node of the growing tree, one _explores_ each adjacent vertex completely. The order of exploring (visiting all adjacent vertices) vertices can vary and is arbitrary. One can start from an internal vertex if desired.
 
-The sequence lists the vertices visited. 
+The sequence lists the vertices visited.
 
 1. After a vertex is visited, add the vertex to a queue.
 2. Take a vertex out of the queue and _explore_ it.
@@ -151,9 +150,10 @@ DFS is similar to pre-order traversal of tree structures.
 3. Suspend the exploration of the (new) vertex from step 1. Instead, push it into a stack.
 4. If available, pick any (other*) vertex adjacent to the vertex from step 2. Set the vertex as visited.
 5. Regarding vertex from step 4:
-  + If there are vertices adjacent to the vertex from step 4, suspend the exploration of the vertex from step 4 and push it to the stack.
-  + If there are no other vertices adjacent to the vertex from step 4, then pop the vertex from step 3 and continue with other adjacent vertices starting from step 3.
- 
+
++ If there are vertices adjacent to the vertex from step 4, suspend the exploration of the vertex from step 4 and push it to the stack.
++ If there are no other vertices adjacent to the vertex from step 4, then pop the vertex from step 3 and continue with other adjacent vertices starting from step 3.
+
 An example of DFS is outlined below. Notice how part of the DFS sequence resembles the stack, the ordering of the values of which directs future visit checks.
 
 ![](images/depthFirstSearch.svg)
@@ -187,7 +187,7 @@ A spanning tree is a subgraph such that the for a given number of vertices `v`, 
 
 ![](/images/spanningTrees.svg)
 
-When drawn, a spanning tree links all vertices together with the minimum number of edges required. 
+When drawn, a spanning tree links all vertices together with the minimum number of edges required.
 
 There are usually numerous spanning trees per graph and is deduced with a binomial coefficient `eC(v-1) - no. of cyclic subgraphs`. For a graph with four vertices, this results in `20 - 4` spanning trees.
 
@@ -209,7 +209,7 @@ If Prim's algorithm was run on a non-connected graph then it would derive the MC
 
 Writing the algorithm (indeed, any algorithm) first requires knowing which data structures to use to represent the problem. This is then followed by the sequence of steps required.
 
-We represent the graph (non-directional graph) using an adjacency matrix. Since the graph is non-directional, the matrix is symmetric. This means that one only need inspect the upper-triangular matrix or lower-triangular matrix for the weightings. Recall, one reads row followed by column numbers. 
+We represent the graph (non-directional graph) using an adjacency matrix. Since the graph is non-directional, the matrix is symmetric. This means that one only need inspect the upper-triangular matrix or lower-triangular matrix for the weightings. Recall, one reads row followed by column numbers.
 
 The matrix itself is given by an `n*n` matrix where `n = v + 1` (assuming that each vertex is numbered from 1 onwards). Each element in the matrix stores the corresponding edge weight. Elements which do not correspond to an edge are typically set to the maximum value of the primitive data type (maximum `int` type, for example), mathematically, taken as 'infinity'.
 
@@ -247,7 +247,7 @@ Then we need to locate the minimum weighted edge. Ignoring the zero-assigned ele
 
 ![](images/Prims_step6.svg)
 
-From the above example, row 2 and column 1 yield the lowest weighing (after considering the edge which joins vertices 1 and 4). 
+From the above example, row 2 and column 1 yield the lowest weighing (after considering the edge which joins vertices 1 and 4).
 
 One then adds (2, 1) to column = 1 of array `t`. Pairing (row 0, row 1) of `t` matches the pairing from `near` (index, element). Array `t` holds a record of the edges covered. The edges between vertices (1, 4) and (2, 1) are finalised.
 
@@ -263,7 +263,7 @@ Find the lowest weighting from the pairings in `near`. Then update array `t`.
 
 ![](images/Prims_step8.svg)
 
-Set element 3 to zero. Now compare which vertex is closer to 3 (compared to 4). Update array `near` with the lower weighting whenever possible. So that is 
+Set element 3 to zero. Now compare which vertex is closer to 3 (compared to 4). Update array `near` with the lower weighting whenever possible. So that is
 
 ![](images/Prims_step9.svg)
 
@@ -286,14 +286,14 @@ Initialising the global variables is given by:
 ```cpp
 #define I = 32767  //highest 16-bit integer
 
-int cost[8][8] =   { {I, I, I, I, I, I, I, I},
+int cost[8][8] =   {{I, I, I, I, I, I, I, I},
                     {I, I, 4, I, 1, I, I, I},
                     {I, 4, I, 8, I, I, I, I},
                     {I, I, 8, I, 5, I, 2, I},
                     {I, 1, I, 5, I, 10, I, I},
                     {I, I, I, I, 10, I, I, 3},
                     {I, I, I, 2, I, I, I, 6},
-                    {I, I, I, I, I, 3, 6, I} };
+                    {I, I, I, I, I, 3, 6, I}};
 
 int near[8] = {I, I, I, I, I, I, I, I};
 
@@ -402,8 +402,8 @@ Overall, an array such as {2, -4, 2, 2} shows that elements 0, 2 and 3 are child
 
 When joining two subsets, the root node is assigned to the parent of the largest set. The parent of the smaller set is represented by the value of the new parent (the index of the parent node does not change: this is needed regarding _its_ children). The magnitude of the new parent node is changed to reflect the new cardinality.
 
-- as two subsets (the parent of each is in __bold__) {__3__, 5, 9} and {__4__, 7, 8, 10} can be stored as [-1, -1, -1, -3, -4, 3, -1, 4, 4, 3, 4]. Note here there are two different positive numbers meaning there are two parent nodes of disjointed sets.
-- the union of {__3__, 5, 9} and {__4__, 7, 8, 10} is given by [-1, -1, -1, 4, -7, 3, -1, 4, 4, 3, 4]
++ as two subsets (the parent of each is in __bold__) {__3__, 5, 9} and {__4__, 7, 8, 10} can be stored as [-1, -1, -1, -3, -4, 3, -1, 4, 4, 3, 4]. Note here there are two different positive numbers meaning there are two parent nodes of disjointed sets.
++ the union of {__3__, 5, 9} and {__4__, 7, 8, 10} is given by [-1, -1, -1, 4, -7, 3, -1, 4, 4, 3, 4]
 
 One can check if a cycle is formed by comparing the parent nodes to the top of the tree. In the set, element _5_ [-1, -1, -1, 4, -7, _3_, -1, 4, 4, 3, 4] belongs to __3__ [-1, -1, -1, __4__, -7, _3_, -1, 4, 4, 3, 4] where 3 belongs to 4. Element _10_ [-1, -1, -1, 4, -7, 3, -1, 4, 4, 3, _4_] also belongs to 4. Thus both elements belong to the same set and tree, so joining them would result in a cyclic graph.
 

@@ -11,11 +11,11 @@ Sorting methods are developed with the following aspects in mind:
 There are two main types of sorting methods: _comparison-based sorts_ and _index-based sorts_
 
 + Comparison based sorts
-  - The following are O(n^2): bubble, insertion, selection
-  - The following are O(n log n): heap, merge, quick, tree
-  - Shell sort, O(n^[3/2])
+  + The following are O(n^2): bubble, insertion, selection
+  + The following are O(n log n): heap, merge, quick, tree
+  + Shell sort, O(n^[3/2])
 + Index based sorts (faster at O(n) but more memory demanding)
-  - count, bucket/bin, radix
+  + count, bucket/bin, radix
 
 ## Bubble sort ##
 
@@ -108,7 +108,7 @@ Insertion sort is also stable since it only swaps elements which are greater tha
 
 ## Selection sort ##
 
-As demonstrated previously, the example shown here attempts to sort a collection in increasing order, with the lowest element coming first. 
+As demonstrated previously, the example shown here attempts to sort a collection in increasing order, with the lowest element coming first.
 
 The basis of selection sort concerns three pointers. One pointer `i` points to the element which can potentially be replaced. It starts at the beginning of the collection and is incremented after each pass. Pointer `j` traverses along the collection after pointer `i` and updates pointer `k` with the currently lowest found element, initially between pointers `i` and `j` but, if appropriate thereafter between pointers `j` and `k`.
 
@@ -414,6 +414,7 @@ void CountSort(int A[], int n)
   }
 }
 ```
+
 ## Bucket (or bin) sort ##
 
 The ideas carry over from count sort. Bucket, or bin, sort is suitable when only one scan or pass of the array is needed. The auxiliary array is initialised with `NULL` pointers. Each element in the auxiliary array is referred to as a 'bin'. One scans the array that needs sorting and copies the value to the bin whose index matches the value of the element copied. The values are stored in a linked list. As a result, the auxiliary array must have a length which equals the magnitude of the largest element.
@@ -467,7 +468,7 @@ Each element in the auxiliary array is referred to as a 'bin'. For decimal based
 
 One uses the last digit of the element to be sorted (take % 10 or mod-10 of the value) and then assign the value to the bin with the same index. Thus, all possible integers with a last decimal digit are represented in some way with its bin index.
 
-The bins are then emptied (the array is re-populated) left to right and then FIFO (if there is more than one element in a bin). This, however, does not guarantee that the elements are sorted. They are only sorted on the basis of the last digit. 
+The bins are then emptied (the array is re-populated) left to right and then FIFO (if there is more than one element in a bin). This, however, does not guarantee that the elements are sorted. They are only sorted on the basis of the last digit.
 
 `[512, 965, 788, 476]` is assigned to bins as `[/, /, 512, /, /, 965, 476, /, 788, /]` and then re-populated as `[512, 965, 476, 788]`.
 
@@ -548,13 +549,13 @@ With insertion sort, one traverses along the list and compares two consecutive e
 
 ![](/images/shellSort.svg)
 
-Note that for an odd number of elements, this results in the introduction of a third pointer which facilitates the swapping of three elements, if required. The requirement is clear: if the pair of pointers results in no swapping, then the introduction of the third pointer is not carried out. If however, the first two pointers swapped values then the third pointer is introduced and the value is checked. 
+Note that for an odd number of elements, this results in the introduction of a third pointer which facilitates the swapping of three elements, if required. The requirement is clear: if the pair of pointers results in no swapping, then the introduction of the third pointer is not carried out. If however, the first two pointers swapped values then the third pointer is introduced and the value is checked.
 
 ![](/images/shellSort2.svg)
 
 The gap between all three pointers is still the floor value of `9/2`.
 
-Returning to the previous example, the array is then processed again. In the next pass, one sets up a smaller gap, the floor value of `n/4`. Each time a new pass is carried out, the gap is halved. This continues until `n/2*(pass no.) < 1`. 
+Returning to the previous example, the array is then processed again. In the next pass, one sets up a smaller gap, the floor value of `n/4`. Each time a new pass is carried out, the gap is halved. This continues until `n/2*(pass no.) < 1`.
 
 Note that the number of pointers is eventually increased as the pass number increases. Going back to the introduction of the third pointer, this is done on a needs basis. For small gaps, the third pointer is introduced if the first pointers swapped elements. If the second and third pointer also swapped values then a fourth (non-NULL with the same gap) pointer earlier in the list is introduced and compared. If the third and fourth pointer swapped values then a fifth pointer is introduced. If not, then no preceding pointers are introduced. The index `i` is incremented.
 

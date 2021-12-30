@@ -5,12 +5,26 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
   + Enumerations
   + Structures
   + Pointers
-  + References
-  + Passing to functions
+    + Storing data on the heap with pointers in C and C++
+    + Pointer and Arrays
+  + References (C++ only)
+  + Functions and parameter passing
+    + Passing pointers and function overloading
+    + The main() method
+    + Passing by reference (C++ only)
+    + Passing arrays
+    + Passing read-only addresses
+    + Passing structures
+  + Static variables
+  + Returning pointers and references
+  + Pointers to functions
+  + Functions as arguments of other functions
+  + Array of pointers to functions
+  + Default arguments
 2. [Classes in C++](2_Classes_in_C++.md)
   + General syntax
   + Scope resolution
-  + Templates
+  + Templates (function and class)
 3. [The stack and the heap](3_Stack_and_Heap.md)
 4. [Types of data structures](4_Types_of_data_structures.md)
   + Physical and logical data structures
@@ -89,8 +103,8 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
   + Implementing stacks with linked lists
   + Linked list based methods
   + Stack applications
-    - Checking paired parentheses
-    - Prefix and postfix operations (meaning of operator precedence)
+    + Checking paired parentheses
+    + Prefix and postfix operations (meaning of operator precedence)
 20. [The Queue](20_Queues.md)
   + Implementing queues with arrays
   + Enqueue and Dequeue methods
@@ -138,26 +152,26 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
   + Binary heaps and priority queues
 26. [Sorting methods](26_Sorting_methods.md)
   + Comparison based sorting methods
-    - Bubble sort
-    - Insertion sort
-    - Selection sort
-    - Heap sort
-    - Merge sort
-    - Quick sort
-    - Tree sort
-    - Shell sort
+    + Bubble sort
+    + Insertion sort
+    + Selection sort
+    + Heap sort
+    + Merge sort
+    + Quick sort
+    + Tree sort
+    + Shell sort
   + Index based sorting methods
-    - Bin/bucket sort
-    - Count sort
-    - Radix sort
+    + Bin/bucket sort
+    + Count sort
+    + Radix sort
 27. [Hashing techniques](27_Hashing.md)
   + Hash tables, keys and collisions
   + Open hashing
-    - Chaining
+    + Chaining
   + Closed hashing
-    - Linear probing
-    - Quadratic probing
-    - Double hashing
+    + Linear probing
+    + Quadratic probing
+    + Double hashing
 28. [Graphs](28_Graphs.md)
   + Directed and undirected graphs
   + Breadth first search
@@ -167,3 +181,4 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
   + Kruskal's minimum cost spanning tree
   + Disjoint subsets
   + Kruskal's program
+29. [Exceptions and error-handling](29_Exceptions_and_error_handling.md)

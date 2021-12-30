@@ -5,12 +5,26 @@ My notes from an online C++ course
   + Enumerations
   + Structures
   + Pointers
-  + References
-  + Passing to functions
+    + Storing data on the heap with pointers in C and C++
+    + Pointer and Arrays
+  + References (C++ only)
+  + Functions and parameter passing
+    + Passing pointers and function overloading
+    + The main() method
+    + Passing by reference (C++ only)
+    + Passing arrays
+    + Passing read-only addresses
+    + Passing structures
+  + Static variables
+  + Returning pointers and references
+  + Pointers to functions
+  + Functions as arguments of other functions
+  + Array of pointers to functions
+  + Default arguments
 2. [Classes in C++](2_Classes_in_C++.md)
   + General syntax
   + Scope resolution
-  + Templates
+  + Templates (function and class)
 3. [The stack and the heap](3_Stack_and_Heap.md)
 4. [Types of data structures](4_Types_of_data_structures.md)
   + Physical and logical data structures
@@ -167,3 +181,4 @@ My notes from an online C++ course
   + Kruskal's minimum cost spanning tree
   + Disjoint subsets
   + Kruskal's program
+29. [Exceptions and error-handling](29_Exceptions_and_error_handling.md)

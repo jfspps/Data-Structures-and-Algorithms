@@ -267,7 +267,7 @@ Tokens `&r` to the right of the assignment operator return the address the refer
 
 Passing by value assigns a variable, local to the function, with the parameter. The variable passed as the parameter resides in a different part of memory. Only a copy of the variable is handled by the function: hence the original variable cannot be changed. To change a parameter passed as a variable, send its address in the form of a reference or a pointer.
 
-### Passing pointers ###
+### Passing pointers and function overloading ###
 
 From the given block (quite often `main()`), the address of parameter(s) can be sent to a function so as to allow the parameter values to change. The following function call passes the address of the variables `a` and `b`.
 
@@ -285,9 +285,14 @@ The corresponding function prototype (or _declaration_, that is, the function si
 
 ```cpp
  void swap(int *x, int *y);
+
+ // provide function overloading capability (this will require a separate function definition)
+ void swap(double *x, double *y);
 ```
 
 The above definition expects pointers, which are then referred to as `x` and `y` in the `swap()`. The function body would then need to dereference `x` and `y` (using `*x` and `*y`) in order to access the values of `a` and `b`.
+
+Function overloading permits a more readable code base, particularly when the only difference between all functions is the parameter list. If function overloading becomes excessive then consider using _function templates_ instead.
 
 ### The main() method ###
 

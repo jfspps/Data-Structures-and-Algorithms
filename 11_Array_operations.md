@@ -103,7 +103,7 @@ int Delete(struct Array *arr, int index)
 
 ```cpp
 //somewhere in main(){}
-struct Array arr1 = {{2,3,4,5,6},10,5};
+struct Array arr1 = { { 2,3,4,5,6 } ,10, 5};
 printf("%d", Delete(&arr1, 0));     //prints 2
 Display(arr1);      //prints 3,4,5,6
 ```
@@ -184,8 +184,8 @@ Two sorted arrays can be merged such that the resultant array is also sorted. Th
     }
 
     //somewhere in main(){}
-        struct Array array1 = {{2,6,10,15,25}, 10, 5};
-        struct Array array2 = {{3,4,7,18,20}, 10, 5};
+        struct Array array1 = { { 2,6,10,15,25 }, 10, 5};
+        struct Array array2 = { { 3,4,7,18,20 }, 10, 5};
 
         struct Array array3 = array1.Merge(array2)
 
@@ -415,8 +415,8 @@ struct Array* Difference(struct Array *arr1, struct Array *arr2)
 
 int main()
 {
-    struct Array arr1 = {{2,9,21,28,35}, 10, 5};
-    struct Array arr1 = {{2,3,9,18,28}, 10, 5};
+    struct Array arr1 = { { 2,9,21,28,35 }, 10, 5};
+    struct Array arr1 = { { 2,3,9,18,28 }, 10, 5};
     struct Array *arr3;
 
     arr3 = Union(&arr1, &arr2);

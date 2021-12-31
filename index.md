@@ -7,6 +7,7 @@ My notes from an online C++ course
   + Pointers
     + Storing data on the heap with pointers in C and C++
     + Pointer and Arrays
+    + Pointers and Structures
   + References (C++ only)
   + Functions and parameter passing
     + Passing pointers and function overloading

@@ -54,16 +54,16 @@ Enumerations are indexed by integers by default but can be indexed with characte
 
 ## Structures ##
 
-These are collections of data types under one name
+These are collections of data types under one name and remain pervasive, particularly in solutions which are/were written primarily in C. Each structure is defined by its __members__ or __fields__.
 
 ```cpp
-  struct rectangle{
+  struct Rectangle{
     int length;
     int breadth;
   };
 
  void main(){
-  struct rectangle r; //places r in the stack
+  struct Rectangle r; //places r in the stack
   r = {10, 5};  //initialises r
   
   r.length = 10;
@@ -72,11 +72,28 @@ These are collections of data types under one name
   printf('Area of rectangle is %d/n', r.length*r.breadth);
   
   //declaring an array of structs
-  struct rectangle[5];
+  struct Rectangle rectangles[5];
 
-  rectangle[0].length = 30; //etc...
+  rectangles[0].length = 30; //etc...
  }
  ```
+
+ Structure members (or fields) can be of any type except for the structure being defined. To use the same structure definition in the structure, use a pointer to the structure instead:
+
+ ```cpp
+  struct Node {
+    int level;
+    struct* Node node;
+    struct AnotherStruct another;
+
+    // would not compile
+    // struct Node node;
+  };
+```
+
+This idea is useful for linked lists.
+
+C structures are generally superseded by C++ classes.
 
 ## Pointers ##
 
@@ -248,14 +265,21 @@ Functions which handle the references do not reside in separate stack frames and
 
 References do not need dereferencing and their identifier (i.e. `r`) automatically provides the value it points to. The address the reference points to is given by `&r`.
 
-The address of `a` and `r` are the same, so any operations on `a` and `r`are the same. So `r++` is equivalent to `a++`. The tokens `&r` to the left of the assignment operator assign a reference `r` to some variable. Pointers can be assigned to the address held by references, e.g. structures:
+The address of `a` and `r` are the same, so any operations on `a` and `r`are the same. So `r++` is equivalent to `a++`. The tokens `&r` to the left of the assignment operator assign a reference `r` to some variable. 
+
+## Pointers and Structures ##
+
+Pointers can be assigned to the address held by references, e.g. structures:
 
 ```cpp
- struct rectangle *p = &r;
- (*p).length = 20; //* has higher precedence than .
+ struct Rectangle *p = &r;
+
+ // dereferencing operator * has lower precedence than the member access operator . hence the parenthesese 
+ // dereference the structure pointer p first before accessing the member
+ (*p).length = 20;
 ```
 
-Alternatively, one can use the indirect member operator, instead of (*p).
+Alternatively, one can use the indirect member operator (->) instead of (*p). The indirect member selection is also used with C++ classes.
 
 ```cpp
  p->length = 20;

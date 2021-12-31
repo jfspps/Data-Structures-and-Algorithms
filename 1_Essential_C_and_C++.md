@@ -265,7 +265,15 @@ Functions which handle the references do not reside in separate stack frames and
 
 References do not need dereferencing and their identifier (i.e. `r`) automatically provides the value it points to. The address the reference points to is given by `&r`.
 
-The address of `a` and `r` are the same, so any operations on `a` and `r`are the same. So `r++` is equivalent to `a++`. The tokens `&r` to the left of the assignment operator assign a reference `r` to some variable. 
+The address of `a` and `r` are the same, so any operations on `a` and `r`are the same. So `r++` is equivalent to `a++`. The tokens `&r` to the left of the assignment operator assign a reference `r` to some variable.
+
+Tokens `&r` to the right of the assignment operator return the address the reference points to. For example:
+
+```cpp
+  int* intPtr = &r;
+```
+
+All references MUST be initialised.
 
 ## Pointers and Structures ##
 
@@ -284,8 +292,6 @@ Alternatively, one can use the indirect member operator (->) instead of (*p). Th
 ```cpp
  p->length = 20;
 ```
-
-Tokens `&r` to the right of the assignment operator return the address the reference points to. All references MUST be initialised.
 
 ## Functions and parameter passing ##
 

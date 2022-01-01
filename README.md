@@ -5,17 +5,17 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
   + Enumerations
   + Structures
   + Pointers
-    - Storing data on the heap with pointers in C and C++
-    - Pointer and Arrays
-    - Pointers and Structures
+     - Storing data on the heap with pointers in C and C++
+     - Pointer and Arrays
+     - Pointers and Structures
   + References (C++ only)
   + Functions and parameter passing
-    - Passing pointers and function overloading
-    - The main() method
-    - Passing by reference (C++ only)
-    - Passing arrays
-    - Passing read-only addresses
-    - Passing structures
+     - Passing pointers and function overloading
+     - The main() method
+     - Passing by reference (C++ only)
+     - Passing arrays
+     - Passing read-only addresses
+     - Passing structures
   + Static variables
   + Returning pointers and references
   + Pointers to functions
@@ -105,8 +105,8 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
   + Implementing stacks with linked lists
   + Linked list based methods
   + Stack applications
-    - Checking paired parentheses
-    - Prefix and postfix operations (meaning of operator precedence)
+     - Checking paired parentheses
+     - Prefix and postfix operations (meaning of operator precedence)
 20. [The Queue](20_Queues.md)
   + Implementing queues with arrays
   + Enqueue and Dequeue methods
@@ -154,26 +154,26 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
   + Binary heaps and priority queues
 26. [Sorting methods](26_Sorting_methods.md)
   + Comparison based sorting methods
-    - Bubble sort
-    - Insertion sort
-    - Selection sort
-    - Heap sort
-    - Merge sort
-    - Quick sort
-    - Tree sort
-    - Shell sort
+     - Bubble sort
+     - Insertion sort
+     - Selection sort
+     - Heap sort
+     - Merge sort
+     - Quick sort
+     - Tree sort
+     - Shell sort
   + Index based sorting methods
-    - Bin/bucket sort
-    - Count sort
-    - Radix sort
+     - Bin/bucket sort
+     - Count sort
+     - Radix sort
 27. [Hashing techniques](27_Hashing.md)
   + Hash tables, keys and collisions
   + Open hashing
-    - Chaining
+     - Chaining
   + Closed hashing
-    - Linear probing
-    - Quadratic probing
-    - Double hashing
+     - Linear probing
+     - Quadratic probing
+     - Double hashing
 28. [Graphs](28_Graphs.md)
   + Directed and undirected graphs
   + Breadth first search

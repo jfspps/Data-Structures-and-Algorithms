@@ -24,7 +24,7 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
   + Default arguments
 2. [Classes in C++](2_Classes_in_C++.md)
   + General syntax
-  + Scope resolution
+  + Scope resolution and inline methods
   + Templates (function and class)
 3. [The stack and the heap](3_Stack_and_Heap.md)
 4. [Types of data structures](4_Types_of_data_structures.md)

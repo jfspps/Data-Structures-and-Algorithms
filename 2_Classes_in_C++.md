@@ -1,5 +1,13 @@
 # Classes in C++ #
 
+Structures do not feature concepts such as:
+
++ Encapsulation: combination (packaging) of members (fields) with methods that operate on members
++ Inheritance: how one class forms the basis of another, by inheriting the base classes members and methods
++ Polymorphism: how an object can exhibit different properties through the different method definitions (e.g. Java's `toString()`)
+
+Classes address these limitations and extend the basic idea of C structures.
+
 C++ and Java overlap a fair bit. Private and public instance variables and methods are bunched together in C++.
 
 ```cpp
@@ -23,9 +31,27 @@ class Rectangle{
 
 Note that garbage collection of the stack is automated in C++. To avoid memory leaks pertaining to the heap, one must call a destructor. Default constructors, through overloading, are available.
 
-## Scope resolution ##
+## Instantiation and data members ##
 
-Methods of a `class` body can be declared and defined outside the class body if they are qualified using `::`. In Java, the resolution operator `::` is used to call (reference) methods on an object which is not an instance of the class.
+Syntactically similar to Java, data members (or just members) are accessed with the direct member selection operator (.).
+
+```cpp
+Rectangle aRectangle;
+
+// initialise public members directly 
+aRectangle.length = 10;
+aRectangle.lengthTwo = 2;
+aRectangle.CalculateArea();
+```
+
+## Scope resolution and inline methods ##
+
+Methods can be:
+
++ declared in the class as a prototype and defined outside the class
++ defined in the class (resulting in an __inline__ method)
+
+Methods declared in a class __and__ defined _outside_ the class body are qualified through scope resolution using `::`. In Java, the resolution operator `::` is used to call (reference) methods on an object which is not an instance of the class.
 
 ```cpp
 Rectangle::Rectangle(int a, int b){
@@ -33,6 +59,7 @@ Rectangle::Rectangle(int a, int b){
   breadth = b;
  }
 
+ // emphasises that area() is a member function of the class Rectangle
  int Rectangle::area(){
  //some code for area()
  }
@@ -45,6 +72,66 @@ Rectangle::Rectangle(int a, int b){
 ```
 
 The method `Init()` in C++ is equivalent to the `static{}` block in Java, allowing one to hide initialisation details from an external class or external method.
+
+Methods defined within the class are treated as inline methods. Such methods instruct the compiler to literally replace all method call literals (outside the class body) with the body of the inline method.
+
+```cpp
+// mimic a Java getter
+class DoStuff{
+  private:
+    char value;
+
+  public:
+    // implicitly inline
+    char getValue()
+    {
+      return value;
+    }
+}
+
+// somewhere in main()
+DoStuff anObject;
+anObject.value = 'f';
+anObject.getValue();
+```
+
+The call to getValue() is replaced with the body of getValue(), along with appropriate adjustments so that the function is not called.
+
+This replacement occurs whenever getValue() is called. This has the advantage of reducing the the overhead of calling a function but only works for very simple definitions because the
+compiler can make the replacement. For more complicated methods (e.g. recursive methods) which are unlikely to be mapped by the compiler, it is best define such methods outside the class and apply scope resolution.
+
+It is also possible to treat class methods (defined in a class) as inline methods by preceding the function header with the keyword __inline__:
+
+```cpp
+// note that all members are public
+class DoStuff{
+  public:
+    char value;
+    // defined outside the class...
+    char getValue(void);
+    int getNumber(void);
+}
+
+// somewhere outside of main(); treated as inline
+inline char DoStuff::getValue(){
+  return value;
+}
+
+// somewhere outside of main(); not treated as inline
+int DoStuff::getNumber(){
+  int Result = value;
+
+  // perform more complex stuff...
+
+  return intResult;
+}
+
+// somewhere in main() ------------------------------
+DoStuff anObject;
+anObject.value = 'f';
+anObject.getValue();
+anObject.getNumber;
+```
 
 ## Templates in C++ ##
 

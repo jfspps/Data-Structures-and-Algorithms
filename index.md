@@ -23,8 +23,9 @@ My notes from an online C++ course
   + Array of pointers to functions
   + Default arguments
 2. [Classes in C++](2_Classes_in_C++.md)
-  + General syntax
+  + Instantiation, members and constructors
   + Scope resolution and inline methods
+  + Friend functions
   + Templates (function and class)
 3. [The stack and the heap](3_Stack_and_Heap.md)
 4. [Types of data structures](4_Types_of_data_structures.md)

@@ -22,36 +22,79 @@ class Rectangle{
     breadth = b;
    }
 
-   //other public methods, including setters and getters
+   // default constructor (without arguments)
+   Rectangle(){
+     // no-args constructor need not be empty, for example, the following is valid
+     std::cout << "Default constructor called" << std::endl;
+   };
+
+   //other public methods, including setters and getters for private member access
 
    //destructors are needed in C++ if objects reside in the heap
    ~Rectangle(); 
- }
+ };
 ```
 
-Note that garbage collection of the stack is automated in C++. To avoid memory leaks pertaining to the heap, one must call a destructor. Default constructors, through overloading, are available.
+Note that garbage collection of the stack is automated in C++. To avoid memory leaks pertaining to the heap, one must call a destructor.
+Default constructors, through overloading, are available.
 
-## Instantiation and data members ##
+## Instantiation, members and constructors ##
 
-Syntactically similar to Java, data members (or just members) are accessed with the direct member selection operator (.).
+Syntactically similar to Java, _data members_ (or just _members_) are accessed with the direct member selection operator (.). They constitute the
+variables and methods, which can be private or public. Only the class' methods and friend functions (see later) can access private members.
+
+Like Java, _constructors_ provide a more concise way of initialising members in addition to granting access to private members.
+The syntax for constructor calls in C++ is more concise than it is in Java (recall that the `new` keyword initialises pointers to
+data on the heap).
 
 ```cpp
 Rectangle aRectangle;
 
-// initialise public members directly 
+// initialise public members directly (assumes length and lengthTwo are public) 
 aRectangle.length = 10;
 aRectangle.lengthTwo = 2;
 aRectangle.CalculateArea();
+
+// instantiate via the constructor (members are private or public)
+Rectangle anotherRectangle(10,2);
 ```
+
+Constructors are not strictly required and the compiler will provide a default no-args constructor if none is provided.
+Note that by adding a constructor with or without arguments indicates to the compiler that it will __not__ provide a default no-args
+constructor. This means that if a no-args constructor is needed (when at least one constructor is already defined), then one must be declared in the class.
+
+Default constructors can initialise defaults for members. The method call to such a method is the same as the no-args constructor. As a result,
+the compiler will not know which to call, the constructor with no-args or that with defaults. In this case, one could
+replace the no-args constructor with the defaults constructor:
+
+```cpp
+   // default constructor (no arguments but with defaults)
+   Rectangle(int length = 1, int lengthTwo = 1){
+     std::cout << "Default constructor with defaults called" << std::endl;
+   };
+```
+
+Finally, one can use __initialisation lists__ in a defaults constructor to initialise members with identifiers that differ from member identifiers:
+
+```cpp
+   // default constructor (no arguments but with defaults set by initialisation lists)
+   Rectangle(int l1 = 1, int l2 = 1):length(l1), lengthTwo(l2)
+   {
+     std::cout << "Default constructor with defaults called via an initialisation list" << std::endl;
+   };
+```
+
+Initialisation lists are needed in some cases when initialisating members of certain data types.
 
 ## Scope resolution and inline methods ##
 
-Methods can be:
+Methods (class functions) can be:
 
 + declared in the class as a prototype and defined outside the class
 + defined in the class (resulting in an __inline__ method)
 
-Methods declared in a class __and__ defined _outside_ the class body are qualified through scope resolution using `::`. In Java, the resolution operator `::` is used to call (reference) methods on an object which is not an instance of the class.
+Methods declared in a class __and__ defined _outside_ the class body are qualified through scope resolution using `::`.
+In Java, the resolution operator `::` is used to call (reference) methods on an object which is not an instance of the class.
 
 ```cpp
 Rectangle::Rectangle(int a, int b){
@@ -71,9 +114,11 @@ Rectangle::Rectangle(int a, int b){
  }
 ```
 
-The method `Init()` in C++ is equivalent to the `static{}` block in Java, allowing one to hide initialisation details from an external class or external method.
+The method `Init()` in C++ is equivalent to the `static{}` block in Java, allowing one to hide initialisation details from
+an external class or external method.
 
-Methods defined within the class are treated as inline methods. Such methods instruct the compiler to literally replace all method call literals (outside the class body) with the body of the inline method.
+Methods defined within the class are treated as inline methods. Such methods instruct the compiler to literally replace all
+method call literals (outside the class body) with the body of the inline method.
 
 ```cpp
 // mimic a Java getter
@@ -87,7 +132,7 @@ class DoStuff{
     {
       return value;
     }
-}
+};
 
 // somewhere in main()
 DoStuff anObject;
@@ -95,12 +140,16 @@ anObject.value = 'f';
 anObject.getValue();
 ```
 
-The call to getValue() is replaced with the body of getValue(), along with appropriate adjustments so that the function is not called.
+The call to getValue() is replaced with the body of getValue(), along with appropriate adjustments so that the function does
+not need to be called.
 
-This replacement occurs whenever getValue() is called. This has the advantage of reducing the the overhead of calling a function but only works for very simple definitions because the
-compiler can make the replacement. For more complicated methods (e.g. recursive methods) which are unlikely to be mapped by the compiler, it is best define such methods outside the class and apply scope resolution.
+This replacement occurs whenever getValue() is called. This has the advantage of reducing the the overhead of calling a function
+but only works for very simple definitions because the
+compiler can make the replacement. For more complicated methods (e.g. recursive methods) which are unlikely to be mapped by the
+compiler, it is best define such methods outside the class and apply scope resolution.
 
-It is also possible to treat class methods (defined in a class) as inline methods by preceding the function header with the keyword __inline__:
+It is also possible to treat class methods (defined in a class) as inline methods by preceding the function header with the
+keyword __inline__:
 
 ```cpp
 // note that all members are public
@@ -110,7 +159,7 @@ class DoStuff{
     // defined outside the class...
     char getValue(void);
     int getNumber(void);
-}
+};
 
 // somewhere outside of main(); treated as inline
 inline char DoStuff::getValue(){
@@ -133,13 +182,49 @@ anObject.getValue();
 anObject.getNumber;
 ```
 
+### Friend functions ###
+
+Friend functions are functions which are not part of a class (that is, they are neither private nor public members) that are granted access to a class' private members.
+Friend functions defined within a class are by default, inline. Friend function prototypes inside a class would need to be defined outside the class and would not be
+treated as inline methods unless they are preceded with the _inline_ keyword.
+
+```cpp
+// mimic a Java getter
+class DoStuff{
+  private:
+    char value;
+
+  public:
+    // implicitly inline
+    char getValue()
+    {
+      return value;
+    }
+  
+  // check the indentation, this friend function is not a member
+  // for clarity, this prototype are placed outside of both private and public lists
+  friend int RepeatCharacter(DoStuff object);
+};
+
+// compiler assumes this is not an inline method
+int RepeatCharacter(DoStuff object)
+{
+  // CharToInt is hypothetical here but is sent the value to a private member
+  return CharToIntobject(value);
+}
+```
+
+Placing the method definition outside the class generally makes it clearer to see that the method exists (instead of hiding it in the class).
+
 ## Templates in C++ ##
 
 ### Function templates ###
 
-Function templates are particularly useful when function overloading becomes excessive, i.e. a function prototype is declared one too many times.
+Function templates are particularly useful when function overloading becomes excessive, i.e. a function prototype is declared
+one too many times.
 
-There are two keywords one can use to define a function template: `class` and `typename`. The latter is considered more generic while the former is used specifically for class templates (see next section). These keywords are interchangeable in this section.
+There are two keywords one can use to define a function template: `class` and `typename`. The latter is considered more generic
+while the former is used specifically for class templates (see next section). These keywords are interchangeable in this section.
 
 ```cpp
 // assume here that an array of int's, double's or long's is involved...
@@ -182,7 +267,8 @@ int main(){
 
 ### Class templates ###
 
-Templates in C++ are equivalent to generic classes in Java. The instantiation of a template with chosen types through the constructor causes other methods to follow the same type used.
+Templates in C++ are equivalent to generic classes in Java. The instantiation of a template with chosen types through the
+constructor causes other methods to follow the same type used.
 
 ```cpp
 template<class T>   // this token is similar in function to @someProperty annotation in Java

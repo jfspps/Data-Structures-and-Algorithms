@@ -216,6 +216,38 @@ int RepeatCharacter(DoStuff object)
 
 Placing the method definition outside the class generally makes it clearer to see that the method exists (instead of hiding it in the class).
 
+## The this pointer ##
+
+Methods can be defined to operate on the instance directly without passing it as a parameter. To achieve this, one uses the `this` pointer
+in the method definition. Since `this` is a pointer, then one can access its members with the indirect member operator (->) instead of using (*this).
+
+```cpp
+class DoStuff{
+  public:
+    int value;
+
+    // implicitly inline
+    int incrementValue()
+    {
+      return ++this->value;
+    }
+
+    int compareTo(DoStuff object){
+      // this is a pointer but object is not
+      return this->value >= object.value;
+    }
+};
+
+// somewhere in main()
+DoStuff example;
+example.value = 8;
+example.incrementValue();
+
+// example.value is now 9
+```
+
+Indeed, all member functions come with `this` and is provided by the compiler. The above definition is not the only way to implement `compareTo()` but is arguably the simplest.
+
 ## Templates in C++ ##
 
 ### Function templates ###

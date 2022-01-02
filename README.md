@@ -50,7 +50,7 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
     + Designing recursive functions
     + Recurrence relations
 
-7. [Static and global variables](7_Static_and_global_variables.md)
+7. [Static variables and methods](7_Static_variables_and_methods.md)
 
 8. [Types of recursion](8_Types_of_recursion.md)
 

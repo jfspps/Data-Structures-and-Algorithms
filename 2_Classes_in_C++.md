@@ -63,7 +63,7 @@ Constructors are not strictly required and the compiler will provide a default n
 Note that by adding a constructor with or without arguments indicates to the compiler that it will __not__ provide a default no-args
 constructor. This means that if a no-args constructor is needed (when at least one constructor is already defined), then one must be declared in the class.
 
-Default constructors can initialise defaults for members. The method call to such a method is the same as the no-args constructor. As a result,
+Default constructors can initialise defaults for members and are used when building arrays of objects, for example. The method call to such a method is the same as the no-args constructor. As a result,
 the compiler will not know which to call, the constructor with no-args or that with defaults. In this case, one could
 replace the no-args constructor with the defaults constructor:
 
@@ -207,7 +207,7 @@ class DoStuff{
 };
 
 // compiler assumes this is not an inline method
-int RepeatCharacter(DoStuff object)
+int DoStuff::RepeatCharacter(DoStuff object)
 {
   // CharToInt is hypothetical here but is sent the value to a private member
   return CharToIntobject(value);
@@ -247,6 +247,95 @@ example.incrementValue();
 ```
 
 Indeed, all member functions come with `this` and is provided by the compiler. The above definition is not the only way to implement `compareTo()` but is arguably the simplest.
+
+### Constant class instances ###
+
+Objects or instances of a class can be treated as constants provided that the `this` pointer provided in all member functions that use `this` (note that not all member functions need to use `this` so to them this passage does not apply) are also marked constant. To make the `this` pointer
+of a member function constant requires making the method constant! So overall, a constant object is assumed as long as the relevant member functions are also constant.
+
+Since member functions can be (a) declared as prototypes in the class and defined outside the class or (b) defined in the class, wherever the method is declared or defined, it must apply the `const` keyword. The following
+demonstrates both cases:
+
+```cpp
+class DemoClass 
+{
+  private:
+    double someDouble;
+
+  public:
+    DemoClass(double sD = 1.1);
+
+    // uses the this pointer
+    double getDouble() const;
+
+    // uses the this pointer
+    double doubleDouble() const
+    {
+      return 2*(this->someDouble);
+    }
+}
+
+double DemoClass::getDouble() const
+{
+  return this->someDouble();
+}
+
+DemoClass::DemoClass(double sD): someDouble(sD)
+{
+  std::cout << "DemoClass initialised" << std::endl;
+}
+
+int main(){
+  DemoClass demo;
+
+  double demoDouble = demo.getDouble();
+}
+```
+
+## Pointers and references to objects ##
+
+Passing by address is particularly useful with member access since some classes can get quite large.
+
+```cpp
+SomeClass example;
+
+SomeClass* objectPtr = 0;
+objectPtr = &example;
+
+// dereference the object first before accessing the data member...
+std::cout << objectPtr->someField << std::endl;
+```
+
+References can be assigned to objects using:
+
+```cpp
+SomeClass example;
+
+SomeClass& objectRef = example;
+
+// no need to dereference the object first; accessing the data member directly...
+std::cout << objectRef.someField << std::endl;
+```
+
+## The copy constructor ##
+
+Copy constructors build objects by initialising data members from an existing object, hence a copy. Passing an object (to be copied) by value would result in an endless loop.
+A copy constructor would need to build a copy of the object to pass as an argument and so the copy constructor would need a copy constructor in order to proceed.
+
+Copy constructors therefore must use a pass-by-reference argument of the object that it is copying. The reference to an existing object does not require a copy constructor call.
+
+Generally, one passes a `const` reference to the object to ensure that the copy constructor cannot change the reference to the object (to be copied). Other new objects may also
+want to apply the data members.
+
+```cpp
+// copy constructor prototype
+SomeClass(const SomeClass& copyFromThis);
+
+// the definition provided outside SomeClass
+SomeClass::SomeClass(const SomeClass& initObj){
+  // initialise the members of the newly created object according to those provided by initObj
+}
+```
 
 ## Templates in C++ ##
 

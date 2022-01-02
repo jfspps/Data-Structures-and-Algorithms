@@ -29,7 +29,8 @@ class Shape
       static int numberOfInstances;
 
       Shape(){
-          // this does nothing since numberOfInstances will remain whatever it was set to outside this class
+          // this does nothing since numberOfInstances will remain whatever 
+          // it was set to outside this class
           numberOfInstances++;
           std::cout << "Number of instances: " << numberOfInstances;
       }

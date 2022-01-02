@@ -70,17 +70,20 @@ replace the no-args constructor with the defaults constructor:
 ```cpp
    // default constructor (no arguments but with defaults)
    Rectangle(int length = 1, int lengthTwo = 1){
-     std::cout << "Default constructor with defaults called" << std::endl;
+     std::cout << "Default constructor with defaults called" 
+        << std::endl;
    };
 ```
 
 Finally, one can use __initialisation lists__ in a defaults constructor to initialise members with identifiers that differ from member identifiers:
 
 ```cpp
-   // default constructor (no arguments but with defaults set by initialisation lists)
+   // default constructor (no arguments but with defaults set by 
+   // initialisation lists)
    Rectangle(int l1 = 1, int l2 = 1):length(l1), lengthTwo(l2)
    {
-     std::cout << "Default constructor with defaults called via an initialisation list" << std::endl;
+     std::cout << "Default constructor with defaults called via an initialisation list" 
+        << std::endl;
    };
 ```
 
@@ -201,8 +204,9 @@ class DoStuff{
       return value;
     }
   
-  // check the indentation, this friend function is not a member
-  // for clarity, this prototype are placed outside of both private and public lists
+  // check the indentation, this friend function is not a member;
+  // for clarity, this prototype are placed outside of both 
+  // private and public lists
   friend int RepeatCharacter(DoStuff object);
 };
 
@@ -333,7 +337,8 @@ SomeClass(const SomeClass& copyFromThis);
 
 // the definition provided outside SomeClass
 SomeClass::SomeClass(const SomeClass& initObj){
-  // initialise the members of the newly created object according to those provided by initObj
+  // initialise the members of the newly created object 
+  // according to those provided by initObj
 }
 ```
 

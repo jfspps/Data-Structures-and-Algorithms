@@ -282,8 +282,10 @@ Pointers can be assigned to the address held by references, e.g. structures:
 ```cpp
  struct Rectangle *p = &r;
 
- // dereferencing operator * has lower precedence than the member access operator . hence the parenthesese 
- // dereference the structure pointer p first before accessing the member
+ // dereferencing operator * has lower precedence than the 
+ // member access operator . hence the parenthesese 
+ // dereference the structure pointer p first before 
+ // accessing the member
  (*p).length = 20;
 ```
 
@@ -316,7 +318,8 @@ The corresponding function prototype (or _declaration_, that is, the function si
 ```cpp
  void swap(int *x, int *y);
 
- // provide function overloading capability (this will require a separate function definition)
+ // provide function overloading capability (this will require 
+ // a separate function definition)
  void swap(double *x, double *y);
 ```
 

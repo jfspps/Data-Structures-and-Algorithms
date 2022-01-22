@@ -23,20 +23,24 @@ class Rectangle{
    }
 
    // default constructor (without arguments)
-   Rectangle(){
+   Rectangle()
+   {
      // no-args constructor need not be empty, for example, the following is valid
      std::cout << "Default constructor called" << std::endl;
    };
 
    //other public methods, including setters and getters for private member access
 
-   //destructors are needed in C++ if objects reside in the heap
-   ~Rectangle(); 
+   // destructors are needed in C++ if objects reside in the heap (not required for the stack)
+   ~Rectangle();
  };
 ```
 
-Note that garbage collection of the stack is automated in C++. To avoid memory leaks pertaining to the heap, one must call a destructor.
-Default constructors, through overloading, are available.
+Note that garbage collection of the stack is automated in C++. The compiler will build a default destructor and call it when the object
+goes out of scope.
+
+To avoid memory leaks pertaining to the heap, one must define and then call a destructor. The destructor will release resources initialiased by
+the constructor, such as releasing pointers through the `delete` keyword. More to follow below.
 
 ## Instantiation, members and constructors ##
 
@@ -340,6 +344,80 @@ SomeClass::SomeClass(const SomeClass& initObj){
   // initialise the members of the newly created object 
   // according to those provided by initObj
 }
+```
+
+## Destructors ##
+
+Objects of a class are freed by the compiler by the use of a default destructor.
+
+```cpp
+class SomeClass
+{
+  // destructor prototype (nothing more than a reference to the default destructor)
+  ~SomeClass();
+}
+```
+
+Note the distinction: the compiler will release the object from the heap but any resources local to the object would
+still be 'dangling' in the heap if they too are not released.
+
+```cpp
+class SomeClass
+{
+  private:
+    char* ptrMessage;
+
+  public:
+
+  SomeClass
+  {
+    // constructor allocates some of the heap to a string via the pointer;
+    // one should free ptrMessage when the instance of SomeClass is freed
+    ptrMessage = "SomeClass instance local resource";
+  };
+
+  ~SomeClass();
+}
+
+// outside of main()
+SomeClass::~SomeClass()
+{
+  // when SomeClass is released, make sure all other resources are also freed
+  // i.e. the array of char pointed to by ptrMessage
+  delete[] ptrMessage;
+}
+```
+
+The `delete` keyword removes the data from the heap that a pointer points to. If the pointer is pointing to a (class) object then
+`delete` also calls the defined destructor.
+
+```cpp
+{  
+  // instantiate the class in the stack
+  SomeClass example;
+
+  // instantiate the class in the heap and save the pointer in the stack
+  SomeClass* anotherExample = new SomeClass;
+}
+
+// by now, "example" is released but "anotherExample" is not
+```
+
+The `delete` keyword invokes the class' destructor:
+
+```cpp
+{  
+  // instantiate the class in the stack
+  SomeClass example;
+
+  // instantiate the class in the heap and save the pointer in the stack
+  SomeClass* anotherExample = new SomeClass;
+
+  // effectively calls the destructor of SomeClass
+  delete anotherExample;
+}
+
+// by now, "example" and "anotherExample" are released
 ```
 
 ## Templates in C++ ##

@@ -369,7 +369,7 @@ class SomeClass
 
   public:
 
-  SomeClass
+  SomeClass()
   {
     // constructor allocates some of the heap to a string via the pointer;
     // one should free ptrMessage when the instance of SomeClass is freed
@@ -418,6 +418,69 @@ The `delete` keyword invokes the class' destructor:
 }
 
 // by now, "example" and "anotherExample" are released
+```
+
+## Copy constructors revisted ##
+
+Now that the idea of local resource management for an object is explained in the above section regarding destructors,
+what are the implications with regard to copy constructors?
+
+When a copy constructor is invoked, it also sets a reference (pointer) to all members (local resources) of the object it
+copies.
+
+```cpp
+class SomeClass
+{
+  private:
+    char* ptrMessage;
+
+  public:
+
+  SomeClass()
+  {
+    ptrMessage = "SomeClass instance local resource";
+  };
+
+  SomeClass(const SomeClass& copyFromThis);
+
+  ~SomeClass();
+}
+
+// outside of main()
+SomeClass::~SomeClass()
+{
+  delete[] ptrMessage;
+}
+
+void main()
+{
+  SomeClass class1;
+  SomeClass classCopy(class1);
+
+  // classCopy has the reference to the same string defined in ptrMessage
+  // i.e. both classCopy and class1 have their own pointer that references the
+  // same string in the heap, first initialised by class1
+}
+```
+
+The problem that the destructor is defined to free the member ptrMessage whenever an instance SomeClass is deleted. Hence, when the object copy `classCopy`
+is freed from the stack (e.g. the copy goes out of scope), then the member `ptrMessage` is also freed.
+This leaves the original `class1` object with a pointer that references an area on the heap that is now void of the string it previously had.
+
+The general solution to this is to:
+
++ define the destructor to free members on the heap (as is already outlined above)
++ define a copy constructor which builds its own copy of all members (of the object copy) so that when the copy is freed, the original object still has valid
+members
+
+```cpp
+// define the copy constructor outside of the class and copy members when building a copy of the object
+SomeClass(const SomeClass& copyOf)
+{
+  // set the pointer to the member at an independent location of the heap;
+  // this not only has a different string literal but is also linked to the copy and not the original, copyOf
+  ptrMessage = "Copy of SomeClass";
+}
 ```
 
 ## Templates in C++ ##

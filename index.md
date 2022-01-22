@@ -29,6 +29,7 @@ My notes from an online C++ course
     + Instantiation, members and constructors
     + Scope resolution and inline methods
     + Friend functions
+    + Destructors
     + Templates (function and class)
   
 3. [The stack and the heap](3_Stack_and_Heap.md)

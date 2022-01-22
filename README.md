@@ -30,7 +30,12 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
     + Instantiation, members and constructors
     + Scope resolution and inline methods
     + Friend functions
+    + The this pointer
+    + Constant class instances
+    + Pointers and references to objects
+    + The copy constructor
     + Destructors
+    + Copy constructors revisted
     + Templates (function and class)
   
 3. [The stack and the heap](3_Stack_and_Heap.md)

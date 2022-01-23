@@ -747,7 +747,6 @@ template<class T>   // this token is similar in function to @someProperty annota
   public:
    Arithmetic(T a, T b);
    T add();
-   T sub();
  }
 
  template<class T>   // needed again since } closed previous class block
@@ -766,3 +765,16 @@ template<class T>   // this token is similar in function to @someProperty annota
   return c;
  }
 ```
+
+To build an instance of the class template and call functions, simply substitute the generic T to the type required.
+
+```cpp
+Arithmetic<int> integerObject(2, 3);
+
+Arithmetic<double> doubleObject(0.9, 1.1);
+
+// note here that the template function add() is only created if it is called (this applies to all methods and objects)
+int sum = integerObject.add();
+```
+
+As with all parameters, one can also pass expressions which evaluate to the data types that the method is expecting.

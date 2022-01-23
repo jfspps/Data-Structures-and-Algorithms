@@ -36,6 +36,8 @@ My notes from an online C++ course
     + The copy constructor
     + Destructors
     + Copy constructors revisted
+    + Operator overloading
+    + Overloading prefix and postfix operators
     + Templates (function and class)
   
 3. [The stack and the heap](3_Stack_and_Heap.md)

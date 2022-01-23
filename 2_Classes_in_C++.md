@@ -104,21 +104,22 @@ Methods declared in a class __and__ defined _outside_ the class body are qualifi
 In Java, the resolution operator `::` is used to call (reference) methods on an object which is not an instance of the class.
 
 ```cpp
+class Rectangle
+{
+  //class instance variables and other methods
+}
+
 Rectangle::Rectangle(int a, int b){
   length = a;
   breadth = b;
- }
+}
 
- // emphasises that area() is a member function of the class Rectangle
- int Rectangle::area(){
- //some code for area()
- }
- 
- Rectangle::~Rectangle(){};
+// emphasises that area() is a member function of the class Rectangle
+int Rectangle::area(){
+  // some code for area()
+}
 
- class Rectangle{
- //class instance variables and other methods
- }
+Rectangle::~Rectangle(){};
 ```
 
 The method `Init()` in C++ is equivalent to the `static{}` block in Java, allowing one to hide initialisation details from
@@ -456,6 +457,8 @@ SomeClass::~SomeClass()
 void main()
 {
   SomeClass class1;
+
+  // instantiate classCopy with the references to class1's member values; this invokes the copy constructor
   SomeClass classCopy(class1);
 
   // classCopy has the reference to the same string defined in ptrMessage
@@ -482,6 +485,201 @@ SomeClass(const SomeClass& copyOf)
   // this not only has a different string literal but is also linked to the copy and not the original, copyOf
   ptrMessage = "Copy of SomeClass";
 }
+```
+
+Note that the copy constructor is not the same as the assignment operator. The assignment operator works on objects that have already be instantiated
+and only performs a direct mapping of the member values from one instance to the other. Note that the assignment operator is fine for situations where
+the members are saved to the stack. If, however, members are dynamically assigned on the heap then it is advisable to overload the assignment operator.
+
+## Operator overloading ##
+
+Operator overloading allows one to re-define many (not all) C++ operators so that they perform tasks tailored for a specific class.
+
+```cpp
+SomeClass anObject;
+
+// left-hand operand
+if (anObject == 4.4){
+  // do stuff
+}
+
+// right-hand operand; how is this conditional evaluated?
+return anObject > 3;
+```
+
+Operator overloading can be an involving prospect. Some operands appear on the left, others on the right. There are also other types and classes to consider.
+
+The following operators cannot be overloaded:
+
++ scope-resolution operator `::`
++ (ternary) conditional-operator `?:`
++ direct member selection operator `.`
++ size-of operator `sizeof`
++ deference pointer to a class member operator `.*`
+
+Operators appear by symbol (above) but also by name e.g. `new` and `delete`.
+
+To overload an operator, first give the prototype in the class it applies to.
+
+```cpp
+class SomeClass
+{
+  private:
+    int someInt;
+
+  public:
+    // this could be written as operator> or operator > (with a space)
+    bool operator> (SomeClass &anObject) const;
+
+    SomeClass(int input = 2);
+
+    ~SomeClass();
+}
+
+SomeClass::SomeClass(int input = 2): someInt(input)
+{
+  // set up as needed
+}
+
+bool SomeClass::operator> (const SomeClass &anObject)
+{
+  // this assumes that the left-hand operand is referenced by this and 
+  // the right-hand operand is "anObject", the parameter
+  return this->someInt > anObject->someInt;
+}
+
+void main()
+{
+  // initialiase stuff...
+  SomeClass tryMe;
+  SomeClass thisThis;
+
+  // this is equivalent to "if (tryMe->someInt > tryThis->someInt)"
+  if (tryMe > tryThis)
+  {
+    // this will never pass, anyway....
+  }
+}
+```
+
+As shown, the `this` pointer assumes the role of the left-hand operand.
+
+To compare with primitive data types, use a reference to the primitive data type:
+
+```cpp
+// use a space this time...
+bool SomeClass::operator > (const double &aDouble)
+{
+  // this assumes that the left-hand operand is referenced by this and 
+  // the right-hand operand is "aDouble", the parameter
+  return this->someInt > aDouble;
+}
+```
+
+One can also apply (declare) more explicit operand use without the `this` pointer and supply both operands
+in the method definition.
+
+```cpp
+// use a space this time...
+bool SomeClass::operator > (const SomeClass &anObject, const double &aDouble)
+{
+  // no this pointer, this is more explicit
+  return anObject->someInt > aDouble;
+}
+```
+
+To overload the `new` operator, for example, then a space is needed after the `operator` keyword.
+
+```cpp
+// use a space this time...
+bool SomeClass::operator new (const SomeClass &anObject, const double &aDouble)
+{
+  // no this pointer, this is more explicit
+  return anObject->someInt > aDouble;
+}
+```
+
+As alluded to in the previous section on assignment operators vs. copy constructors, whenever a class uses dynamically allocated members it
+is quite possible that the assignment operator will grant the recipient object the same reference (pointer) as the source object. Subsequently,
+when the recipient object goes out of scope, it invokes the destructor and releases the dynamically allocated members. Consequently, the source
+object will have members that are pointing to memory used by something else.
+
+```cpp
+class SomeClass
+{
+  private:
+    char* ptrMessage;
+
+  public:
+
+  // constructor
+  SomeClass()
+  {
+    ptrMessage = "SomeClass instance local resource";
+  };
+
+  // copy constructor
+  SomeClass(const SomeClass& copyFromThis);
+
+  // a reference is returned to accommodate the different uses under which the assignment operator applies
+  // e.g. object1 = object2, or object1 = object2 = object3;
+  // note that the return value is an lvalue not an rvalue, so the parameter refers to the rvalue, the source object
+  SomeClass& operator = (const SomeClass &rhsOperand)
+  {
+    // if the assignment operator is used to compare to itself, then return the reference to itself
+    // (otherwise this overloaded operator would end up deleting its own dynamically allocated members!)
+    if (this == &rhsOperand)
+    {
+      std::cout << "Trying to copy to itself..." << std::endl;
+      return *this;
+    }
+
+    // for the left hand operand (implied through "this" pointer though not needed here), free ptrMessage
+    delete ptrMessage;
+    
+    ptrMessage = new char[strlen(rhsOperand.ptrMessage) + 1];
+
+    strcpy(this->ptrMessage, rhsOperand.ptrMessage);
+
+    // note that "this" is a pointer variable, so dereference it to get the address reference
+    return *this;
+  }
+
+  ~SomeClass();
+}
+
+// outside of main()
+SomeClass::~SomeClass()
+{
+  delete[] ptrMessage;
+}
+
+void main()
+{
+  SomeClass class1;
+  SomeClass class2;
+
+  // some rather (admittedly pointless) assignement
+  class2 = class1;
+}
+```
+
+### Overloading prefix and postfix operators ###
+
+Unary operators such as the prefix operator and postfix operators need some thought here when overloading them.
+
+For the prefix operators (e.g. --object), there are no parameters in the prototype or definition. For postfix operators (e.g. object++), there is one parameter. However,
+the parameter is merely a differentiator for the compiler. There is no need to provide the name, only the data type, in the list. The function definition would not use the parameter -
+no need since the operation is unary not binary.
+
+```cpp
+// assume Length is a class with a private member of type int
+
+// postfix - need to "pass by value", make a copy, increment and finally return the resultant Length object 
+const Length operator ++ (int);
+
+// prefix - need to work on the current (with "this") and return a reference to the new value
+Length& operator ++();
 ```
 
 ## Templates in C++ ##

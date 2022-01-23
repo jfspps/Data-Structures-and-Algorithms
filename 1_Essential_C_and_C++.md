@@ -107,6 +107,9 @@ Grant access to stack and heap resources, by address. Functions called are store
   p = &a; //pointer p references int a (both in the stack)
   
   int t = *p; //dereferences p then assigns the value (not the address)
+
+  // change the value "a" through its pointer
+  *p = 20;
  }
  ```
 
@@ -131,7 +134,7 @@ In C++:
  p = new int[5];
 ```
 
-### Pointer and Arrays ###
+### Pointers, Arrays and Pointer Arithmetic ###
 
 A pointer to an array can be expressed in the form:
 
@@ -147,7 +150,7 @@ In this case, `ptr` is an array of pointers to integers. In comparison, the lite
 
 The array name or literal is essentially a pointer to the first element. The expression `*ptr` refers to the _value_ of the first element of the array and is equivalent to `ptr[0]`. The expression `*(ptr + 1)` is equivalent to `ptr[1]` and all are examples of 'pointer arithmetic'.
 
-This next example shows a little about pointer arithmetic and how to free arrays in heap.
+This next example shows some examples about pointer arithmetic and how to free arrays in heap.
 
 ```cpp
  #include <iostream>
@@ -249,6 +252,49 @@ This next example shows a little about pointer arithmetic and how to free arrays
  }
 ```
 
+### Pointers to char ###
+
+Pointers to a `char` are somewhat unique compared to other types (e.g. int or long). One can initialise the value the pointer points to directly with a string literal:
+
+```cpp
+char* someString = "Welcome to the world of C++ pointers";
+
+// compare this to pointers to other types
+double someDouble = 2.2;
+double* ptrDouble = &someDouble;
+
+*ptrDouble = 5.5;
+```
+
+The string is a sequence of characters with a terminating `null` character `/0`. The string itself is immutable, though the pointer is mutable. To effectively change the string
+one would re-assign the pointer to a new string literal.
+
+There are no pointers to a single `char`, only pointers to an array of characters. This means that an array of pointers to a `char` are in fact an array of pointers to strings.
+
+```cpp
+char* someArrayOfStrings[2];
+
+// assign the first element
+*someArrayOfStrings = "First element";
+
+// assign the second element (uses pointer arithmetic)
+*(someArrayOfStrings + 1) = "Second element";
+
+// someArrayOfStrings[0] and *someArrayOfStrings represents the first element
+char aString[100] = *someArrayOfStrings;
+
+// someArrayOfStrings[1] and *(someArrayOfStrings + 1) represents the second element
+char a2String[100] = *(someArrayOfStrings + 1);
+
+// someArrayOfStrings[1][0] and *(*(someArrayOfStrings + 1)) represents the first char of the second element
+char aChar = *(*(someArrayOfStrings + 1));
+
+// someArrayOfStrings[1][3] and *(*(someArrayOfStrings + 1) + 3) represents the fourth char of the second element
+char aChar = *(*(someArrayOfStrings + 1) + 3);
+```
+
+Generally, `anArray[i][j]` is equivalent to `*(*(anArray + i) + j))`. One could combine array and pointer notation but this then gets a bit unwieldy.
+
 ## References (C++ only) ##
 
 References are aliases to variables, and not part of C. They do not create copies of variables they reference to in any function call (other than `main()`). Unlike pointers, __references are immutable__ and so must be assigned as an alias to one variable for the program's entire lifecycle.
@@ -337,7 +383,7 @@ The `main()` method can have arguments defined which end up representing command
  }
 ```
 
-The first argument `argc` represents the number of arguments and the second argument `argv` is an array of pointers to characters. The latter equivalent to an array of pointers to strings, since each character pointer points to the first character of the string. The first element of `argv` is always the program name and so `argc` is always at least 1.
+The first argument `argc` represents the number of arguments and the second argument `argv` is an array of pointers to strings (recall above ideas). Each character pointer points to the first character of the string. The first element of `argv` is always the program name and so `argc` is always at least 1.
 
 ### Passing by reference (C++ only) ###
 

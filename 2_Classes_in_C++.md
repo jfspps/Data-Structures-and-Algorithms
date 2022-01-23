@@ -348,7 +348,8 @@ SomeClass::SomeClass(const SomeClass& initObj){
 
 ## Destructors ##
 
-Objects of a class are freed by the compiler by the use of a default destructor.
+Objects of a class are freed by the compiler by the use of a default destructor. If the object is referenced via a pointer then the object resides in the heap. The
+`delete` keyword is used to release data from the heap referenced by a pointer and, as explained below, also invokes the destructor should it be applied to an object.
 
 ```cpp
 class SomeClass

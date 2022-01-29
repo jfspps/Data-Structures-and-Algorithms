@@ -2,9 +2,9 @@
 
 My notes from an online C++ course. The GitHub pages landing page is [here](https://jfspps.github.io/Data-Structures-and-Algorithms)
 
-1. [The stack and the heap](3_Stack_and_Heap.md)
+1. [The stack and the heap](1_Stack_and_Heap.md)
 
-2. [Essential C and C++](1_Essential_C_and_C++.md)
+2. [Essential C and C++](2_Essential_C_and_C++.md)
 
     + Enumerations
     + Structures
@@ -28,7 +28,7 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
     + Array of pointers to functions
     + Default arguments
 
-3. [Classes in C++](2_Classes_in_C++.md)
+3. [Classes in C++](3_Classes_in_C++.md)
 
     + Instantiation, members and constructors
     + Scope resolution and inline methods

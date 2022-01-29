@@ -36,6 +36,9 @@ class Rectangle{
  };
 ```
 
+Note that if the `private` and `public` access modifiers are ommitted from the class definition, then the class members will be assumed `private`.
+This has consequences for this class and all classes derived from it (see Inheritance).
+
 Note that garbage collection of the stack is automated in C++. The compiler will build a default destructor and call it when the object
 goes out of scope.
 
@@ -778,3 +781,94 @@ int sum = integerObject.add();
 ```
 
 As with all parameters, one can also pass expressions which evaluate to the data types that the method is expecting.
+
+## Inheritance ##
+
+As with Java, C++ base classes can be extended. A dervied class does not inherit the base classes:
+
++ constructor
++ destructor
++ overloaded assignment operator
+
+Classes are normally organised in their own header or source files, just as Java classes are defined in their own .java files.
+
+```cpp
+// inside BaseClass.h
+
+// forces the definition of BaseClass to appear only once in the build
+#pragma once
+
+class BassClass 
+{
+  private:
+    double someDouble;
+    int someInt;
+
+  public:
+    BaseClass (double defDob = 1.1, int defInt = 98): someDouble(defDob), someInt(defInt)
+    {}
+};
+
+```
+
+Now derive `BaseClass` in another header file. Note the way in which the identifiers are used:
+
+```cpp
+// inside DerivedClass.h
+
+#pragma once
+
+// add BaseClass.h (mandatory here)
+#include "BaseClass.h"
+
+class DerivedClass : BaseClass
+{
+  public:
+    char* someString;
+
+    DerivedClass(char* stringArg = "Derived from BaseClass")
+    {
+      someString = new char[strlen(stringArg) + 1];
+
+      // since stringArg resides on the heap, its source reference (its pointer) is needed
+      strcpy_s(someString, strlen(stringArg) + 1, stringArg);
+    }
+
+    ¬DerivedClass()
+    {
+      delete[] someString;
+    };
+};
+```
+
+One can then instantiate from either class as required.
+
+```cpp
+// in program.cpp
+#include <iostream>
+#include <cstring>
+
+// this caters for the given class and all its base class(es)
+#include "DerivedClass.h"
+
+using std::cout;
+using std::endl;
+
+int main()
+{
+  BaseClass baseObj(13.3, 500);
+  DerivedClass derObj;
+  DerivedClass derObj2("This is the second time");
+
+  cout  << "BaseClass is smaller: " << sizeof baseObj
+        << " bytes" << endl;
+
+  cout  << "derObj and derObj2 are of equal size (respectively): " << sizeof derObj
+        << " bytes compared to " << sizeof derObj2 << " bytes" << endl;
+
+  // one cannot change private members of BaseClass through DerivedClass
+  // derObj.someInt = 200;
+
+  return 0;
+}
+```

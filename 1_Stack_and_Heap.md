@@ -17,14 +17,14 @@ Programs do not access heap memory directly. They can access them with pointers 
 ```cpp
 void main(){
   int *p;
-  p = new int[5];  //this allocated 5*size of int in the heap, somewhere
+  p = new int[5];  // this allocated 5*size of int in the heap, somewhere
 
   //the C based version of new assuming int's are 2 bytes long
   //p = (int *)malloc(2 * 5);
   
   //do stuff to p...
 
-  delete[] p;      //clear the heap (do this before resetting the pointer!)
-  p = NULL;        //reset the pointer
+  delete[] p;      // clear the heap (do this before resetting the pointer!)
+  p = NULL;        // reset the pointer
  }
 ```

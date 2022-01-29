@@ -1,7 +1,9 @@
 # Data-Structures-and-Algorithms
 My notes from an online C++ course
 
-1. [Essential C and C++](1_Essential_C_and_C++.md)
+1. [The stack and the heap](3_Stack_and_Heap.md)
+
+2. [Essential C and C++](1_Essential_C_and_C++.md)
 
     + Enumerations
     + Structures
@@ -25,7 +27,7 @@ My notes from an online C++ course
     + Array of pointers to functions
     + Default arguments
 
-2. [Classes in C++](2_Classes_in_C++.md)
+3. [Classes in C++](2_Classes_in_C++.md)
 
     + Instantiation, members and constructors
     + Scope resolution and inline methods
@@ -40,8 +42,6 @@ My notes from an online C++ course
     + Overloading prefix and postfix operators
     + Templates (function and class)
   
-3. [The stack and the heap](3_Stack_and_Heap.md)
-
 4. [Types of data structures](4_Types_of_data_structures.md)
 
     + Physical and logical data structures

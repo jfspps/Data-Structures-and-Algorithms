@@ -790,6 +790,9 @@ As with Java, C++ base classes can be extended. A dervied class does not inherit
 + destructor
 + overloaded assignment operator
 
+Objects of derived classes are instantiated first from the base class constructor and then all other constructors of successive
+derived classes before the constructor of the last, defining class is called.
+
 Classes are normally organised in their own header or source files, just as Java classes are defined in their own .java files.
 
 ```cpp
@@ -871,4 +874,40 @@ int main()
 
   return 0;
 }
+```
+
+Methods defined in a base class (or the intermediate base classes) have normal access to their respective
+members (private and public) but methods of a derived class cannot access `private` members of any of its
+base classes.
+
+As already noted, the base class constructor takes care of the base part of the derived object. The base class
+constructors after all are the only methods that have access to the given private members.
+
+If a base class constructor is not already defined then the compiler calls the default constructor to manage
+the base class part of the object. To call a specific constructor (instead of the default constructor) one
+must pass parameters needed for the specific constructor (which must already be defined)
+as part of the initialisation list, along with the parameters (if needed) for the derived constructor.
+
+```cpp
+// modify the DerivedClass
+
+class DerivedClass : BaseClass
+{
+  public:
+    char* someString;
+
+    // assumes that BaseClass constructor with matching signature is established 
+    DerivedClass(double defDob, int defInt, char* stringArg = "Derived from BaseClass"): BaseClass(defDob, defInt)
+    {
+      someString = new char[strlen(stringArg) + 1];
+
+      // since stringArg resides on the heap, its source reference (its pointer) is needed
+      strcpy_s(someString, strlen(stringArg) + 1, stringArg);
+    }
+
+    ¬DerivedClass()
+    {
+      delete[] someString;
+    };
+};
 ```

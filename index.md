@@ -42,6 +42,7 @@ My notes from an online C++ course
     + Overloading prefix and postfix operators
     + Templates (function and class)
     + Inheritance
+    + Protected access specifier
   
 4. [Types of data structures](4_Types_of_data_structures.md)
 

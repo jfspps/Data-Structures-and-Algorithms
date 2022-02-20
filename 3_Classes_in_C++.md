@@ -869,7 +869,7 @@ class DerivedClass : public BaseClass
 One should emphasise here that base class `private` members are __never__ accessible to any derived class methods, under any circumstances.
 They can only be accessed through public base class methods.
 
-### How derived classes are instantiated ###
+### Derived class objects ###
 
 One can then instantiate from either class as required.
 
@@ -944,7 +944,7 @@ class DerivedClass : public BaseClass
 Destructors, on the other hand, are called in the reverse order to constructors. When a derived class destructor is called, the
 compiler calls the derived class destructor first before the base class(es) destructor(s).
 
-### Protected members ###
+## Protected members ##
 
 Base class members marked `protected` are treated like `private` base class members. Such members are only visible to the base class methods and friend functions of the class.
 
@@ -975,7 +975,6 @@ Note that `public` members in the base class are now `protected` in the derived 
 
 Alternatively, one could make all `protected` and `public` base class members, respectively, `protected` and `public` in the derived
 class (i.e. no change to access) by using the `public` access modifier.
-
 
 ```cpp
 // inside DerivedClass.h

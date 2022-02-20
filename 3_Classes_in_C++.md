@@ -837,7 +837,7 @@ class DerivedClass : BaseClass
       strcpy_s(someString, strlen(stringArg) + 1, stringArg);
     }
 
-    ¬DerivedClass()
+    ~DerivedClass()
     {
       delete[] someString;
     };
@@ -905,7 +905,7 @@ class DerivedClass : BaseClass
       strcpy_s(someString, strlen(stringArg) + 1, stringArg);
     }
 
-    ¬DerivedClass()
+    ~DerivedClass()
     {
       delete[] someString;
     };

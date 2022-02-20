@@ -814,7 +814,7 @@ class BassClass
 
 ```
 
-Now derive `BaseClass` in another header file. Note the way in which the identifiers are used:
+Now derive `BaseClass` in another header file. Note the way in which the identifiers and member _access specifiers_ are used:
 
 ```cpp
 // inside DerivedClass.h
@@ -824,6 +824,8 @@ Now derive `BaseClass` in another header file. Note the way in which the identif
 // add BaseClass.h (mandatory here)
 #include "BaseClass.h"
 
+// this DerivedClass to BaseClass 'access specifier' is assumed private, equivalent to
+// class DerivedClass : private BaseClass
 class DerivedClass : BaseClass
 {
   public:
@@ -843,6 +845,31 @@ class DerivedClass : BaseClass
     };
 };
 ```
+
+Note that according to the `DerivedClass` and `BaseClass` _access specifier_, the public (__not__ private) members of the base class
+are inherited by the derived class as `private` members. Changing the access specification to `public` means that all `public`
+members are inherited as `public` members in the derived class and are accessible to `main()`.
+
+```cpp
+// inside DerivedClass.h
+
+#pragma once
+
+// add BaseClass.h (mandatory here)
+#include "BaseClass.h"
+
+// all public members in BaseClass are now public in DerivedClass
+class DerivedClass : public BaseClass
+{
+  public:
+    // ...public members, constructors and destructors...
+};
+```
+
+One should emphasise here that base class `private` members are __never__ accessible to any derived class methods, under any circumstances.
+They can only be accessed through public base class methods.
+
+### How derived classes are instantiated ###
 
 One can then instantiate from either class as required.
 
@@ -878,10 +905,11 @@ int main()
 
 Methods defined in a base class (or the intermediate base classes) have normal access to their respective
 members (private and public) but methods of a derived class cannot access `private` members of any of its
-base classes.
+base classes. Private methods of a base class are only accessible to derived classes through `public` base class methods
+that make use of `private` base class members.
 
-As already noted, the base class constructor takes care of the base part of the derived object. The base class
-constructors after all are the only methods that have access to the given private members.
+The base class constructor takes care of the base part of the derived object. The base class
+constructors are methods that have access to the base class private members.
 
 If a base class constructor is not already defined then the compiler calls the default constructor to manage
 the base class part of the object. To call a specific constructor (instead of the default constructor) one
@@ -891,7 +919,8 @@ as part of the initialisation list, along with the parameters (if needed) for th
 ```cpp
 // modify the DerivedClass
 
-class DerivedClass : BaseClass
+// this makes all public base class members become public in the derived class (see notes above)
+class DerivedClass : public BaseClass
 {
   public:
     char* someString;
@@ -909,5 +938,58 @@ class DerivedClass : BaseClass
     {
       delete[] someString;
     };
+};
+```
+
+Destructors, on the other hand, are called in the reverse order to constructors. When a derived class destructor is called, the
+compiler calls the derived class destructor first before the base class(es) destructor(s).
+
+### Protected members ###
+
+Base class members marked `protected` are treated like `private` base class members. Such members are only visible to the base class methods and friend functions of the class.
+
+As mentioned above, the default access specifier is `private` so with the new `protected` member access specifier, one can now say
+that by default all derived `public` and `protected` base class members will be treated as `private` members in the derived class.
+
+To make base class `protected` members remain protected in the derived class, use the `protected` access specfier in the derived class
+definition:
+
+```cpp
+// inside DerivedClass.h
+
+#pragma once
+
+// add BaseClass.h (mandatory here)
+#include "BaseClass.h"
+
+// all protected members in BaseClass are now protected in DerivedClass;
+// note that base class public member are protected
+class DerivedClass : protected BaseClass
+{
+  public:
+    // ...public members, constructors and destructors...
+};
+```
+
+Note that `public` members in the base class are now `protected` in the derived class.
+
+Alternatively, one could make all `protected` and `public` base class members, respectively, `protected` and `public` in the derived
+class (i.e. no change to access) by using the `public` access modifier.
+
+
+```cpp
+// inside DerivedClass.h
+
+#pragma once
+
+// add BaseClass.h (mandatory here)
+#include "BaseClass.h"
+
+// all protected members in BaseClass are now protected in DerivedClass;
+// all public members in BaseClass are now public in DerivedClass
+class DerivedClass : public BaseClass
+{
+  public:
+    // ...public members, constructors and destructors...
 };
 ```

@@ -941,12 +941,19 @@ class DerivedClass : public BaseClass
 };
 ```
 
+In general, one should always be aware of ensuring base class members are initialised in addition to the derived class members, through
+careful definition of the constructor.
+
 Destructors, on the other hand, are called in the reverse order to constructors. When a derived class destructor is called, the
 compiler calls the derived class destructor first before the base class(es) destructor(s).
 
 ## Protected members ##
 
-Base class members marked `protected` are treated like `private` base class members. Such members are only visible to the base class methods and friend functions of the class.
+Base class members marked `protected` are treated like `private` base class members. Such members are visible to the base class methods and friend functions of the class.
+More distinctly, they are accessible to derived class member functions, just as `public` member are. However, `protected` members are not accessible to classes which do not
+derive from the base class.
+
+Overall, `protected` members straddle the boundary that is `private` and `public`. They are accessible to derived classes but not accessible to other non-derived classes.
 
 As mentioned above, the default access specifier is `private` so with the new `protected` member access specifier, one can now say
 that by default all derived `public` and `protected` base class members will be treated as `private` members in the derived class.

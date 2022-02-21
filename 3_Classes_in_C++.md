@@ -941,9 +941,6 @@ class DerivedClass : public BaseClass
 };
 ```
 
-In general, one should always be aware of ensuring base class members are initialised in addition to the derived class members, through
-careful definition of the constructor.
-
 Destructors, on the other hand, are called in the reverse order to constructors. When a derived class destructor is called, the
 compiler calls the derived class destructor first before the base class(es) destructor(s).
 
@@ -970,7 +967,7 @@ definition:
 #include "BaseClass.h"
 
 // all protected members in BaseClass are now protected in DerivedClass;
-// note that base class public member are protected
+// note that base class public member are now protected, not public!
 class DerivedClass : protected BaseClass
 {
   public:
@@ -999,3 +996,161 @@ class DerivedClass : public BaseClass
     // ...public members, constructors and destructors...
 };
 ```
+
+### Copy constructors in derived classes ###
+
+Copy constructors can be called explicitly or invoked as a default base class constructor in the derived class, with the reference to the base class instance as a parameter. In this
+snippet, one can also see `protected` members in use.
+
+```cpp
+// inside BaseClass.h
+
+// forces the definition of BaseClass to appear only once in the build
+#pragma once
+
+class BassClass 
+{
+  protected:
+    double someDouble;
+    int someInt;
+
+  public:
+    BaseClass (double defDob = 1.1, int defInt = 98): someDouble(defDob), someInt(defInt)
+    {}
+
+    BaseClass(const BaseClass& copyObj)
+    {
+      someDouble = copyObj.someDouble;
+      someInt = copyObj.someInt;
+    }
+};
+```
+
+Then the derived class would initialise the base and derived members accordingly. What is different here is that
+the base class copy constructor can take a reference to the derived class and only take in the base class member
+initialisation values. The base class constructor leaves out the derived class members, as it should.
+
+```cpp
+// inside DerivedClass.h
+
+#pragma once
+
+// add BaseClass.h (mandatory here)
+#include "BaseClass.h"
+
+// no changes to the BaseClass access specifiers
+class DerivedClass : public BaseClass
+{
+  public:
+    char* someString;
+
+    // without the copy construtor: the base constructor is called explicitly
+    DerivedClass(double devDouble, int devInt, char* stringArg = "Derived from BaseClass") :
+      BaseClass(devDouble, devInt)
+    {
+      someString = new char[strlen(stringArg) + 1];
+
+      // since stringArg resides on the heap, its source reference (its pointer) is needed
+      strcpy_s(someString, strlen(stringArg) + 1, stringArg);
+    }
+
+    // with an 'implied' copy constructor, called automatically
+    DerivedClass(char* stringArg = "Derived from BaseClass")
+    {
+      someString = new char[strlen(stringArg) + 1];
+
+      strcpy_s(someString, strlen(stringArg) + 1, stringArg);
+    }
+
+    // when copying an object, the BaseClass copy constructor is called
+    DerivedClass(const DerivedClass& devCopy): BaseClass(devCopy)
+    {
+      someString = new char[strlen(stringArg) + 1];
+
+      strcpy_s(someString, strlen(devCopy.someString) + 1, devCopy.someString);
+    }
+
+    ~DerivedClass()
+    {
+      delete[] someString;
+    };
+};
+
+// somewhere in main()
+DerivedClass firstObj(1.1, 9, "TweedleDum");
+
+DerivedClass secondObj(firstObj);
+```
+
+The general sequence of constructor calls would be:
+
+1. BaseClass() to build base part of firstObj
+2. DerivedClass() to build derived part of firstObj
+3. BaseClass copy constructor is called to build a BaseClass object, as a portion from devCopy, of secondObj
+4. Derived class copy constructor called to start building the derived calls part of secondObj
+
+In general, one should always be aware of ensuring base class members are initialised in addition to the derived class members, through
+careful definition of the constructor.
+
+## Friend classes ##
+
+A brief note about `friend` classes. As before, `friend` methods have acccess to all data members of the class they are declared in.
+
+```cpp
+class WhatClass
+{
+  public:
+    WhatClass(double alpha, double beta)
+    {
+      privA = alpha;
+      privB = beta;
+    }
+
+    private:
+      double privA;
+      double privB;
+
+    // let a non-derived class access WhatClass' private members e.g. this copy constructor
+    friend FriendsClass::FriendsClass(const WhatClass& aWhatClass);
+}
+
+class FriendsClass
+{
+  public:
+    FriendsClass(const WhatClass& someClass)
+    {
+      privAFriend = someClass.privA;
+      privBFriend = someClass.privB;
+    }
+  
+  private:
+    double privAFriend;
+    double privBFriend;
+}
+```
+
+It is also possible to declare all methods in a given class as `friend` methods to a different class.
+
+```cpp
+class WhatClass
+{
+  public:
+    WhatClass(double alpha, double beta)
+    {
+      privA = alpha;
+      privB = beta;
+    }
+
+    private:
+      double privA;
+      double privB;
+
+    // now all methods in FriendsClass have access to privA and privB
+    friend FriendsClass;
+}
+```
+
+Note, however, that WhatClass does not have access to FriendsClass' members. It is not reciporacal.
+
+Furthermore, only FriendsClass has access to WhatClass' members. Derived classes of FriendsClass would not have access
+to WhatClass' members. Thus the scope of inheritence of `friend` classes is very limited, compared to traditional derived classes.

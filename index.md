@@ -43,6 +43,7 @@ My notes from an online C++ course
     + Templates (function and class)
     + Inheritance
     + Protected access specifier
+    + Friend Classes
   
 4. [Types of data structures](4_Types_of_data_structures.md)
 

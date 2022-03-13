@@ -48,6 +48,7 @@ My notes from an online C++ course
     + Virtual Functions and Polymorphism
     + Pointers and References of derived class instances
     + Abstract classes
+    + Nested classes
   
 4. [Types of data structures](4_Types_of_data_structures.md)
 

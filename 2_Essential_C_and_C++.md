@@ -52,6 +52,10 @@ Enumerations are indexed by integers by default but can be indexed with characte
  }
 ```
 
+The above `static_cast<destinationType>(originType)` operator does not check the validity of the cast, so it is up to the developer to make sure
+that the cast is valid. If the cast is invalid at runtime then the program will terminate. To get the compiler to check the validity of the cast, and
+then set the output as null (as opposed to terminate the program) use `dynamic_cast<destinationType> (orginType)`.
+
 ## Structures ##
 
 These are collections of data types under one name and remain pervasive, particularly in solutions which are/were written primarily in C. Each structure is defined by its __members__ or __fields__.

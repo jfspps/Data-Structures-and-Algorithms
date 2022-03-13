@@ -355,6 +355,8 @@ SomeClass::SomeClass(const SomeClass& initObj){
 Objects of a class are freed by the compiler by the use of a default destructor. If the object is referenced via a pointer then the object resides in the heap. The
 `delete` keyword is used to release data from the heap referenced by a pointer and, as explained below, also invokes the destructor should it be applied to an object.
 
+Note, however, that the `delete` keyword does not remove the pointer variable from memory. This is handled once the function goes out of scope.
+
 ```cpp
 class SomeClass
 {
@@ -1197,8 +1199,8 @@ Similarly, if DerivedClass was first instantiated then the derived class' `Commo
 
 ```cpp
 // somewhere in main()
-BaseClass baseObject = new BaseClass();
-DerivedClass derivedObject = new DerivedClass();
+BaseClass baseObject();
+DerivedClass derivedObject();
 
 derivedObject.CallCommonMethod();   // calls the BaseClass definition of CommonMethod() since baseObject was built first
 ```
@@ -1252,8 +1254,8 @@ Now the true intentions can be realised.
 
 ```cpp
 // somewhere in main(), when CommonMethod() is declared virtual
-BaseClass baseObject = new BaseClass();
-DerivedClass derivedObject = new DerivedClass();
+BaseClass baseObject();
+DerivedClass derivedObject();
 
 derivedObject.CallCommonMethod();   // calls the DerivedClass definition of CommonMethod()
 ```
@@ -1303,7 +1305,9 @@ Virtual functions provide C++ with a way to implement polymorphism.
 
 ## Pointers and References of derived class instances ##
 
-### Pointers to derived class instances ###
+### Pointers to derived class instances and casting ###
+
+This part of the discussion raises a number of new options for code design, as well as ptifalls to look out for.
 
 A pointer to a base class instance can be reassigned to derived class instances. Furthermore, member functions
 using pointers and indirect member selection operator `->` on base class and derived class instances apply
@@ -1311,8 +1315,8 @@ dynamic linkage for virtual functions.
 
 ```cpp
 // somewhere in main(), when CommonMethod() is declared virtual
-BaseClass baseObject = new BaseClass();
-DerivedClass derivedObject = new DerivedClass();
+BaseClass baseObject();
+DerivedClass derivedObject();
 
 BaseClass* pInstance = 0;
 pInstance = &baseObject;
@@ -1323,6 +1327,16 @@ pInstance = &derivedObject;
 pInstance->CallCommonMethod();  // calls the DerivedClass definition of CommonMethod()
 
 delete pInstance;
+```
+
+Since the pointer can accept either base class or derived class instances, it is also possible to cast between different pointers. In this case,
+the examples draw from `dynamic_cast<destination>(origin)` rather than `static_cast<destination>(origin)`.
+
+```cpp
+BaseClass* pBaseObject = new DerivedClass();
+
+// dynamically cast a base class pointer to a derived class pointer
+DerivedClass* pDerivedObject = dynamic_cast<DerivedClass*>(pbaseObject);
 ```
 
 ### References to instances as arguments ###
@@ -1338,8 +1352,8 @@ void PassByRef(const BaseClass& anObject);
 main()
 {
   // CommonMethod() is declared virtual
-  BaseClass baseObject = new BaseClass();
-  DerivedClass derivedObject = new DerivedClass();
+  BaseClass baseObject();
+  DerivedClass derivedObject();
 
   PassByRef(baseObject)   // calls the BaseClass definition of CommonMethod()
 
@@ -1408,7 +1422,8 @@ class StillAnAbstractClass: public AbstractClass
 As is the case in Java, __C++ abstract classes cannot be instantiated__ and it would not be surprising to know that constructors and destructors are not normally
 present in an abstract class. Classes which are not abstract are known as __concrete classes__.
 
-Perhaps confusingly, at some point a derived class is based on an abstract base class and pointers to the derived class look like they reference objects of
+One can use the previously discussed pointer notation to build an instance of a concrete (derived) class in reference to the abstract class.
+Perhaps confusingly, the pointers to the derived class look like they reference objects of
 an abstract class. The constructor identifier should make it clear, however, that this is not the case.
 
 ```cpp
@@ -1425,7 +1440,7 @@ class ConcreteClass: public AbstractClass
 
 // somewhere in main()
 
-AbstractClass* anObject = new ConcreteClass;
+AbstractClass* anObject = new ConcreteClass();
 anObject->PureVirtualFunction();
 
 delete anObject;
@@ -1433,3 +1448,61 @@ delete anObject;
 
 Note that the pointer `anObject` can be assigned to any class that is derived from `AbstractClass` and subsequently assume that the compiler will call the corresponding
 virtual functions automatically.
+
+Finally, a derived class can be derived further. The base classes above would then represent the __indirect__ base class of the newly derived classes. That is, there would be
+at least three levels of classes:
+
+```java
+BaseClass <--- DerivedLevelOneClass <--- DerivedLevelTwoClass <--- DerivedLevelThreeClass
+```
+
+`BaseClass` is a _direct_ base class to `DerivedLevelOneClass` and an _indirect_ base class to all others. `DerivedLevelOneClass` is a
+_direct_ base class to `DerivedLevelTwoClass`, and so on.
+
+### Virtual destructors ###
+
+As discussed with regard to destructors of derived classes, when order of calling destructors is:
+
+1. Derived class destructor
+2. Base class destructor
+
+When calling destructors in an order that the static linkage policy (manipulated on the part of the developer) would work.
+
+It becomes an issue when using pointers to handle base and derived class instances. Pointers can be re-assigned to some other direct or indirect
+class and therefore require a different destructor to free up the heap. Without any change the class definitions, the
+compiler only really knows about the base class destructor since this is common to the family of classes. That is, calling
+`delete` will only invoke the base class destructor. In many cases, this is a problem because it leaves the derived instance
+parts dangling in the heap.
+
+Thankfully, the solution is simple: declare destructors as __virtual destructors__:
+
+```cpp
+virtual ~BaseClass();
+```
+
+As with all virtual functions, it is recommended to also declare derived class destructors as virtual functions even though it is not strictly necessary.
+
+## Nested classes ##
+
+Similar to Java, C++ also provides __nested classes__, which are represented as Structures and/or classes. These are typically one-off uses within an enclosing class instance, rather than be utilised outside the enclosing class.
+
+Nested classes can be `public` or `private` and all have access to the enclosing class' members. The enclosing class can only access the `public` members of a `private` nested class
+(less common approach) and access to all members of a `public` nested class (more common approach).
+
+Nested classes declared `public` are accessible ouside the enclosing class but would need to be fully qualified using scope resolution operators.
+
+```cpp
+class EnclosingClass
+{
+  private:
+    // declare private members of EnclosingClass here
+  public:
+    class NestedClass
+    {
+      private:
+        // declare private members of NestedClass here
+      public:
+        // declare public members of NestedClass here
+    }
+}
+```

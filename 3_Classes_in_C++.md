@@ -1496,13 +1496,17 @@ class EnclosingClass
 {
   private:
     // declare private members of EnclosingClass here
+
   public:
+  
     class NestedClass
     {
       private:
         // declare private members of NestedClass here
       public:
         // declare public members of NestedClass here
-    }
+    };
+
+    // add other public members of EnclosingClass here
 }
 ```

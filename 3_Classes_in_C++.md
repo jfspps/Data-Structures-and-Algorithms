@@ -1154,3 +1154,149 @@ Note, however, that WhatClass does not have access to FriendsClass' members. It 
 
 Furthermore, only FriendsClass has access to WhatClass' members. Derived classes of FriendsClass would not have access
 to WhatClass' members. Thus the scope of inheritence of `friend` classes is very limited, compared to traditional derived classes.
+
+## Early and Late Binding ##
+
+Suppose that a base class and a derived class make a call to member functions of the same signature. The method defined in the derived class
+is intended for derived class instances and the method defined in the base class is intended for base class instances.
+
+```cpp
+class BaseClass
+{
+  public:
+    void CallCommonMethod() const
+    {
+      // do stuff then...
+      CommonMethod();
+    }
+
+    void CommonMethod() 
+    {
+      // BaseClass' Common method definition...
+    }
+
+    // insert constructor and private/protected data members
+}
+
+// in another C++ header file
+class DerivedClass
+{
+  public:
+    void CommonMethod() const
+    {
+      // DerivedClass' Common method definition...
+    }
+
+    // insert constructor and private/protected data members
+}
+```
+
+The situation here is that when an instance of DerivedClass calls `CallCommonMethod()`, by default, the definition of `CommonMethod()` is 
+called based on how the program was compiled. If an instance of BaseClass was instantiated first, then the base class' `CommonMethod()` is called.
+Similarly, if DerivedClass was first instantiated then the derived class' `CommonMethod()` is called. 
+
+```cpp
+// somewhere in main()
+BaseClass baseObject;
+DerivedClass derivedObject;
+
+derivedObject.CallCommonMethod();   // calls the BaseClass definition of CommonMethod() since baseObject was built first
+```
+
+This mechanism is referred to as `early binding`, i.e. first come first served in many ways.
+The function call is fixed prior to running, and so is termed `static resolution` (or `static linkage`).
+
+Ideally, the derived class definition of `CommonMethod()` should be applied to objects of the derived class. That is, one requires the compiler
+to call the appropriate method based on the object type, through `late binding` (also known as `dynamic linkage`).
+
+## Virtual functions and Polymorphism ##
+
+This is where __virtual functions__ come in. Virtual functions are functions which, when defined as such, signal to the compiler to that it
+should apply dynamic linkage to the method. Strictly speaking, the `virtual` keyword is only required in the base class.
+
+```cpp
+class BaseClass
+{
+  public:
+    void CallCommonMethod() const
+    {
+      // call to CommonMethod() is dynamically linked
+      CommonMethod();
+    }
+
+    // indicate to the compiler to apply dynamic linkage
+    virtual void CommonMethod() 
+    {
+      // BaseClass' Common method definition...
+    }
+
+    // insert constructor and private/protected data members
+}
+
+// in another C++ header file
+class DerivedClass
+{
+  public:
+    // indicate to the compiler to apply dynamic linkage (this is optional, and helps
+    // make the code clearer)
+    virtual void CommonMethod() const
+    {
+      // DerivedClass' Common method definition...
+    }
+
+    // insert constructor and private/protected data members
+}
+```
+
+Now the true intentions can be realised.
+
+```cpp
+// somewhere in main(), when CommonMethod() is declared virtual
+BaseClass baseObject;
+DerivedClass derivedObject;
+
+derivedObject.CallCommonMethod();   // calls the DerivedClass definition of CommonMethod()
+```
+
+If one wanted to force the compiler to call the base class definition of `CommonMethod()` then a full qualification
+with the scope resultion operator would be needed.
+
+```cpp
+class BaseClass
+{
+  public:
+    void CallCommonMethod() const
+    {
+      // call to CommonMethod() is dynamically linked (based on the object type)
+      CommonMethod();
+    }
+
+    // indicate to the compiler to apply dynamic linkage
+    virtual void CommonMethod() 
+    {
+      // BaseClass' Common method definition...
+    }
+
+    // insert constructor and private/protected data members
+}
+
+// in another C++ header file
+class DerivedClass
+{
+  public:
+    void CommonMethod() const
+    {
+      // DerivedClass' CommonMethod()
+    }
+
+    void BaseCommonCall() const
+    {
+      // call BaseClass' CommonMethod()
+      BaseClass::CommonMethod();
+    }
+
+    // insert constructor and private/protected data members
+}
+```
+
+Virtual functions provide C++ with a way to implement polymorphism.

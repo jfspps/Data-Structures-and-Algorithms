@@ -45,6 +45,8 @@ My notes from an online C++ course. The GitHub pages landing page is [here](http
     + Inheritance
     + Protected access specifier
     + Friend Classes
+    + Early and Late Binding
+    + Virtual Functions and Polymorphism
 
 4. [Types of data structures](4_Types_of_data_structures.md)
 

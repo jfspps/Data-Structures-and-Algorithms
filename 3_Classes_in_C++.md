@@ -1179,7 +1179,7 @@ class BaseClass
 }
 
 // in another C++ header file
-class DerivedClass
+class DerivedClass: public BaseClass
 {
   public:
     void CommonMethod() const
@@ -1197,8 +1197,8 @@ Similarly, if DerivedClass was first instantiated then the derived class' `Commo
 
 ```cpp
 // somewhere in main()
-BaseClass baseObject;
-DerivedClass derivedObject;
+BaseClass baseObject = new BaseClass();
+DerivedClass derivedObject = new DerivedClass();
 
 derivedObject.CallCommonMethod();   // calls the BaseClass definition of CommonMethod() since baseObject was built first
 ```
@@ -1234,7 +1234,7 @@ class BaseClass
 }
 
 // in another C++ header file
-class DerivedClass
+class DerivedClass: public BaseClass
 {
   public:
     // indicate to the compiler to apply dynamic linkage (this is optional, and helps
@@ -1252,8 +1252,8 @@ Now the true intentions can be realised.
 
 ```cpp
 // somewhere in main(), when CommonMethod() is declared virtual
-BaseClass baseObject;
-DerivedClass derivedObject;
+BaseClass baseObject = new BaseClass();
+DerivedClass derivedObject = new DerivedClass();
 
 derivedObject.CallCommonMethod();   // calls the DerivedClass definition of CommonMethod()
 ```
@@ -1281,7 +1281,7 @@ class BaseClass
 }
 
 // in another C++ header file
-class DerivedClass
+class DerivedClass: public BaseClass
 {
   public:
     void CommonMethod() const
@@ -1300,3 +1300,136 @@ class DerivedClass
 ```
 
 Virtual functions provide C++ with a way to implement polymorphism.
+
+## Pointers and References of derived class instances ##
+
+### Pointers to derived class instances ###
+
+A pointer to a base class instance can be reassigned to derived class instances. Furthermore, member functions
+using pointers and indirect member selection operator `->` on base class and derived class instances apply
+dynamic linkage for virtual functions.
+
+```cpp
+// somewhere in main(), when CommonMethod() is declared virtual
+BaseClass baseObject = new BaseClass();
+DerivedClass derivedObject = new DerivedClass();
+
+BaseClass* pInstance = 0;
+pInstance = &baseObject;
+pInstance->CallCommonMethod();  // calls the BaseClass definition of CommonMethod()
+
+
+pInstance = &derivedObject;
+pInstance->CallCommonMethod();  // calls the DerivedClass definition of CommonMethod()
+
+delete pInstance;
+```
+
+### References to instances as arguments ###
+
+In relation to calling member functions based on object type, the type identity of the object passed by reference is also
+preserved. Pointers can be reassigned to base and derived classes at will, and this behaviour is also applicable to
+references. A function that has a reference to the base class will accept base class _and_ derived class instances as parameters.
+
+```cpp
+// prototype given outside main()
+void PassByRef(const BaseClass& anObject);
+
+main()
+{
+  // CommonMethod() is declared virtual
+  BaseClass baseObject = new BaseClass();
+  DerivedClass derivedObject = new DerivedClass();
+
+  PassByRef(baseObject)   // calls the BaseClass definition of CommonMethod()
+
+  PassByRef(derivedObject)   // calls the DerivedClass definition of CommonMethod()
+}
+
+void PassByRef(const BaseClass& anObject)
+{
+  // this calls the corresponding CommonMethod, based on the type of anObject
+  anObject.CallCommonMethod();
+}
+```
+
+## Abstract Classes ##
+
+Similar to Java, C++ abstract classes provide a common starting point for other derived classes that provide more of the 'missing' implementation
+of member functions. Since it is often necessary to redefine derived class member functions via virtual functions, the base class must first set
+the tone with regard to virtual functions.
+
+There are cases where the definition of the base class (virtual) function is not known or needed. Instead they are defined in code as `pure virtual functions`
+which are essentially method prototypes of virtual functions.
+
+```cpp
+class AbstractClass
+{
+  public:
+    virtual int PureVirtualFunction() const = 0;
+}
+```
+
+Note the assignment of zero above. This indicates to the compiler that the function is a pure virtual function. Any class with pure virtual functions
+is subsequently known as an __abstract class__. All other derived classes must either
+
+a.  Redefine the base class virtual function as a pure virtual function (thus the derived class is also an abstract class)
+b.  Define the method body of the pure virtual function, preserving the `const` state accordingly
+
+```cpp
+class NonAbstractClass: public AbstractClass
+{
+  public:
+    virtual int PureVirtualFunction() const
+    {
+      // do stuff here
+    }
+}
+```
+
+One can implement a non-`const` member function based on a `const` pure virtual function if required. This does mean, however, that the derived class is
+abstract because the developer did not provide implementation for the `const` pure virtual function.
+
+```cpp
+class StillAnAbstractClass: public AbstractClass
+{
+  public:
+    virtual int PureVirtualFunction()
+    {
+      // do stuff here
+    }
+
+    // the const version of PureVirtualFunction() applies to this class and is not defined here; hence this class is (still) abstract
+
+    // define other data members (variables and methods)
+}
+```
+
+As is the case in Java, __C++ abstract classes cannot be instantiated__ and it would not be surprising to know that constructors and destructors are not normally
+present in an abstract class. Classes which are not abstract are known as __concrete classes__.
+
+Perhaps confusingly, at some point a derived class is based on an abstract base class and pointers to the derived class look like they reference objects of
+an abstract class. The constructor identifier should make it clear, however, that this is not the case.
+
+```cpp
+class ConcreteClass: public AbstractClass
+{
+  public:
+    virtual int PureVirtualFunction() const
+    {
+      // do stuff here
+    }
+
+    // define other data members (variables and methods), constructors and destructors
+}
+
+// somewhere in main()
+
+AbstractClass* anObject = new ConcreteClass;
+anObject->PureVirtualFunction();
+
+delete anObject;
+```
+
+Note that the pointer `anObject` can be assigned to any class that is derived from `AbstractClass` and subsequently assume that the compiler will call the corresponding
+virtual functions automatically.

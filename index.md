@@ -1,4 +1,4 @@
-# C++ HowTo with Data Structures and Algorithms in C++
+# Data Structures and Algorithms in C++
 
 1. [The stack and the heap](1_Stack_and_Heap.md)
 

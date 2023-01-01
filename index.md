@@ -1,5 +1,6 @@
 # Data-Structures-and-Algorithms
-My notes from an online C++ course
+
+My notes from an online C++ course ([index page](index.md))
 
 1. [The stack and the heap](1_Stack_and_Heap.md)
 
